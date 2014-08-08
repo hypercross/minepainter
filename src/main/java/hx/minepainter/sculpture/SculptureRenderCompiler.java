@@ -1,4 +1,4 @@
-package hx.minepainter.block;
+package hx.minepainter.sculpture;
 
 import org.lwjgl.opengl.GL11;
 
@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 
 @SideOnly(Side.CLIENT)
 public class SculptureRenderCompiler {
-	private static RenderBlocks rb = new RenderBlocks();
+	public static RenderBlocks rb = new RenderBlocks();
 
 	int glDisplayList = -1;
 	int light;

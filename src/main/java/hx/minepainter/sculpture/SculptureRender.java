@@ -1,4 +1,4 @@
-package hx.minepainter.block;
+package hx.minepainter.sculpture;
 
 import org.lwjgl.opengl.GL11;
 

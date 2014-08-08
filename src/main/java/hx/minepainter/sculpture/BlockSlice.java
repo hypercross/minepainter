@@ -1,4 +1,4 @@
-package hx.minepainter.block;
+package hx.minepainter.sculpture;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

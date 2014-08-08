@@ -1,13 +1,37 @@
-package hx.minepainter.block;
+package hx.minepainter.sculpture;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public class Raytrace {
+public class Operations {
+	
+	interface Rotation{
+		int to(int from);
+	}
+	
+	private static int[] rotationBuffer = new int[512]; 
+	public static void rotate(Sculpture sculpture, Rotation rotation){
+		for(int i = 0; i < 512; i++){
+			int x = (i >> 8) & 7;
+			int y = (i >> 4) & 7;
+			int z = (i >> 0) & 7;
+			
+			rotationBuffer[i] = sculpture.getIndex(x,y,z);
+		}
+		
+		for(int i = 0; i < 512; i++){
+			int x = (i >> 8) & 7;
+			int y = (i >> 4) & 7;
+			int z = (i >> 0) & 7;
+			
+			sculpture.setIndex(x,y,z, rotationBuffer[i]);
+		}
+	}
 	
 	
-	public static int[] trace(Sculpture sculpture, Vec3 start, Vec3 end){
+	public static int[] raytrace(Sculpture sculpture, Vec3 start, Vec3 end){
 		
 		int[] xyz = new int[]{-1,-1,-1};
 		

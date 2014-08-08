@@ -1,4 +1,4 @@
-package hx.minepainter.block;
+package hx.minepainter.sculpture;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -86,14 +86,14 @@ public class Sculpture {
 		return index;
 	}
 	
-	private int getIndex(int x,int y,int z){
+	int getIndex(int x,int y,int z){
 		int index = 0;
 		for(int l = 0; l < layers.length; l ++)
 			if( (layers[l][x*8 + y] & (1<<z)) > 0)index |= (1 << l);
 		return index;
 	}
 	
-	private void setIndex(int x,int y,int z, int index){
+	void setIndex(int x,int y,int z, int index){
 		
 		int prev = getIndex(x,y,z);
 		usage_count[prev]--;

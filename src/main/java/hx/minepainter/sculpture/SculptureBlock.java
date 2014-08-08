@@ -1,4 +1,4 @@
-package hx.minepainter.block;
+package hx.minepainter.sculpture;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;

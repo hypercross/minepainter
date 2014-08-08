@@ -1,0 +1,16 @@
+[
+{
+  "modid": "minepainter",
+  "name": "MinePainter",
+  "description": "sculptures and pixel art",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["hypercross"],
+  "credits": "hypercross",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

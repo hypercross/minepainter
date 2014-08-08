@@ -1,5 +1,7 @@
 package hx.minepainter.sculpture;
 
+import org.lwjgl.util.vector.Matrix;
+
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -15,6 +17,8 @@ public class Sculpture {
 	byte[] block_metas;
 	int[] usage_count;
 	
+	int rotation;
+	
 	public Sculpture(){
 		normalize();
 	}
@@ -24,11 +28,13 @@ public class Sculpture {
 		nbt.setByteArray("block_metas", block_metas);
 		for(int i = 0 ; i < layers.length; i ++)
 			nbt.setByteArray("layer" + i, layers[i]);
+		nbt.setInteger("rotation", rotation);
 	}
 	
 	public void read(NBTTagCompound nbt){
 		block_ids = nbt.getIntArray("block_ids");
 		block_metas = nbt.getByteArray("block_metas");
+		rotation = nbt.getInteger("rotation");
 		layers = new byte[block_ids.length][];
 		for(int i = 0; i < layers.length; i ++)
 			layers[i] = nbt.getByteArray("layer" + i);
@@ -86,23 +92,26 @@ public class Sculpture {
 		return index;
 	}
 	
-	int getIndex(int x,int y,int z){
+	int getIndex(int... coord){
+		for(Rotation r : Rotation.dirs[rotation])r.apply(coord);
 		int index = 0;
 		for(int l = 0; l < layers.length; l ++)
-			if( (layers[l][x*8 + y] & (1<<z)) > 0)index |= (1 << l);
+			if( (layers[l][coord[0]*8 + coord[1]] & (1<<coord[2])) > 0)index |= (1 << l);
 		return index;
 	}
 	
-	void setIndex(int x,int y,int z, int index){
+	void setIndex(int... coord){
 		
-		int prev = getIndex(x,y,z);
+		int prev = getIndex(coord);
+		int index = coord[3];
 		usage_count[prev]--;
 		usage_count[index]++;
 		
+		for(Rotation r : Rotation.dirs[rotation])r.apply(coord);
 		for(int l = 0; l < layers.length; l ++)
 			if( (index & (1 << l)) > 0)
-				layers[l][x*8 + y] |= (1<<z);
-			else layers[l][x*8 + y] &= ~(1<<z);
+				layers[l][coord[0]*8 + coord[1]] |= (1<<coord[2]);
+			else layers[l][coord[0]*8 + coord[1]] &= ~(1<<coord[2]);
 	}
 	
 	public boolean contains(int x,int y,int z){

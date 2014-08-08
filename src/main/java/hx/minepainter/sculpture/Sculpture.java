@@ -17,7 +17,7 @@ public class Sculpture {
 	byte[] block_metas;
 	int[] usage_count;
 	
-	int rotation;
+	Rotation r = new Rotation();
 	
 	public Sculpture(){
 		normalize();
@@ -28,13 +28,13 @@ public class Sculpture {
 		nbt.setByteArray("block_metas", block_metas);
 		for(int i = 0 ; i < layers.length; i ++)
 			nbt.setByteArray("layer" + i, layers[i]);
-		nbt.setInteger("rotation", rotation);
+		nbt.setByteArray("rotation", r.r);
 	}
 	
 	public void read(NBTTagCompound nbt){
 		block_ids = nbt.getIntArray("block_ids");
 		block_metas = nbt.getByteArray("block_metas");
-		rotation = nbt.getInteger("rotation");
+		r.r = nbt.getByteArray("rotation");
 		layers = new byte[block_ids.length][];
 		for(int i = 0; i < layers.length; i ++)
 			layers[i] = nbt.getByteArray("layer" + i);
@@ -92,26 +92,25 @@ public class Sculpture {
 		return index;
 	}
 	
-	int getIndex(int... coord){
-		for(Rotation r : Rotation.dirs[rotation])r.apply(coord);
+	int getIndex(int x, int y,int z){
+		r.apply(x, y, z);
 		int index = 0;
 		for(int l = 0; l < layers.length; l ++)
-			if( (layers[l][coord[0]*8 + coord[1]] & (1<<coord[2])) > 0)index |= (1 << l);
+			if( (layers[l][r.x*8 + r.y] & (1<<r.z)) > 0)index |= (1 << l);
 		return index;
 	}
 	
-	void setIndex(int... coord){
+	void setIndex(int x, int y,int z, int index){
 		
-		int prev = getIndex(coord);
-		int index = coord[3];
+		int prev = getIndex(x,y,z);
 		usage_count[prev]--;
 		usage_count[index]++;
 		
-		for(Rotation r : Rotation.dirs[rotation])r.apply(coord);
+		r.apply(x, y, z);
 		for(int l = 0; l < layers.length; l ++)
 			if( (index & (1 << l)) > 0)
-				layers[l][coord[0]*8 + coord[1]] |= (1<<coord[2]);
-			else layers[l][coord[0]*8 + coord[1]] &= ~(1<<coord[2]);
+				layers[l][r.x*8 + r.y] |= (1<<r.z);
+			else layers[l][r.x*8 + r.y] &= ~(1<<r.z);
 	}
 	
 	public boolean contains(int x,int y,int z){
@@ -122,6 +121,7 @@ public class Sculpture {
 		if(block_ids == null)return false;
 		if(block_metas == null)return false;
 		if(layers == null)return false;
+		if(r.r == null)return false;
 		for(int i = 0; i <layers.length; i ++){
 			if(layers[i] == null)return false;
 			if(layers[i].length != 64)return false;

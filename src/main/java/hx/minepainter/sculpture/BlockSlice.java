@@ -19,7 +19,7 @@ public class BlockSlice implements IBlockAccess{
 	int z;
 	Sculpture sculpture;
 	
-	private static BlockSlice instance;	
+	private static BlockSlice instance = new BlockSlice();	
 	private BlockSlice(){};
 	
 	public static BlockSlice at(IBlockAccess iba, int x,int y,int z){

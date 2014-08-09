@@ -23,7 +23,9 @@ public class Rotation {
 	}
 	
 	public Rotation(){
-		this.r = I.r.clone();
+		r[0] = 1;
+		r[4] = 1;
+		r[8] = 1;
 	}
 	
 	public static Rotation I = new Rotation();
@@ -31,8 +33,5 @@ public class Rotation {
 	public static Rotation Y = new Rotation();
 	public static Rotation Z = new Rotation();
 	static{
-		I.r[0] = 1;
-		I.r[4] = 1;
-		I.r[8] = 1;
 	}
 }

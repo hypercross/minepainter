@@ -1,18 +1,22 @@
 package hx.minepainter.sculpture;
 
+import hx.utils.Debug;
+
 import org.lwjgl.util.vector.Matrix;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class Sculpture {
-	
-	public static Block current;
-	public static int current_meta;
-	
 
+	// layers of data.
+	// combine bits at [x*8 + y] & (1<<z) for index
+	// possible indexes : 2^#layers
+	// start with 1 layer
 	byte[][] layers;
 	
+	// block type index.
+	// starts with 0 - air
 	int[] block_ids;
 	byte[] block_metas;
 	int[] usage_count;
@@ -60,49 +64,47 @@ public class Sculpture {
 		return block_metas[index];
 	}
 	
-	public boolean setBlockAt(int x,int y,int z,Block block){
+	public boolean setBlockAt(int x,int y,int z,Block block, byte meta){
 		if(!contains(x,y,z))return false;
 		
-		int index = findIndexForBlock(Block.getIdFromBlock(block));
-		if(index < 0)return false;
+		int index = findIndexForBlock(Block.getIdFromBlock(block), meta);
+		if(index < 0){
+			grow();
+			index = block_ids.length/2;
+			block_ids[index] = Block.getIdFromBlock(block);
+			block_metas[index] = meta;
+		}
 		
 		setIndex(x,y,z,index);		
-		return true;
-	}
-	
-	public boolean setMetaAt(int x,int y,int z,int meta){
-		if(!contains(x,y,z))return false;
-		
-		int index = getIndex(x,y,z);
-		block_metas[index] = (byte) meta;
 		return true;
 	}
 	
 	public boolean isEmpty(){
 		int s = 0;
 		for(int i = 0; i <block_ids.length;i++)
-			if(block_ids[i]!=0)s+=usage_count[i];
-		return s == 0;
+			if(block_ids[i]==0)s+=usage_count[i];
+		return s == 512;
 	}
 	
 	public boolean isFull(){
 		int s = 0;
 		for(int i = 0; i <block_ids.length;i++)
-			if(block_ids[i]!=0)s+=usage_count[i];
-		return s == 512;
+			if(block_ids[i]==0)s+=usage_count[i];
+		return s == 0;
 	}
 	
-	private int findIndexForBlock(int blockID){
-		int index = -1;
+	private int findIndexForBlock(int blockID, byte meta){
 		for(int i = 0; i < block_ids.length; i++){
-			if(block_ids[i] == blockID){
-				return index;
-			}if(usage_count[i] == 0){
+			if(block_ids[i] == blockID && block_metas[i] == meta){
+				return i;
+			}
+			if(usage_count[i] == 0){
 				block_ids[i] = blockID;
-				return index;
+				block_metas[i] = meta;
+				return i;
 			}
 		}
-		return index;
+		return -1;
 	}
 	
 	int getIndex(int x, int y,int z){
@@ -147,36 +149,36 @@ public class Sculpture {
 	}
 	
 	private void grow(){
-		byte[][] nlayers = new byte[layers.length][];
+		byte[][] nlayers = new byte[layers.length + 1][];
 		for(int i = 0; i < layers.length;i++)
 			nlayers[i] = layers[i];
+		nlayers[layers.length] = new byte[64];
 		layers = nlayers;
 		
-		int[] ids = new int[block_ids.length+1];
+		int[] ids = new int[block_ids.length * 2];
 		for(int i = 0; i < block_ids.length;i++)ids[i]=block_ids[i];
 		block_ids = ids;
 		
-		byte[] metas = new byte[block_metas.length+1];
+		byte[] metas = new byte[block_metas.length * 2];
 		for(int i = 0; i < block_metas.length;i++)metas[i]=block_metas[i];
 		block_metas = metas;
 		
-		int[] usage = new int[usage_count.length+1];
+		int[] usage = new int[usage_count.length * 2];
 		for(int i = 0; i < usage_count.length;i++)usage[i]=usage_count[i];
 		usage_count = usage;
 	}
 	
 	private void normalize(){
 		if(!check()){
-			layers = new byte[0][64];
-			block_ids = new int[0];
-			block_metas = new byte[0];
-			usage_count = new int[0];
+			layers = new byte[1][64];
+			block_ids = new int[2];
+			block_metas = new byte[2];
+			usage_count = new int[2];
 		}
 		for(int i = 0;i<usage_count.length;i++)usage_count[i] = 0;
 		for(int i = 0; i < 512;i++){
-			int index = getIndex(i >> 8, (i >> 4) & 7, i & 7);
+			int index = getIndex(i >> 6, (i >> 3) & 7, i & 7);
 			usage_count[index]++;
 		}
-		
 	}
 }

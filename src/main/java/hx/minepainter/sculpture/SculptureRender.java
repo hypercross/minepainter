@@ -25,15 +25,13 @@ public class SculptureRender implements ISimpleBlockRenderingHandler{
 		
 		GL11.glPushMatrix();
 		GL11.glTranslated(x,y,z);
-		GL11.glScalef(0.125f, 0.125f, 0.125f);
-		//TODO : call gl list
+//		GL11.glScalef(0.125f, 0.125f, 0.125f);
 		SculptureEntity se = (SculptureEntity) world.getTileEntity(x, y, z);
-		se.render.update(block.getMixedBrightnessForBlock(world, x, y, z), BlockSlice.at(world, x, y, z));
-		GL11.glCallList(se.render.glDisplayList);
-		BlockSlice.clear();
+		se.render.updateLight(block.getMixedBrightnessForBlock(world, x, y, z));
+		if(se.render.ready())GL11.glCallList(se.render.glDisplayList);
 		GL11.glPopMatrix();
 		
-		return false;
+		return true;
 	}
 
 	@Override

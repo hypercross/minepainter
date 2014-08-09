@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class Operations {
 	
-	public static int editSubBlock(World w, int[] minmax, int x,int y,int z, Block block){
+	public static int editSubBlock(World w, int[] minmax, int x,int y,int z, Block block, byte meta){
 		int tx,ty,tz;
 		int s = 0;
 		
@@ -27,19 +27,19 @@ public class Operations {
 					while(_y < 0){ _y += 8; ty--; }
 					while(_z < 0){ _z += 8; tz--; }
 					
-					Block target = w.getBlock(tx, ty, tz);
-					int meta = w.getBlockMetadata(tx, ty, tz);
+					Block tgt_block = w.getBlock(tx, ty, tz);
+					int tgt_meta = w.getBlockMetadata(tx, ty, tz);
 					
-					if(target == Blocks.air)
+					if(tgt_block == Blocks.air)
 						w.setBlock(x, y, z, ModMinePainter.sculpture.block);
-					else if(sculptable(target,meta))
+					else if(sculptable(tgt_block,tgt_meta))
 						convertToFullSculpture(w,tx,ty,tz);
 					
 					if(w.getBlock(tx, ty, tz) != ModMinePainter.sculpture.block)
 						continue;
 					
 					SculptureEntity se = (SculptureEntity) w.getTileEntity(tx, ty, tz);
-					se.sculpture.setBlockAt(_x, _y, _z, block);
+					se.sculpture.setBlockAt(_x, _y, _z, block, meta);
 					if(w.isRemote)se.render.changed = true;
 					s++;
 				}
@@ -76,8 +76,7 @@ public class Operations {
 		w.setBlock(x, y, z, ModMinePainter.sculpture.block);
 		SculptureEntity se = (SculptureEntity) w.getTileEntity(x, y, z);
 		for(int i = 0 ; i < 512; i ++){
-			se.sculpture.setBlockAt((i>>8)&7, (i>>8)&7, (i>>8)&7, was);
-			se.sculpture.setMetaAt((i>>8)&7, (i>>8)&7, (i>>8)&7, meta);
+			se.sculpture.setBlockAt((i>>6)&7, (i>>3)&7, (i>>0)&7, was, (byte)meta);
 		}
 	}
 	

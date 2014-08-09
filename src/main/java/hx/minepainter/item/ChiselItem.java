@@ -17,7 +17,7 @@ public class ChiselItem extends Item{
 	
 	@Override
     public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
-		int bs = Operations.editSubBlock(w, new int[]{0, 0,0,7,7,7}, x,y,z, Blocks.stone);
+		int bs = Operations.editSubBlock(w, new int[]{0, 0,0,8,8,8}, x,y,z, Blocks.stone, (byte)0);
 		return bs > 0;
 	}
 }

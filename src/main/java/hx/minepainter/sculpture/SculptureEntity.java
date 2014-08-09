@@ -1,9 +1,12 @@
 package hx.minepainter.sculpture;
 
+import hx.utils.Debug;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class SculptureEntity extends TileEntity{
@@ -54,4 +57,16 @@ public class SculptureEntity extends TileEntity{
 		super.readFromNBT(nbt);
 		sculpture.read(nbt);
 	}
+	
+	public Packet getDescriptionPacket()
+    {
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
+        this.writeToNBT(nbttagcompound);
+        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 17, nbttagcompound);
+    }
+
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+    {
+        readFromNBT(pkt.func_148857_g());
+    }
 }

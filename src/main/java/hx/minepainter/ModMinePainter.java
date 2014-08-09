@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -37,6 +38,7 @@ public class ModMinePainter {
 	public void preInit(FMLPreInitializationEvent e){
 		sculpture.load();
 		GameRegistry.registerItem(chisel, chisel.getClass().getSimpleName());
+		MinecraftForge.EVENT_BUS.register(new hx.minepainter.EventHandler());
 	}
 	
 	@SideOnly(Side.CLIENT)

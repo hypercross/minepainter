@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class SculptureBlock extends BlockContainer{
@@ -39,6 +40,12 @@ public class SculptureBlock extends BlockContainer{
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new SculptureEntity();
 	}
+	
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
+    {
+    	world.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
+    }
 	
 	@Override @SideOnly(Side.CLIENT) public void registerBlockIcons(IIconRegister p_149651_1_){}
 	

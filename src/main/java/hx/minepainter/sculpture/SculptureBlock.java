@@ -17,14 +17,17 @@ public class SculptureBlock extends BlockContainer{
 
 	private int x,y,z,meta = 0;
 	private Block current = Blocks.stone;
+	private int renderID = -1;
 	public void setCurrentBlock(Block that, int meta){
 		if(that == null){
 			meta = 0;
+			renderID = -1;
 			current = Blocks.stone;
 			return;
 		}
 		current = that;
 		this.meta = meta;
+		renderID = that.getRenderType();
 	}
 	public void setSubCoordinate(int x,int y,int z){
 		this.x = x; this.y = y; this.z = z;
@@ -55,7 +58,9 @@ public class SculptureBlock extends BlockContainer{
 	
 	@Override @SideOnly(Side.CLIENT) public int getRenderType()
 	{
-		return ModMinePainter.sculpture.renderID;
+		if(renderID == -1)
+			return ModMinePainter.sculpture.renderID;
+		return renderID;
 	}
 
 }

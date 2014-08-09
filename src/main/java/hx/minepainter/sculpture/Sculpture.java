@@ -141,7 +141,7 @@ public class Sculpture {
 			if(layers[i] == null)return false;
 			if(layers[i].length != 64)return false;
 		}
-		if(block_ids.length != (1 << layers.length) -1)return false;
+		if(block_ids.length != (1 << layers.length) )return false;
 		if(block_ids.length != block_metas.length)return false;
 		
 		if(usage_count.length != block_ids.length)usage_count = new int[block_ids.length];

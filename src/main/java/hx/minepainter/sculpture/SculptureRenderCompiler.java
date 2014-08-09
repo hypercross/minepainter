@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.init.Blocks;
 
 @SideOnly(Side.CLIENT)
 public class SculptureRenderCompiler {
@@ -60,15 +61,17 @@ public class SculptureRenderCompiler {
 			int z = (i >> 0) & 7;
 
 			Block b = slice.getBlock(x, y, z);
+			if(b == Blocks.air)continue;
 			int meta = slice.getBlockMetadata(x, y, z);
 			ModMinePainter.sculpture.block.setCurrentBlock(b, meta);
 			ModMinePainter.sculpture.block.setSubCoordinate(x,y,z);
 
 			rb.setRenderBounds(x/8f, y/8f, z/8f, (x+1)/8f, (y+1)/8f, (z+1)/8f);
 			tes.setTranslation(-x, -y, -z);
-			rb.renderStandardBlock(ModMinePainter.sculpture.block, x,y,z);
+			rb.renderBlockByRenderType(ModMinePainter.sculpture.block, x,y,z);
 		}
 		
+		ModMinePainter.sculpture.block.setCurrentBlock(null,0);
 		rb.blockAccess = null;
 		tes.draw();
 	}

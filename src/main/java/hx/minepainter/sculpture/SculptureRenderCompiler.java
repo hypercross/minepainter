@@ -17,9 +17,10 @@ public class SculptureRenderCompiler {
 
 	int glDisplayList = -1;
 	int light;
+	boolean changed = false;
 	
 	public void update(int light, BlockSlice slice){
-		if(glDisplayList != -1 && light == this.light)return;
+		if(glDisplayList != -1 && light == this.light && !changed)return;
 		
 		glDisplayList = GLAllocation.generateDisplayLists(1);
 		GL11.glNewList(glDisplayList, GL11.GL_COMPILE);
@@ -27,6 +28,7 @@ public class SculptureRenderCompiler {
 		GL11.glEndList();
 		
 		this.light = light;
+		changed = false;
 	}
 	
 	

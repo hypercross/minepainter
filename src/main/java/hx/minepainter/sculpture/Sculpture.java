@@ -78,6 +78,19 @@ public class Sculpture {
 		return true;
 	}
 	
+	public boolean isEmpty(){
+		int s = 0;
+		for(int i = 0; i <block_ids.length;i++)
+			if(block_ids[i]!=0)s+=usage_count[i];
+		return s == 0;
+	}
+	
+	public boolean isFull(){
+		int s = 0;
+		for(int i = 0; i <block_ids.length;i++)
+			if(block_ids[i]!=0)s+=usage_count[i];
+		return s == 512;
+	}
 	
 	private int findIndexForBlock(int blockID){
 		int index = -1;

@@ -1,0 +1,16 @@
+itemGroup.tabMinePainter=Minepainter
+tile.paintingcrossslot.name=Painting Slot
+item.canvas.name=Canvas
+item.schematic.name=Schematic
+item.ironchisel.name=Iron Chisel
+item.diamondchisel.name=Diamond Chisel
+item.stonechisel.name=Stone Chisel
+item.hinge.name=Hinge
+item.palette.name=Palette
+item.brush.name=Brush
+item.brushsmall.name=Small Brush
+item.transmuter.name=Transmuter
+item.sculpturecover.name=Sculpture Cover Piece
+item.sculpturebar.name=Sculpture Bar Piece
+item.sculpturepiece.name=Sculpture Small Piece
+item.finishedpainting.name=Finished Painting

@@ -7,8 +7,8 @@ import net.minecraft.world.World;
 
 public class SculptureBlock extends BlockContainer{
 
-	protected SculptureBlock(Material m) {
-		super(m);
+	public SculptureBlock() {
+		super(Material.rock);
 	}
 
 	@Override

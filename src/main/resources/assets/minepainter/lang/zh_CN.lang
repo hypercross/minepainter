@@ -1,0 +1,16 @@
+itemGroup.tabMinePainter=雕塑与像素画
+tile.paintingcrossslot.name=十字画架
+item.canvas.name=画布
+item.schematic.name=蓝图
+item.ironchisel.name=铁雕刻刀
+item.diamondchisel.name=钻石雕刻刀
+item.stonechisel.name=石雕刻刀
+item.hinge.name=转轴
+item.palette.name=色板
+item.brush.name=画笔
+item.brushsmall.name=小画笔
+item.transmuter.name=材质转换卷轴
+item.sculpturecover.name=片状雕塑碎片
+item.sculpturebar.name=条状雕塑碎片
+item.sculpturepiece.name=粒状雕塑碎片
+item.finishedpainting.name=画布（已完成）

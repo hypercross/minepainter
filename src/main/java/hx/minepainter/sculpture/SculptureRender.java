@@ -30,12 +30,14 @@ public class SculptureRender implements ISimpleBlockRenderingHandler{
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
 			Block block, int modelId, RenderBlocks renderer) {
+
+		SculptureEntity se = (SculptureEntity) world.getTileEntity(x, y, z);
+		se.render.updateLight(block.getMixedBrightnessForBlock(world, x, y, z));
+		se.render.updateAO(world, x, y, z);
 		
 		GL11.glPushMatrix();
 		GL11.glTranslated(x,y,z);
 		GL11.glTranslated(-chunk_x, -chunk_y, -chunk_z);		
-		SculptureEntity se = (SculptureEntity) world.getTileEntity(x, y, z);
-		se.render.updateLight(block.getMixedBrightnessForBlock(world, x, y, z));
 		if(se.render.ready())GL11.glCallList(se.render.glDisplayList);
 		GL11.glPopMatrix();
 		

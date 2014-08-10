@@ -44,21 +44,15 @@ public class SculptureBlock extends BlockContainer{
 
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side){
-		return iba.isAirBlock(x, y, z);
+		if(x>=0 && y>=0 && z>=0 && x<8 && y<8 && z<8)
+			return iba.isAirBlock(x, y, z);
+		return iba.isAirBlock(x, y, z) || !iba.getBlock(x, y, z).isOpaqueCube();
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new SculptureEntity();
 	}
-	
-	//TODO render update not triggered by block change
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
-    {
-    	Operations.markChanged(world,x,y,z);
-    }
 	
 	@Override @SideOnly(Side.CLIENT) public void registerBlockIcons(IIconRegister p_149651_1_){}
 	

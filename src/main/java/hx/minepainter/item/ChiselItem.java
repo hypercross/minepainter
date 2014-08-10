@@ -16,10 +16,12 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class ChiselItem extends Item{
+	
 	public ChiselItem(){
 		super();
 		this.setCreativeTab(ModMinePainter.tabMinePainter);
-		this.setUnlocalizedName("stone_chisel");
+		this.setUnlocalizedName("chisel");
+		this.setTextureName("minepainter:stone_chisel");
 	}
 	
 	@Override
@@ -27,7 +29,7 @@ public class ChiselItem extends Item{
 		if(!w.isRemote)return false;
 		int[] pos = Operations.raytrace(x,y,z,ep);
 		
-		int flags = this.getChiselFlags();
+		int flags = this.getChiselFlags(ep);
 		if(!Operations.validOperation(w, x, y, z, pos, flags))
 			return false;
 		
@@ -46,7 +48,7 @@ public class ChiselItem extends Item{
 		return 0;
 	}
 	
-	public int getChiselFlags(){
+	public int getChiselFlags(EntityPlayer ep){
 		return 0;
 	}
 }

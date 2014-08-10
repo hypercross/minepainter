@@ -1,6 +1,8 @@
 package hx.minepainter;
 
+import hx.minepainter.item.BarcutterItem;
 import hx.minepainter.item.ChiselItem;
+import hx.minepainter.item.SawItem;
 import hx.minepainter.sculpture.SculptureBlock;
 import hx.minepainter.sculpture.SculptureEntity;
 import hx.minepainter.sculpture.SculptureOperationMessage;
@@ -37,13 +39,19 @@ public class ModMinePainter {
 			new BlockLoader<SculptureBlock>(new SculptureBlock(), SculptureEntity.class);
 	
 	public static Item chisel = new ChiselItem();
+	public static Item barcutter = new BarcutterItem();
+	public static Item saw = new SawItem();
 	
 	public static SimpleNetworkWrapper network;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e){
 		sculpture.load();
+		
 		GameRegistry.registerItem(chisel, chisel.getClass().getSimpleName());
+		GameRegistry.registerItem(barcutter, barcutter.getClass().getSimpleName());
+		GameRegistry.registerItem(saw, saw.getClass().getSimpleName());
+		
 		MinecraftForge.EVENT_BUS.register(new hx.minepainter.EventHandler());
 		network = NetworkRegistry.INSTANCE.newSimpleChannel("minepainter");
 		network.registerMessage(SculptureOperationMessage.SculptureOperationHandler.class, 

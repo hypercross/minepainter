@@ -38,9 +38,10 @@ public class EventHandler {
 		if(pos[0] == -1)return;
 		
 		ChiselItem ci = Utils.getItem(is);
-		if(!Operations.validOperation(event.player.worldObj, x,y,z, pos, ci.getChiselFlags()))return;
+		int flags = ci.getChiselFlags(event.player);
+		if(!Operations.validOperation(event.player.worldObj, x,y,z, pos, flags))return;
 		
-		Operations.setBlockBoundsFromRaytrace(pos, sculpture, ci.getChiselFlags());
+		Operations.setBlockBoundsFromRaytrace(pos, sculpture, flags);
 		event.context.drawSelectionBox(event.player, event.target, 0, event.partialTicks);
 		sculpture.setBlockBounds(0, 0, 0, 1, 1, 1);
 		

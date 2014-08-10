@@ -214,17 +214,14 @@ public class Operations {
 		if(hasFlag(chiselFlags, PLACE)){
 			if(b == Blocks.air)return true;
 			if(b == ModMinePainter.sculpture.block)return true;
-			Debug.log("cannot place in non-air non-sculpture block");
 			return false;
 		}else{
 			int meta = worldObj.getBlockMetadata(x, y, z);
 			if(b == Blocks.air){
-				Debug.log("cannot sculpt air");
 				return false;
 			}
 			if(b == ModMinePainter.sculpture.block)return true;
 			if(sculptable(b,meta))return true;
-			Debug.log("cannot sculpt non-sculptable block: " + b.getUnlocalizedName());
 			return false;
 		}
 	}
@@ -257,5 +254,16 @@ public class Operations {
 		int blocks = editSubBlock(w,minmax,x,y,z,editBlock,(byte) editMeta);
 		
 		return blocks > 0;
+	}
+	
+	public static int getLookingAxis(EntityPlayer ep){
+		Vec3 vec = ep.getLookVec();
+		double x = Math.abs(vec.xCoord);
+		double y = Math.abs(vec.yCoord);
+		double z = Math.abs(vec.zCoord);
+		if(x >= y && x >= z)return 0;
+		if(y >= x && y >= z)return 1;
+		if(z >= x && z >= y)return 2;
+		return 0;
 	}
 }

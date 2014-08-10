@@ -3,6 +3,7 @@ package hx.minepainter;
 import hx.minepainter.item.ChiselItem;
 import hx.minepainter.sculpture.SculptureBlock;
 import hx.minepainter.sculpture.SculptureEntity;
+import hx.minepainter.sculpture.SculptureOperationMessage;
 import hx.minepainter.sculpture.SculptureRender;
 import hx.utils.BlockLoader;
 import hx.utils.Debug;
@@ -14,6 +15,8 @@ import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -35,11 +38,16 @@ public class ModMinePainter {
 	
 	public static Item chisel = new ChiselItem();
 	
+	public static SimpleNetworkWrapper network;
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e){
 		sculpture.load();
 		GameRegistry.registerItem(chisel, chisel.getClass().getSimpleName());
 		MinecraftForge.EVENT_BUS.register(new hx.minepainter.EventHandler());
+		network = NetworkRegistry.INSTANCE.newSimpleChannel("minepainter");
+		network.registerMessage(SculptureOperationMessage.SculptureOperationHandler.class, 
+				SculptureOperationMessage.class, 0, Side.SERVER);
 	}
 	
 	@SideOnly(Side.CLIENT)

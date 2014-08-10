@@ -6,7 +6,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.ModMinePainter;
 import hx.utils.Debug;
+import hx.utils.Utils;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
@@ -88,8 +90,22 @@ public class Operations {
 	static double length;
 	static int[] xyzf = new int[]{-1,-1,-1,-1};
 	
+	public static int[] raytrace(int x,int y,int z, EntityPlayer ep){
+		Block sculpture = ep.worldObj.getBlock(x,y,z);
+		Sculpture the_sculpture = null;
+		if(sculpture == ModMinePainter.sculpture.block){
+			SculptureEntity se = Utils.getTE(ep.worldObj, x, y, z);
+			the_sculpture = se.sculpture();
+		}
+		
+		Vec3 from = ep.getPosition(1.0f);
+		from = from.addVector(-x,-y,-z);
+		Vec3 look = ep.getLookVec();
+		
+		return raytrace(the_sculpture, from,from.addVector(look.xCoord * 5, look.yCoord * 5, look.zCoord * 5));
+	}
+	
 	public static int[] raytrace(Sculpture sculpture, Vec3 start, Vec3 end){
-		Debug.log(start,end);
 		xyzf[0] = xyzf[1] = xyzf[2] = xyzf[3] = -1; 
 		length = Double.MAX_VALUE;
 		
@@ -145,11 +161,101 @@ public class Operations {
 	}
 	
 	private static void updateRaytraceResult(Sculpture sculpture, int x,int y,int z,int f, double len){
-		if(!sculpture.contains(x, y, z))return;
-		if(sculpture.getBlockAt(x, y, z, null) == Blocks.air)return;
+		if(!Sculpture.contains(x,y,z))return;
+		if(sculpture != null){
+			if(sculpture.getBlockAt(x, y, z, null) == Blocks.air)return;
+		}
 		if(len >= length)return;
 		
 		length = len;
 		xyzf[0] = x; xyzf[1] = y; xyzf[2] = z;  xyzf[3] = f;
+	}
+	
+	
+	public static final int PLACE = 1;
+	public static final int ALLX = 2;
+	public static final int ALLY = 4;
+	public static final int ALLZ = 8;
+	
+	public static void setBlockBoundsFromRaytrace(int[] r, Block block, int type){
+		if(hasFlag(type, PLACE)){
+			ForgeDirection dir = ForgeDirection.getOrientation(r[3]);
+			r[0] += dir.offsetX;
+			r[1] += dir.offsetY;
+			r[2] += dir.offsetZ;
+		}
+		boolean allx = (type & ALLX) > 0;
+		boolean ally = (type & ALLY) > 0;
+		boolean allz = (type & ALLZ) > 0;
+		block.setBlockBounds(allx ? 0 : r[0]/8f, 
+				             ally ? 0 : r[1]/8f,
+				             allz ? 0 : r[2]/8f,
+		            		 allx ? 1 : (r[0]+1)/8f, 
+				             ally ? 1 : (r[1]+1)/8f,
+				             allz ? 1 : (r[2]+1)/8f);
+		if(hasFlag(type, PLACE)){
+			ForgeDirection dir = ForgeDirection.getOrientation(r[3]);
+			r[0] -= dir.offsetX;
+			r[1] -= dir.offsetY;
+			r[2] -= dir.offsetZ;
+		}
+	}
+
+	public static boolean validOperation(World worldObj, int x, int y, int z,
+			int[] pos, int chiselFlags) {
+		while(pos[0] < 0){ pos[0] += 8; x--; }
+		while(pos[0] > 7){ pos[0] -= 8; x++; }
+		while(pos[1] < 0){ pos[1] += 8; y--; }
+		while(pos[1] > 7){ pos[1] -= 8; y++; }
+		while(pos[2] < 0){ pos[2] += 8; z--; }
+		while(pos[2] > 7){ pos[2] -= 8; z++; }
+		
+		Block b = worldObj.getBlock(x, y, z);
+		if(hasFlag(chiselFlags, PLACE)){
+			if(b == Blocks.air)return true;
+			if(b == ModMinePainter.sculpture.block)return true;
+			Debug.log("cannot place in non-air non-sculpture block");
+			return false;
+		}else{
+			int meta = worldObj.getBlockMetadata(x, y, z);
+			if(b == Blocks.air){
+				Debug.log("cannot sculpt air");
+				return false;
+			}
+			if(b == ModMinePainter.sculpture.block)return true;
+			if(sculptable(b,meta))return true;
+			Debug.log("cannot sculpt non-sculptable block: " + b.getUnlocalizedName());
+			return false;
+		}
+	}
+	
+	private static boolean hasFlag(int flags, int mask){
+		return (flags & mask) > 0;
+	}
+
+	public static boolean applyOperation(World w, int x, int y, int z,
+			int[] pos, int flags, Block editBlock, int editMeta) {
+		
+		while(pos[0] < 0){ pos[0] += 8; x--; }
+		while(pos[0] > 7){ pos[0] -= 8; x++; }
+		while(pos[1] < 0){ pos[1] += 8; y--; }
+		while(pos[1] > 7){ pos[1] -= 8; y++; }
+		while(pos[2] < 0){ pos[2] += 8; z--; }
+		while(pos[2] > 7){ pos[2] -= 8; z++; }
+		
+		int[] minmax = new int[6];
+		boolean allx = hasFlag(flags, ALLX);
+		boolean ally = hasFlag(flags, ALLY);
+		boolean allz = hasFlag(flags, ALLZ);
+		minmax[0] = allx ? 0 : pos[0];
+		minmax[1] = ally ? 0 : pos[1];
+		minmax[2] = allz ? 0 : pos[2];
+		minmax[3] = allx ? 8 : (pos[0]+1);
+		minmax[4] = ally ? 8 : (pos[1]+1);
+		minmax[5] = allz ? 8 : (pos[2]+1);
+		
+		int blocks = editSubBlock(w,minmax,x,y,z,editBlock,(byte) editMeta);
+		
+		return blocks > 0;
 	}
 }

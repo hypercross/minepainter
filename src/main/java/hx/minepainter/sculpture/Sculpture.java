@@ -128,7 +128,7 @@ public class Sculpture {
 			else layers[l][r.x*8 + r.y] &= ~(1<<r.z);
 	}
 	
-	public boolean contains(int x,int y,int z){
+	public static boolean contains(int x,int y,int z){
 		return x>=0 && y>=0 && z>=0 && x<8 && y<8 && z<8; 
 	}
 	

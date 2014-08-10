@@ -18,14 +18,13 @@ import net.minecraft.init.Blocks;
 
 @SideOnly(Side.CLIENT)
 public class SculptureRenderCompiler {
-	public static RenderBlocks rb = new RenderBlocks();
+	public static RenderBlocks rb = new SculptureRenderBlocks();
 
 	int glDisplayList = -1;
 	int light;
 	boolean changed = false;
 	
 	public void updateLight(int light){
-		Debug.log("reporting light " + light);
 		if(light != this.light)
 			changed = true;
 		this.light = light;
@@ -43,10 +42,10 @@ public class SculptureRenderCompiler {
 		return true;
 	}
 	
-	
 	public void build(BlockSlice slice){
 		rb.blockAccess = slice;
 		rb.renderAllFaces = false;
+		SculptureBlock sculpture = ModMinePainter.sculpture.block;
 		
 		TextureManager tm = Minecraft.getMinecraft().renderEngine;
 		tm.bindTexture(TextureMap.locationBlocksTexture);
@@ -63,15 +62,17 @@ public class SculptureRenderCompiler {
 			Block b = slice.getBlock(x, y, z);
 			if(b == Blocks.air)continue;
 			int meta = slice.getBlockMetadata(x, y, z);
-			ModMinePainter.sculpture.block.setCurrentBlock(b, meta);
-			ModMinePainter.sculpture.block.setSubCoordinate(x,y,z);
-
-			rb.setRenderBounds(x/8f, y/8f, z/8f, (x+1)/8f, (y+1)/8f, (z+1)/8f);
+			sculpture.setCurrentBlock(b, meta);
+			sculpture.setSubCoordinate(x,y,z);
+			
 			tes.setTranslation(-x, -y, -z);
-			rb.renderBlockByRenderType(ModMinePainter.sculpture.block, x,y,z);
+//			rb.renderStandardBlock(ModMinePainter.sculpture.block, x,y,z);
+			sculpture.setBlockBounds(x/8f, y/8f, z/8f, (x+1)/8f, (y+1)/8f, (z+1)/8f);
+			rb.renderBlockByRenderType(sculpture, x,y,z);
 		}
 		
 		ModMinePainter.sculpture.block.setCurrentBlock(null,0);
+		sculpture.setBlockBounds(0,0,0,1,1,1);
 		rb.blockAccess = null;
 		tes.draw();
 	}

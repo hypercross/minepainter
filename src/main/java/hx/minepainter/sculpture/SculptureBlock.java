@@ -13,6 +13,9 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+//TODO add hooks for block bounds
+//TODO add hooks for collision raytracing
+//TODO add hooks for transparent blocks
 public class SculptureBlock extends BlockContainer{
 
 	private int x,y,z,meta = 0;
@@ -40,14 +43,21 @@ public class SculptureBlock extends BlockContainer{
 	}
 
 	@Override
+	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side){
+		return iba.isAirBlock(x, y, z);
+	}
+	
+	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new SculptureEntity();
 	}
 	
+	//TODO render update not triggered by block change
     @Override
+    @SideOnly(Side.CLIENT)
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
     {
-    	world.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
+    	Operations.markChanged(world,x,y,z);
     }
 	
 	@Override @SideOnly(Side.CLIENT) public void registerBlockIcons(IIconRegister p_149651_1_){}
@@ -62,5 +72,25 @@ public class SculptureBlock extends BlockContainer{
 			return ModMinePainter.sculpture.renderID;
 		return renderID;
 	}
+	
+    @Override public boolean isOpaqueCube()
+	{
+		return false;
+	}
 
+    @Override public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
+  
+    @Override public int getLightValue(IBlockAccess world,int x,int y,int z){
+    	TileEntity te = world.getTileEntity(x, y, z);
+    	if(te == null || !(te instanceof SculptureEntity))return super.getLightValue(world, x, y, z);
+    	SculptureEntity se = (SculptureEntity) te;
+    	return se.sculpture.getLight();
+    }
+//
+//    @Override public int getLightOpacity(){
+//    	return current.getLightOpacity();
+//    }
 }

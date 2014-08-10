@@ -1,5 +1,7 @@
 package hx.minepainter.sculpture;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.ModMinePainter;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -132,6 +134,12 @@ public class Operations {
 		}
 		
 		xyz[0] = x;xyz[1] = y; xyz[2] = z; 
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void markChanged(World world, int x, int y, int z) {
+		SculptureEntity se = (SculptureEntity) world.getTileEntity(x, y, z);
+		se.render.changed = true;
 	}
 	
 	

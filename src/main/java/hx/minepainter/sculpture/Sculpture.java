@@ -39,7 +39,7 @@ public class Sculpture {
 		block_ids = nbt.getIntArray("block_ids");
 		block_metas = nbt.getByteArray("block_metas");
 		r.r = nbt.getByteArray("rotation");
-		layers = new byte[block_ids.length][];
+		layers = new byte[log(block_ids.length)][];
 		for(int i = 0; i < layers.length; i ++)
 			layers[i] = nbt.getByteArray("layer" + i);
 		
@@ -138,8 +138,14 @@ public class Sculpture {
 		if(layers == null)return false;
 		if(r.r == null)return false;
 		for(int i = 0; i <layers.length; i ++){
-			if(layers[i] == null)return false;
-			if(layers[i].length != 64)return false;
+			if(layers[i] == null){
+				Debug.log("layer " + i + " is null!" );
+				return false;
+			}
+			if(layers[i].length != 64){
+				Debug.log("layer " + i + " is " + layers[i].length + " long!");
+				return false;
+			}
 		}
 		if(block_ids.length != (1 << layers.length) )return false;
 		if(block_ids.length != block_metas.length)return false;
@@ -180,5 +186,22 @@ public class Sculpture {
 			int index = getIndex(i >> 6, (i >> 3) & 7, i & 7);
 			usage_count[index]++;
 		}
+	}
+	
+	private int log(int num){
+		int i = 0;
+		while(num > 1){
+			num = num >> 1;
+			i++;
+		}
+		return i;
+	}
+
+	public int getLight() {
+		int light = 0;
+		for(int i = 0; i < usage_count.length; i ++){
+			light += Block.getBlockById(block_ids[i]).getLightValue() * usage_count[i];
+		}
+		return light / 512;
 	}
 }

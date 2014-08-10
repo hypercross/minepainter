@@ -5,6 +5,7 @@ import hx.minepainter.sculpture.SculptureBlock;
 import hx.minepainter.sculpture.SculptureEntity;
 import hx.minepainter.sculpture.SculptureRender;
 import hx.utils.BlockLoader;
+import hx.utils.Debug;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;

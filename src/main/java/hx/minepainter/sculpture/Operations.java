@@ -1,8 +1,11 @@
 package hx.minepainter.sculpture;
 
+import java.util.LinkedList;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.ModMinePainter;
+import hx.utils.Debug;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.Vec3;
@@ -82,65 +85,71 @@ public class Operations {
 		}
 	}
 	
+	static double length;
+	static int[] xyzf = new int[]{-1,-1,-1,-1};
+	
 	public static int[] raytrace(Sculpture sculpture, Vec3 start, Vec3 end){
-		
-		int[] xyz = new int[]{-1,-1,-1};
+		Debug.log(start,end);
+		xyzf[0] = xyzf[1] = xyzf[2] = xyzf[3] = -1; 
+		length = Double.MAX_VALUE;
 		
 		for(int x = 0; x <= 8; x ++){
 
 			Vec3 hit = start.getIntermediateWithXValue(end, x/8f);
 			if(hit == null)continue;
 			
-			int y = (int)hit.yCoord;
-			int z = (int)hit.zCoord;
-			
-			if(end.xCoord > start.xCoord)updateResult(sculpture, xyz,x,y,z,start);
-			else updateResult(sculpture,xyz,x-1,y,z,start);
+			if(hit.yCoord < 0)continue;
+			if(hit.zCoord < 0)continue;
+			int y = (int)(hit.yCoord * 8);
+			int z = (int)(hit.zCoord * 8);
+
+			if(end.xCoord > start.xCoord)updateRaytraceResult(sculpture, x,y,z,ForgeDirection.WEST.ordinal(), 
+					hit.subtract(start).lengthVector());
+			else updateRaytraceResult(sculpture, x-1,y,z, ForgeDirection.EAST.ordinal(), 
+					hit.subtract(start).lengthVector());
 		}
 		
 		for(int y = 0; y <= 8; y ++){
 			
 			Vec3 hit = start.getIntermediateWithYValue(end, y/8f);
+			if(hit == null)continue;
 			
-			int x = (int)hit.xCoord;
-			int z = (int)hit.zCoord;
+			if(hit.xCoord < 0)continue;
+			if(hit.zCoord < 0)continue;
+			int x = (int)(hit.xCoord * 8);
+			int z = (int)(hit.zCoord * 8);
 			
-			if(end.yCoord > start.yCoord)updateResult(sculpture, xyz,x,y,z,start);
-			else updateResult(sculpture, xyz,x,y-1,z,start);
+			if(end.yCoord > start.yCoord)updateRaytraceResult(sculpture,x,y,z, ForgeDirection.DOWN.ordinal(),
+					hit.subtract(start).lengthVector());
+			else updateRaytraceResult(sculpture,x,y-1,z,ForgeDirection.UP.ordinal(),
+					hit.subtract(start).lengthVector());
 		}
 		
 		for(int z = 0; z <= 8; z ++){
 			
 			Vec3 hit = start.getIntermediateWithZValue(end, z/8f);
+			if(hit == null)continue;
 			
-			int x = (int)hit.xCoord;
-			int y = (int)hit.yCoord;
+			if(hit.xCoord < 0)continue;
+			if(hit.yCoord < 0)continue;
+			int x = (int)(hit.xCoord * 8);
+			int y = (int)(hit.yCoord * 8);
 			
-			if(end.zCoord > start.zCoord)updateResult(sculpture, xyz,x,y,z,start);
-			else updateResult(sculpture, xyz,x,y,z-1,start);
+			if(end.zCoord > start.zCoord)updateRaytraceResult(sculpture,x,y,z,ForgeDirection.NORTH.ordinal(),
+					hit.subtract(start).lengthVector());
+			else updateRaytraceResult(sculpture,x,y,z-1,ForgeDirection.SOUTH.ordinal(),
+					hit.subtract(start).lengthVector());
 		}
 		
-		return xyz;
+		return xyzf;
 	}
 	
-	private static void updateResult(Sculpture sculpture, int[] xyz, int x,int y,int z, Vec3 start){
+	private static void updateRaytraceResult(Sculpture sculpture, int x,int y,int z,int f, double len){
 		if(!sculpture.contains(x, y, z))return;
 		if(sculpture.getBlockAt(x, y, z, null) == Blocks.air)return;
-
-		if(xyz[0] != -1){		
-			if(x != xyz[0] && start.xCoord - x > 0 ==  xyz[0] - x > 0)return;
-			if(y != xyz[1] && start.yCoord - y > 0 ==  xyz[1] - y > 0)return;
-			if(z != xyz[2] && start.zCoord - z > 0 ==  xyz[2] - z > 0)return;
-		}
+		if(len >= length)return;
 		
-		xyz[0] = x;xyz[1] = y; xyz[2] = z; 
+		length = len;
+		xyzf[0] = x; xyzf[1] = y; xyzf[2] = z;  xyzf[3] = f;
 	}
-
-	@SideOnly(Side.CLIENT)
-	public static void markChanged(World world, int x, int y, int z) {
-		SculptureEntity se = (SculptureEntity) world.getTileEntity(x, y, z);
-		se.render.changed = true;
-	}
-	
-	
 }

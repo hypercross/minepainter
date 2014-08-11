@@ -67,7 +67,7 @@ public class Operations {
 		ItemStack is = new ItemStack(ModMinePainter.piece.item);
 		is.stackSize = amount;
 		is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
-		ModMinePainter.sculpture.block.dropBlockAsItem(w, x, y, z, meta, amount);
+		ModMinePainter.sculpture.block.dropScrap(w, x, y, z, is);
 	}
 	
 	public static boolean sculptable(Block b, int blockMeta)

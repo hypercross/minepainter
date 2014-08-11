@@ -63,7 +63,7 @@ public class SculptureBlock extends BlockContainer{
 	@Override @SideOnly(Side.CLIENT) public void registerBlockIcons(IIconRegister p_149651_1_){}
 	
 	@Override @SideOnly(Side.CLIENT) public IIcon getIcon(int side, int meta){
-		return current.getIcon(side, meta);
+		return current.getIcon(side, this.meta);
 	}
 	
 	@Override @SideOnly(Side.CLIENT) public int getRenderType()

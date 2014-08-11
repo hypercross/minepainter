@@ -2,6 +2,8 @@ package hx.minepainter.item;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.ModMinePainter;
 import hx.minepainter.sculpture.SculptureBlock;
 import hx.utils.Utils;
@@ -17,6 +19,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 
+@SideOnly(Side.CLIENT)
 public class PieceRenderer implements IItemRenderer {
 	private RenderItem renderItem = new RenderItem();
 	private ItemStack is = new ItemStack(ModMinePainter.sculpture.block);
@@ -33,7 +36,7 @@ public class PieceRenderer implements IItemRenderer {
 	@Override
 	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
 			ItemRendererHelper helper) {
-		return type == ItemRenderType.ENTITY;
+		return type == ItemRenderType.ENTITY || type == ItemRenderType.EQUIPPED_FIRST_PERSON;
 	}
 
 	@Override
@@ -42,6 +45,7 @@ public class PieceRenderer implements IItemRenderer {
 		SculptureBlock sculpture = ModMinePainter.sculpture.block;
 		PieceItem piece = Utils.getItem(item); 
 		sculpture.setCurrentBlock(piece.getEditBlock(item), piece.getEditMeta(item));
+		sculpture.setBlockBounds(0.3f, 0.3f, 0.3f, 0.7f, 0.7f, 0.7f);
 		
 		if(type == ItemRenderType.INVENTORY)
 		{
@@ -64,6 +68,7 @@ public class PieceRenderer implements IItemRenderer {
 		}
 		
 		sculpture.setCurrentBlock(null, 0);
+		sculpture.setBlockBounds(0,0,0,1,1,1);
 	}
 
 }

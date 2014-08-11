@@ -52,6 +52,7 @@ public class Operations {
 					dropScrap(w,tx,ty,tz, former, (byte) metaFormer, 1);
 					se.sculpture.setBlockAt(_x, _y, _z, block, meta);
 					if(w.isRemote)se.getRender().changed = true;
+					else w.markBlockForUpdate(tx, ty, tz);
 					s++;
 				}
 		return s;

@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class ChiselItem extends Item{
 	
@@ -27,7 +28,7 @@ public class ChiselItem extends Item{
 	@Override
     public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
 		if(!w.isRemote)return false;
-		int[] pos = Operations.raytrace(x,y,z,ep);
+		int[] pos = Operations.raytrace(x,y,z,ep); 
 		
 		int flags = this.getChiselFlags(ep);
 		Block editBlock = this.getEditBlock(is);

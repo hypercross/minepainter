@@ -8,6 +8,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -16,6 +17,8 @@ import net.minecraft.world.World;
 //TODO add hooks for block bounds
 //TODO add hooks for collision raytracing
 //TODO add hooks for transparent blocks
+//TODO add sculpture scrap item - a chiseled piece of waste material
+//TODO add sculpture mold block - a machine to make sculpture unit pieces out of scrap or material
 public class SculptureBlock extends BlockContainer{
 
 	private int x,y,z,meta = 0;
@@ -36,6 +39,9 @@ public class SculptureBlock extends BlockContainer{
 		this.x = x; this.y = y; this.z = z;
 	}
 	
+	public void dropScrap(World w, int x, int y, int z, ItemStack is ){
+		this.dropBlockAsItem(w, x, y, z, is);
+	}
 	
 	
 	public SculptureBlock() {

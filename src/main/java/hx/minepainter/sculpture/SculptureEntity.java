@@ -14,17 +14,23 @@ public class SculptureEntity extends TileEntity{
 	Sculpture sculpture = new Sculpture();
 	
 	@SideOnly(Side.CLIENT)
-	SculptureRenderCompiler render = new SculptureRenderCompiler();
+	private SculptureRenderCompiler render;
 	
 	public Sculpture sculpture(){
 		return sculpture;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public SculptureRenderCompiler getRender(){
+		if(render == null)render = new SculptureRenderCompiler();
+		return render;
 	}
 	
 	@Override @SideOnly(Side.CLIENT)
 	public void updateEntity(){
 		if(this.worldObj.isRemote){
 			BlockSlice slice = BlockSlice.at(worldObj, xCoord, yCoord, zCoord);
-			if(render.update(slice))
+			if(getRender().update(slice))
 				worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 			slice.clear();
 		}
@@ -35,7 +41,7 @@ public class SculptureEntity extends TileEntity{
 	{
         super.invalidate();
         if(this.worldObj.isRemote)
-			render.clear();
+        	getRender().clear();
 	}
 	
         @Override
@@ -43,7 +49,7 @@ public class SculptureEntity extends TileEntity{
 	{
         super.onChunkUnload();
 		if(this.worldObj.isRemote)
-			render.clear();
+			getRender().clear();
 	}
 
 	//TileEntity util

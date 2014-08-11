@@ -30,21 +30,23 @@ public class ChiselItem extends Item{
 		int[] pos = Operations.raytrace(x,y,z,ep);
 		
 		int flags = this.getChiselFlags(ep);
+		Block editBlock = this.getEditBlock(is);
+		int editMeta = this.getEditMeta(is);
 		if(!Operations.validOperation(w, x, y, z, pos, flags))
 			return false;
 		
-		boolean done = Operations.applyOperation(w, x, y, z, pos, flags, getEditBlock(),getEditMeta());
+		boolean done = Operations.applyOperation(w, x, y, z, pos, flags,editBlock, editMeta);
 		if(!done)return false;
 		
-		ModMinePainter.network.sendToServer(new SculptureOperationMessage(pos,x,y,z,getEditBlock(),getEditMeta(),flags));		
+		ModMinePainter.network.sendToServer(new SculptureOperationMessage(pos,x,y,z,editBlock,editMeta,flags));		
 		return true;
 	}
 	
-	public Block getEditBlock(){
+	public Block getEditBlock(ItemStack is){
 		return Blocks.air;
 	}
 	
-	public int getEditMeta(){
+	public int getEditMeta(ItemStack is){
 		return 0;
 	}
 	

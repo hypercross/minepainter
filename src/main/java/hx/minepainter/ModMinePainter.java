@@ -2,6 +2,8 @@ package hx.minepainter;
 
 import hx.minepainter.item.BarcutterItem;
 import hx.minepainter.item.ChiselItem;
+import hx.minepainter.item.PieceItem;
+import hx.minepainter.item.PieceRenderer;
 import hx.minepainter.item.SawItem;
 import hx.minepainter.sculpture.SculptureBlock;
 import hx.minepainter.sculpture.SculptureEntity;
@@ -9,6 +11,7 @@ import hx.minepainter.sculpture.SculptureOperationMessage;
 import hx.minepainter.sculpture.SculptureRender;
 import hx.utils.BlockLoader;
 import hx.utils.Debug;
+import hx.utils.ItemLoader;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -26,7 +29,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 @Mod(modid = "minepainter", version = "0.2.0")
 public class ModMinePainter {
 	
-	@SideOnly(Side.CLIENT)
 	public static CreativeTabs tabMinePainter = new CreativeTabs("minepainter"){
 
 		@Override public Item getTabIconItem() {
@@ -38,9 +40,10 @@ public class ModMinePainter {
 	public static BlockLoader<SculptureBlock> sculpture = 
 			new BlockLoader<SculptureBlock>(new SculptureBlock(), SculptureEntity.class);
 	
-	public static Item chisel = new ChiselItem();
-	public static Item barcutter = new BarcutterItem();
-	public static Item saw = new SawItem();
+	public static ItemLoader<ChiselItem> chisel = new ItemLoader(new ChiselItem());
+	public static ItemLoader<BarcutterItem> barcutter = new ItemLoader(new BarcutterItem());
+	public static ItemLoader<SawItem> saw = new ItemLoader(new SawItem());
+	public static ItemLoader<PieceItem> piece = new ItemLoader(new PieceItem());
 	
 	public static SimpleNetworkWrapper network;
 	
@@ -48,9 +51,10 @@ public class ModMinePainter {
 	public void preInit(FMLPreInitializationEvent e){
 		sculpture.load();
 		
-		GameRegistry.registerItem(chisel, chisel.getClass().getSimpleName());
-		GameRegistry.registerItem(barcutter, barcutter.getClass().getSimpleName());
-		GameRegistry.registerItem(saw, saw.getClass().getSimpleName());
+		chisel.load();
+		barcutter.load();
+		saw.load();
+		piece.load();
 		
 		MinecraftForge.EVENT_BUS.register(new hx.minepainter.EventHandler());
 		network = NetworkRegistry.INSTANCE.newSimpleChannel("minepainter");
@@ -62,5 +66,6 @@ public class ModMinePainter {
 	@EventHandler
 	public void preInitClient(FMLPreInitializationEvent e){
 		sculpture.registerRendering(new SculptureRender(), null);
+		piece.registerRendering(new PieceRenderer());
 	}
 }

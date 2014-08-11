@@ -10,6 +10,7 @@ import hx.utils.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -38,7 +39,7 @@ public class Operations {
 					int tgt_meta = w.getBlockMetadata(tx, ty, tz);
 					
 					if(tgt_block == Blocks.air)
-						w.setBlock(x, y, z, ModMinePainter.sculpture.block);
+						w.setBlock(tx, ty, tz, ModMinePainter.sculpture.block);
 					else if(sculptable(tgt_block,tgt_meta))
 						convertToFullSculpture(w,tx,ty,tz);
 					
@@ -46,11 +47,24 @@ public class Operations {
 						continue;
 					
 					SculptureEntity se = (SculptureEntity) w.getTileEntity(tx, ty, tz);
+					Block former = se.sculpture.getBlockAt(_x, _y, _z, null);
+					int metaFormer = se.sculpture.getMetaAt(_x, _y, _z, null);
+					dropScrap(w,tx,ty,tz, former, (byte) metaFormer, 1);
 					se.sculpture.setBlockAt(_x, _y, _z, block, meta);
-					if(w.isRemote)se.render.changed = true;
+					if(w.isRemote)se.getRender().changed = true;
 					s++;
 				}
 		return s;
+	}
+	
+	public static void dropScrap(World w, int x,int y,int z, Block block, byte meta, int amount){
+		Debug.log("dropping " + block.getUnlocalizedName() + " on " + (w.isRemote ? "client" : "server"));
+		if(block == Blocks.air)return;
+		
+		ItemStack is = new ItemStack(ModMinePainter.piece.item);
+		is.stackSize = amount;
+		is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
+		ModMinePainter.sculpture.block.dropBlockAsItem(w, x, y, z, meta, amount);
 	}
 	
 	public static boolean sculptable(Block b, int blockMeta)
@@ -178,6 +192,7 @@ public class Operations {
 	public static final int ALLZ = 8;
 	
 	public static void setBlockBoundsFromRaytrace(int[] r, Block block, int type){
+		r= r.clone();
 		if(hasFlag(type, PLACE)){
 			ForgeDirection dir = ForgeDirection.getOrientation(r[3]);
 			r[0] += dir.offsetX;
@@ -193,16 +208,19 @@ public class Operations {
 		            		 allx ? 1 : (r[0]+1)/8f, 
 				             ally ? 1 : (r[1]+1)/8f,
 				             allz ? 1 : (r[2]+1)/8f);
-		if(hasFlag(type, PLACE)){
-			ForgeDirection dir = ForgeDirection.getOrientation(r[3]);
-			r[0] -= dir.offsetX;
-			r[1] -= dir.offsetY;
-			r[2] -= dir.offsetZ;
-		}
 	}
 
 	public static boolean validOperation(World worldObj, int x, int y, int z,
 			int[] pos, int chiselFlags) {
+		
+		pos= pos.clone();
+		if(hasFlag(chiselFlags, PLACE)){
+			ForgeDirection dir = ForgeDirection.getOrientation(pos[3]);
+			pos[0] += dir.offsetX;
+			pos[1] += dir.offsetY;
+			pos[2] += dir.offsetZ;
+		}
+		
 		while(pos[0] < 0){ pos[0] += 8; x--; }
 		while(pos[0] > 7){ pos[0] -= 8; x++; }
 		while(pos[1] < 0){ pos[1] += 8; y--; }
@@ -232,6 +250,14 @@ public class Operations {
 
 	public static boolean applyOperation(World w, int x, int y, int z,
 			int[] pos, int flags, Block editBlock, int editMeta) {
+		
+		pos= pos.clone();
+		if(hasFlag(flags, PLACE)){
+			ForgeDirection dir = ForgeDirection.getOrientation(pos[3]);
+			pos[0] += dir.offsetX;
+			pos[1] += dir.offsetY;
+			pos[2] += dir.offsetZ;
+		}
 		
 		while(pos[0] < 0){ pos[0] += 8; x--; }
 		while(pos[0] > 7){ pos[0] -= 8; x++; }

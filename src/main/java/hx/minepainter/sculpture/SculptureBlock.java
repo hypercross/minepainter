@@ -17,8 +17,9 @@ import net.minecraft.world.World;
 //TODO add hooks for block bounds
 //TODO add hooks for collision raytracing
 //TODO add hooks for transparent blocks
-//TODO add sculpture scrap item - a chiseled piece of waste material
-//TODO add sculpture mold block - a machine to make sculpture unit pieces out of scrap or material
+//TODO make sculpture piece look correct
+//TODO make sculpture piece place-able
+//TODO make more sculpture piece variants 
 public class SculptureBlock extends BlockContainer{
 
 	private int x,y,z,meta = 0;

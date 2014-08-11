@@ -1,6 +1,7 @@
 package hx.minepainter.sculpture;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,9 +19,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class Operations {
 	
-	public static int editSubBlock(World w, int[] minmax, int x,int y,int z, Block block, byte meta){
+	public static List<int[]> editSubBlock(World w, int[] minmax, int x,int y,int z, Block block, byte meta){
 		int tx,ty,tz;
-		int s = 0;
+		List<int[]> drops = new LinkedList<int[]>();
 		
 		for(int _x = minmax[0] ; _x < minmax[3]; _x ++)
 			for(int _y = minmax[1] ; _y < minmax[4]; _y ++)
@@ -49,12 +50,25 @@ public class Operations {
 					SculptureEntity se = (SculptureEntity) w.getTileEntity(tx, ty, tz);
 					Block former = se.sculpture.getBlockAt(_x, _y, _z, null);
 					int metaFormer = se.sculpture.getMetaAt(_x, _y, _z, null);
-					dropScrap(w,tx,ty,tz, former, (byte) metaFormer, 1);
+					addDrop(drops,former,metaFormer);
 					se.sculpture.setBlockAt(_x, _y, _z, block, meta);
 					if(w.isRemote)se.getRender().changed = true;
-					s++;
 				}
-		return s;
+		return drops;
+	}
+	
+	public static void addDrop(List<int[]> drops, Block block, int meta){
+		int id = Block.getIdFromBlock(block);
+		for(int[] entry : drops){
+			boolean here = false;
+			if(entry[0] == id && entry[1] == meta)here = true;
+			else if(entry[2] == 0)here = true;
+			if(here){
+				entry[2]++;
+				return;
+			}
+		}
+		drops.add(new int[]{id,meta,1});
 	}
 	
 	public static void dropScrap(World w, int x,int y,int z, Block block, byte meta, int amount){
@@ -277,9 +291,9 @@ public class Operations {
 		minmax[4] = ally ? 8 : (pos[1]+1);
 		minmax[5] = allz ? 8 : (pos[2]+1);
 		
-		int blocks = editSubBlock(w,minmax,x,y,z,editBlock,(byte) editMeta);
+		List<int[]> drops = editSubBlock(w,minmax,x,y,z,editBlock,(byte) editMeta);
 		
-		return blocks > 0;
+		return drops.size() > 0;
 	}
 	
 	public static int getLookingAxis(EntityPlayer ep){

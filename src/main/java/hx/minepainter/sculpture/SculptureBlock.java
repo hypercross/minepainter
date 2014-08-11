@@ -1,6 +1,7 @@
 package hx.minepainter.sculpture;
 
 import hx.minepainter.ModMinePainter;
+import hx.utils.Utils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -11,14 +12,15 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 //TODO add hooks for block bounds
-//TODO add hooks for collision raytracing
+//TODO add hooks for collision boxes
 //TODO add hooks for transparent blocks
-//TODO add sculpture scrap item - a chiseled piece of waste material
-//TODO add sculpture mold block - a machine to make sculpture unit pieces out of scrap or material
 public class SculptureBlock extends BlockContainer{
 
 	private int x,y,z,meta = 0;
@@ -48,6 +50,25 @@ public class SculptureBlock extends BlockContainer{
 		super(Material.rock);
 	}
 
+	@Override
+	public MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 st, Vec3 ed)
+	{
+		SculptureEntity tile = Utils.getTE(w, x, y, z);
+		Sculpture sculpture = tile.sculpture();
+
+		int[] pos = Operations.raytrace(sculpture, st.addVector(-x, -y, -z), ed.addVector(-x,-y,-z));
+		if(pos[0] == -1)return null;
+
+		ForgeDirection dir = ForgeDirection.getOrientation(pos[3]);
+		Vec3 hit = null;
+		if(dir.offsetX != 0)hit = st.getIntermediateWithXValue(ed, x + pos[0]/8f + (dir.offsetX+1)/16f);
+		else if(dir.offsetY != 0)hit = st.getIntermediateWithYValue(ed, y + pos[1]/8f + (dir.offsetY+1)/16f);
+		else if(dir.offsetZ != 0)hit = st.getIntermediateWithZValue(ed, z + pos[2]/8f + (dir.offsetZ+1)/16f);
+		if(hit == null)return null;
+		
+		return new MovingObjectPosition(x,y,z,pos[3], hit);
+	}
+	
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side){
 		if(x>=0 && y>=0 && z>=0 && x<8 && y<8 && z<8)

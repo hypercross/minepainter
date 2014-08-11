@@ -1,5 +1,7 @@
 package hx.minepainter.sculpture;
 
+import java.util.List;
+
 import hx.minepainter.ModMinePainter;
 import hx.utils.Utils;
 import cpw.mods.fml.relauncher.Side;
@@ -8,9 +10,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -19,7 +23,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 //TODO add hooks for block bounds
-//TODO add hooks for collision boxes
 //TODO add hooks for transparent blocks
 public class SculptureBlock extends BlockContainer{
 
@@ -67,6 +70,22 @@ public class SculptureBlock extends BlockContainer{
 		if(hit == null)return null;
 		
 		return new MovingObjectPosition(x,y,z,pos[3], hit);
+	}
+	
+    @Override
+	public void addCollisionBoxesToList(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity)
+	{
+		SculptureEntity tile = Utils.getTE(par1World, par2, par3, par4);
+		Sculpture sculpture = tile.sculpture();
+		
+		for(int x = 0 ; x < 8 ; x ++)
+			for(int y = 0 ; y < 8 ; y ++)
+				for(int z = 0 ; z < 8 ; z ++){
+					if(sculpture.getBlockAt(x, y, z, null) == Blocks.air)continue;
+					this.setBlockBounds(x/8f, y/8f,z/8f, (x+1)/8f, (y+1)/8f,(z+1)/8f);
+					super.addCollisionBoxesToList(par1World,par2,par3,par4,par5AxisAlignedBB,par6List,par7Entity);
+				}
+		this.setBlockBounds(0, 0, 0, 1, 1, 1);
 	}
 	
 	@Override

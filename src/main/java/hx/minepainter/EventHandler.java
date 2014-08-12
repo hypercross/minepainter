@@ -1,6 +1,7 @@
 package hx.minepainter;
 
 import hx.minepainter.item.ChiselItem;
+import hx.minepainter.item.PieceItem;
 import hx.minepainter.sculpture.Operations;
 import hx.minepainter.sculpture.Sculpture;
 import hx.minepainter.sculpture.SculptureEntity;
@@ -11,14 +12,31 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderWorldEvent;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
 //TODO auto craft pieces together
 public class EventHandler {
+	
+//	@SubscribeEvent
+//	public void onPickupSculptureScrap(EntityItemPickupEvent e){
+//		if(!(e.item.getEntityItem().getItem() instanceof PieceItem))return;
+//		
+//		ItemStack picked = e.item.getEntityItem();
+//		PieceItem pi = Utils.getItem(picked);
+//		InventoryPlayer ip = e.entityPlayer.inventory;
+//		for(int i = 0; i < ip.getSizeInventory(); i ++){
+//			ItemStack is = ip.getStackInSlot(i);
+//			if(!(is.getItem() instanceof PieceItem))continue;
+//			if(is.getItemDamage() != picked.getItemDamage())continue;
+//		}
+//	}
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent

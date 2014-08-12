@@ -5,6 +5,10 @@ import hx.minepainter.item.ChiselItem;
 import hx.minepainter.item.PieceItem;
 import hx.minepainter.item.PieceRenderer;
 import hx.minepainter.item.SawItem;
+import hx.minepainter.painting.PaintTool;
+import hx.minepainter.painting.PaintingBlock;
+import hx.minepainter.painting.PaintingEntity;
+import hx.minepainter.painting.PaintingRenderer;
 import hx.minepainter.sculpture.SculptureBlock;
 import hx.minepainter.sculpture.SculptureEntity;
 import hx.minepainter.sculpture.SculptureOperationMessage;
@@ -38,7 +42,9 @@ public class ModMinePainter {
 	};
 	
 	public static BlockLoader<SculptureBlock> sculpture = 
-			new BlockLoader<SculptureBlock>(new SculptureBlock(), SculptureEntity.class);
+			new BlockLoader(new SculptureBlock(), SculptureEntity.class);
+	public static BlockLoader<PaintingBlock> painting = 
+			new BlockLoader(new PaintingBlock(), PaintingEntity.class);
 	
 	public static ItemLoader<ChiselItem> chisel = new ItemLoader(new ChiselItem());
 	public static ItemLoader<BarcutterItem> barcutter = new ItemLoader(new BarcutterItem());
@@ -46,12 +52,14 @@ public class ModMinePainter {
 	public static ItemLoader<PieceItem> piece = new ItemLoader(new PieceItem());
 	public static ItemLoader<PieceItem> bar = new ItemLoader(new PieceItem.Bar().setUnlocalizedName("sculpture_bar"));
 	public static ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover().setUnlocalizedName("sculpture_cover"));
+	public static ItemLoader<PaintTool> minibrush = new ItemLoader(new PaintTool.Mini());
 	
 	public static SimpleNetworkWrapper network;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e){
 		sculpture.load();
+		painting.load();
 		
 		chisel.load();
 		barcutter.load();
@@ -59,6 +67,7 @@ public class ModMinePainter {
 		piece.load();
 		bar.load();
 		cover.load();
+		minibrush.load();
 		
 		MinecraftForge.EVENT_BUS.register(new hx.minepainter.EventHandler());
 		network = NetworkRegistry.INSTANCE.newSimpleChannel("minepainter");
@@ -70,6 +79,8 @@ public class ModMinePainter {
 	@EventHandler
 	public void preInitClient(FMLPreInitializationEvent e){
 		sculpture.registerRendering(new SculptureRender(), null);
+		painting.registerRendering(null, new PaintingRenderer());
+		
 		piece.registerRendering(new PieceRenderer());
 		bar.registerRendering(new PieceRenderer.Bar());
 		cover.registerRendering(new PieceRenderer.Cover());

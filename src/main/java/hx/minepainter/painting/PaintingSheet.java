@@ -35,6 +35,7 @@ public class PaintingSheet {
 		int total = resolution * resolution / 256;
 		for(int i = 0 ;i < total; i ++)icons.add(new PaintingIcon(this,i));
 		
+		TextureUtil.allocateTexture(glTexId, resolution, resolution);
 	}
 	
 	public boolean isEmpty(){

@@ -1,6 +1,7 @@
 package hx.minepainter.painting;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,7 +18,17 @@ import net.minecraft.tileentity.TileEntity;
 
 public class PaintingEntity extends TileEntity{
 	
-	BufferedImage image = new BufferedImage(16,16, BufferedImage.TYPE_INT_ARGB);
+	BufferedImage image;
+	
+	public PaintingEntity(){
+		 image = new BufferedImage(16,16, BufferedImage.TYPE_INT_ARGB);
+		 
+//		 WritableRaster raster = image.getRaster();
+		 for(int i = 0 ; i < 256; i ++){
+			 image.setRGB(i/16, i%16, 0xff000000 + 0xff111111 * ((i/16 + i%16) / 2) );
+//			 raster.setSample(i/16, i%16, 0, i%2 == 0 ? 0xffffffff : 0xff000000);
+		 }
+	}
 	
 	@SideOnly(Side.CLIENT)
 	private PaintingIcon icon;
@@ -69,10 +80,11 @@ public class PaintingEntity extends TileEntity{
 		try{
 			BufferedImage img = ImageIO.read(bais);
 			this.image = img;
-			if(worldObj.isRemote)
+			if(worldObj != null && worldObj.isRemote)
 				this.getIcon().fill(img);
 		}catch(IOException e){
 			e.printStackTrace();
+			this.getIcon().fill(this.image);
 		}
 		
 		super.readFromNBT(nbt);

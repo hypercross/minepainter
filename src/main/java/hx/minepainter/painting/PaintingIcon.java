@@ -9,16 +9,17 @@ import net.minecraft.util.IIcon;
 
 public class PaintingIcon implements IIcon{
 
-	PaintingSheet sheet;
+	final PaintingSheet sheet;
 	int index;
 	float umax,umin,vmax,vmin;
 	
 	public PaintingIcon(PaintingSheet sheet,int index){
 		this.index = index;
+		this.sheet = sheet;
 		int slots = sheet.resolution / 16;
 		int xind = index / slots;
 		int yind = index % slots;
-		float unit = 1/slots;
+		float unit = 1.0f/slots;
 		
 		umin = 1.0f * xind / slots;
 		vmin = 1.0f * yind / slots;

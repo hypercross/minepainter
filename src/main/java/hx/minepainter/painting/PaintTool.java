@@ -18,6 +18,7 @@ public class PaintTool extends Item{
 	public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
 		
 		PaintingEntity pe = Utils.getTE(w, x, y, z);
+		if(pe == null)return false;
 		float[] point = PaintingPlacement.of(w.getBlockMetadata(x, y, z)).block2painting(xs, ys, zs);
 		return this.apply(pe.image, point, getColor(ep,is));
 		
@@ -32,13 +33,20 @@ public class PaintTool extends Item{
 	}
 
 	public static class Mini extends PaintTool{
+		
+		public Mini(){
+			super();
+			this.setUnlocalizedName("mini_brush");
+			this.setTextureName("minepainter:brush_small");
+		}
+		
 		@Override public boolean apply(BufferedImage img, float[] point, int color){
 			
 			int x = (int) (point[0] * 8);
 			int y = (int) (point[1] * 8);
 			
 			img.getRaster().setPixel(x, y, new int[]{ (color >> 8) & 0xff, (color >> 4) & 0xff, color & 0xff});
-			return false;
+			return true;
 		}
 	}
 	

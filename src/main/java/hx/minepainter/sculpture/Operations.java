@@ -65,10 +65,31 @@ public class Operations {
 		Debug.log("dropping " + block.getUnlocalizedName() + " on " + (w.isRemote ? "client" : "server"));
 		if(block == Blocks.air)return;
 		
-		ItemStack is = new ItemStack(ModMinePainter.piece.item);
-		is.stackSize = amount;
-		is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
-		ModMinePainter.sculpture.block.dropScrap(w, x, y, z, is);
+		int covers = amount / 64;
+		amount %= 64;
+		int bars = amount / 8;
+		amount %= 8;
+
+		if(covers > 0){
+			ItemStack is = new ItemStack(ModMinePainter.cover.item);
+			is.stackSize = covers;
+			is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
+			ModMinePainter.sculpture.block.dropScrap(w, x, y, z, is);
+		}
+		
+		if(bars > 0){
+			ItemStack is = new ItemStack(ModMinePainter.bar.item);
+			is.stackSize = bars;
+			is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
+			ModMinePainter.sculpture.block.dropScrap(w, x, y, z, is);
+		}
+		
+		if(amount > 0){
+			ItemStack is = new ItemStack(ModMinePainter.piece.item);
+			is.stackSize = amount;
+			is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
+			ModMinePainter.sculpture.block.dropScrap(w, x, y, z, is);
+		}
 	}
 	
 	public static boolean sculptable(Block b, int blockMeta)

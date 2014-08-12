@@ -44,6 +44,8 @@ public class ModMinePainter {
 	public static ItemLoader<BarcutterItem> barcutter = new ItemLoader(new BarcutterItem());
 	public static ItemLoader<SawItem> saw = new ItemLoader(new SawItem());
 	public static ItemLoader<PieceItem> piece = new ItemLoader(new PieceItem());
+	public static ItemLoader<PieceItem> bar = new ItemLoader(new PieceItem.Bar());
+	public static ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover());
 	
 	public static SimpleNetworkWrapper network;
 	
@@ -67,5 +69,7 @@ public class ModMinePainter {
 	public void preInitClient(FMLPreInitializationEvent e){
 		sculpture.registerRendering(new SculptureRender(), null);
 		piece.registerRendering(new PieceRenderer());
+		bar.registerRendering(new PieceRenderer.Bar());
+		cover.registerRendering(new PieceRenderer.Cover());
 	}
 }

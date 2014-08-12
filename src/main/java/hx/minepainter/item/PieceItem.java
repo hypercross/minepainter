@@ -31,4 +31,30 @@ public class PieceItem extends ChiselItem{
 	public int getChiselFlags(EntityPlayer ep){
 		return Operations.PLACE;
 	}
+	
+	public static class Bar extends PieceItem{
+		@Override
+		public int getChiselFlags(EntityPlayer ep){
+			int axis = Operations.getLookingAxis(ep);
+			switch(axis){
+			case 0 : return Operations.PLACE | Operations.ALLX;
+			case 1 : return Operations.PLACE | Operations.ALLY;
+			case 2 : return Operations.PLACE | Operations.ALLZ;
+			}
+			return Operations.PLACE;
+		}
+	}
+	
+	public static class Cover extends PieceItem{
+		@Override
+		public int getChiselFlags(EntityPlayer ep){
+			int axis = Operations.getLookingAxis(ep);
+			switch(axis){
+			case 0 : return Operations.PLACE | Operations.ALLY | Operations.ALLZ;
+			case 1 : return Operations.PLACE | Operations.ALLX | Operations.ALLZ;
+			case 2 : return Operations.PLACE | Operations.ALLX | Operations.ALLY;
+			}
+			return Operations.PLACE;
+		}
+	}
 }

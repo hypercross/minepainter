@@ -45,7 +45,7 @@ public class PieceRenderer implements IItemRenderer {
 		SculptureBlock sculpture = ModMinePainter.sculpture.block;
 		PieceItem piece = Utils.getItem(item); 
 		sculpture.setCurrentBlock(piece.getEditBlock(item), piece.getEditMeta(item));
-		sculpture.setBlockBounds(0.3f, 0.3f, 0.3f, 0.7f, 0.7f, 0.7f);
+		setBounds(sculpture);
 		
 		if(type == ItemRenderType.INVENTORY)
 		{
@@ -71,4 +71,19 @@ public class PieceRenderer implements IItemRenderer {
 		sculpture.setBlockBounds(0,0,0,1,1,1);
 	}
 
+	protected void setBounds(SculptureBlock sculpture){
+		sculpture.setBlockBounds(0.3f, 0.3f, 0.3f, 0.7f, 0.7f, 0.7f);
+	}
+	
+	public static class Bar extends PieceRenderer{
+		@Override protected void setBounds(SculptureBlock sculpture){
+			sculpture.setBlockBounds(0.3f, 0.0f, 0.3f, 0.7f, 1.0f, 0.7f);
+		}
+	}
+	
+	public static class Cover extends PieceRenderer{
+		@Override protected void setBounds(SculptureBlock sculpture){
+			sculpture.setBlockBounds(0.3f, 0.0f, 0.0f, 0.7f, 1.0f, 1.0f);
+		}
+	}
 }

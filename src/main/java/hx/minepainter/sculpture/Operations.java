@@ -1,7 +1,6 @@
 package hx.minepainter.sculpture;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -9,9 +8,11 @@ import hx.minepainter.ModMinePainter;
 import hx.utils.Debug;
 import hx.utils.Utils;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -19,9 +20,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class Operations {
 	
-	public static List<int[]> editSubBlock(World w, int[] minmax, int x,int y,int z, Block block, byte meta){
+	public static int editSubBlock(World w, int[] minmax, int x,int y,int z, Block block, byte meta){
 		int tx,ty,tz;
-		List<int[]> drops = new LinkedList<int[]>();
+		int s = 0;
 		
 		for(int _x = minmax[0] ; _x < minmax[3]; _x ++)
 			for(int _y = minmax[1] ; _y < minmax[4]; _y ++)
@@ -50,27 +51,16 @@ public class Operations {
 					SculptureEntity se = (SculptureEntity) w.getTileEntity(tx, ty, tz);
 					Block former = se.sculpture.getBlockAt(_x, _y, _z, null);
 					int metaFormer = se.sculpture.getMetaAt(_x, _y, _z, null);
-					addDrop(drops,former,metaFormer);
+					dropScrap(w,tx,ty,tz, former, (byte) metaFormer, 1);
 					se.sculpture.setBlockAt(_x, _y, _z, block, meta);
 					if(w.isRemote)se.getRender().changed = true;
+					else w.markBlockForUpdate(tx, ty, tz);
+					s++;
 				}
-		return drops;
+		return s;
 	}
 	
-	public static void addDrop(List<int[]> drops, Block block, int meta){
-		int id = Block.getIdFromBlock(block);
-		for(int[] entry : drops){
-			boolean here = false;
-			if(entry[0] == id && entry[1] == meta)here = true;
-			else if(entry[2] == 0)here = true;
-			if(here){
-				entry[2]++;
-				return;
-			}
-		}
-		drops.add(new int[]{id,meta,1});
-	}
-	
+	//TODO drop more scrap variants based on number
 	public static void dropScrap(World w, int x,int y,int z, Block block, byte meta, int amount){
 		Debug.log("dropping " + block.getUnlocalizedName() + " on " + (w.isRemote ? "client" : "server"));
 		if(block == Blocks.air)return;
@@ -78,7 +68,7 @@ public class Operations {
 		ItemStack is = new ItemStack(ModMinePainter.piece.item);
 		is.stackSize = amount;
 		is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
-		ModMinePainter.sculpture.block.dropBlockAsItem(w, x, y, z, meta, amount);
+		ModMinePainter.sculpture.block.dropScrap(w, x, y, z, is);
 	}
 	
 	public static boolean sculptable(Block b, int blockMeta)
@@ -291,9 +281,9 @@ public class Operations {
 		minmax[4] = ally ? 8 : (pos[1]+1);
 		minmax[5] = allz ? 8 : (pos[2]+1);
 		
-		List<int[]> drops = editSubBlock(w,minmax,x,y,z,editBlock,(byte) editMeta);
+		int blocks = editSubBlock(w,minmax,x,y,z,editBlock,(byte) editMeta);
 		
-		return drops.size() > 0;
+		return blocks > 0;
 	}
 	
 	public static int getLookingAxis(EntityPlayer ep){

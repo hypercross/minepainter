@@ -1,25 +1,29 @@
 package hx.minepainter.sculpture;
 
+import java.util.List;
+
 import hx.minepainter.ModMinePainter;
+import hx.utils.Utils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 //TODO add hooks for block bounds
-//TODO add hooks for collision raytracing
 //TODO add hooks for transparent blocks
-//TODO make sculpture piece look correct
-//TODO make sculpture piece place-able
-//TODO make more sculpture piece variants 
 public class SculptureBlock extends BlockContainer{
 
 	private int x,y,z,meta = 0;
@@ -50,6 +54,41 @@ public class SculptureBlock extends BlockContainer{
 	}
 
 	@Override
+	public MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 st, Vec3 ed)
+	{
+		SculptureEntity tile = Utils.getTE(w, x, y, z);
+		Sculpture sculpture = tile.sculpture();
+
+		int[] pos = Operations.raytrace(sculpture, st.addVector(-x, -y, -z), ed.addVector(-x,-y,-z));
+		if(pos[0] == -1)return null;
+
+		ForgeDirection dir = ForgeDirection.getOrientation(pos[3]);
+		Vec3 hit = null;
+		if(dir.offsetX != 0)hit = st.getIntermediateWithXValue(ed, x + pos[0]/8f + (dir.offsetX+1)/16f);
+		else if(dir.offsetY != 0)hit = st.getIntermediateWithYValue(ed, y + pos[1]/8f + (dir.offsetY+1)/16f);
+		else if(dir.offsetZ != 0)hit = st.getIntermediateWithZValue(ed, z + pos[2]/8f + (dir.offsetZ+1)/16f);
+		if(hit == null)return null;
+		
+		return new MovingObjectPosition(x,y,z,pos[3], hit);
+	}
+	
+    @Override
+	public void addCollisionBoxesToList(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity)
+	{
+		SculptureEntity tile = Utils.getTE(par1World, par2, par3, par4);
+		Sculpture sculpture = tile.sculpture();
+		
+		for(int x = 0 ; x < 8 ; x ++)
+			for(int y = 0 ; y < 8 ; y ++)
+				for(int z = 0 ; z < 8 ; z ++){
+					if(sculpture.getBlockAt(x, y, z, null) == Blocks.air)continue;
+					this.setBlockBounds(x/8f, y/8f,z/8f, (x+1)/8f, (y+1)/8f,(z+1)/8f);
+					super.addCollisionBoxesToList(par1World,par2,par3,par4,par5AxisAlignedBB,par6List,par7Entity);
+				}
+		this.setBlockBounds(0, 0, 0, 1, 1, 1);
+	}
+	
+	@Override
 	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side){
 		if(x>=0 && y>=0 && z>=0 && x<8 && y<8 && z<8)
 			return iba.isAirBlock(x, y, z);
@@ -64,7 +103,7 @@ public class SculptureBlock extends BlockContainer{
 	@Override @SideOnly(Side.CLIENT) public void registerBlockIcons(IIconRegister p_149651_1_){}
 	
 	@Override @SideOnly(Side.CLIENT) public IIcon getIcon(int side, int meta){
-		return current.getIcon(side, meta);
+		return current.getIcon(side, this.meta);
 	}
 	
 	@Override @SideOnly(Side.CLIENT) public int getRenderType()

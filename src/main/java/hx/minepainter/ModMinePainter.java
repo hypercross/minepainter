@@ -44,8 +44,8 @@ public class ModMinePainter {
 	public static ItemLoader<BarcutterItem> barcutter = new ItemLoader(new BarcutterItem());
 	public static ItemLoader<SawItem> saw = new ItemLoader(new SawItem());
 	public static ItemLoader<PieceItem> piece = new ItemLoader(new PieceItem());
-	public static ItemLoader<PieceItem> bar = new ItemLoader(new PieceItem.Bar());
-	public static ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover());
+	public static ItemLoader<PieceItem> bar = new ItemLoader(new PieceItem.Bar().setUnlocalizedName("sculpture_bar"));
+	public static ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover().setUnlocalizedName("sculpture_cover"));
 	
 	public static SimpleNetworkWrapper network;
 	
@@ -57,6 +57,8 @@ public class ModMinePainter {
 		barcutter.load();
 		saw.load();
 		piece.load();
+		bar.load();
+		cover.load();
 		
 		MinecraftForge.EVENT_BUS.register(new hx.minepainter.EventHandler());
 		network = NetworkRegistry.INSTANCE.newSimpleChannel("minepainter");

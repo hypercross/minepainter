@@ -1,6 +1,7 @@
 package hx.minepainter.sculpture;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,6 +24,8 @@ public class Operations {
 	public static int editSubBlock(World w, int[] minmax, int x,int y,int z, Block block, byte meta){
 		int tx,ty,tz;
 		int s = 0;
+		
+		LinkedList<int[]> droplist = new LinkedList<int[]>();
 		
 		for(int _x = minmax[0] ; _x < minmax[3]; _x ++)
 			for(int _y = minmax[1] ; _y < minmax[4]; _y ++)
@@ -51,13 +54,29 @@ public class Operations {
 					SculptureEntity se = (SculptureEntity) w.getTileEntity(tx, ty, tz);
 					Block former = se.sculpture.getBlockAt(_x, _y, _z, null);
 					int metaFormer = se.sculpture.getMetaAt(_x, _y, _z, null);
-					dropScrap(w,tx,ty,tz, former, (byte) metaFormer, 1);
+					addDrop(droplist, former, metaFormer);
 					se.sculpture.setBlockAt(_x, _y, _z, block, meta);
 					if(w.isRemote)se.getRender().changed = true;
 					else w.markBlockForUpdate(tx, ty, tz);
 					s++;
 				}
+		for(int[] drop : droplist){
+			if(drop[0] == 0)continue;
+			dropScrap(w,x,y,z, Block.getBlockById(drop[0]), (byte) drop[1], drop[2]);
+		}
+		
 		return s;
+	}
+	
+	private static void addDrop(List<int[]> drops, Block block, int meta){
+		int id  = Block.getIdFromBlock(block);
+		for(int[] drop : drops){
+			if(drop[0] == id && drop[1] == meta){
+				drop[2] ++;
+				return;
+			}
+		}
+		drops.add(new int[]{id,meta,1});
 	}
 	
 	public static void dropScrap(World w, int x,int y,int z, Block block, byte meta, int amount){
@@ -215,23 +234,33 @@ public class Operations {
 	public static final int ALLY = 4;
 	public static final int ALLZ = 8;
 	
-	public static void setBlockBoundsFromRaytrace(int[] r, Block block, int type){
-		r= r.clone();
+	public static void setBlockBoundsFromRaytrace(int[] pos, Block block, int type){
+		pos = pos.clone();
 		if(hasFlag(type, PLACE)){
-			ForgeDirection dir = ForgeDirection.getOrientation(r[3]);
-			r[0] += dir.offsetX;
-			r[1] += dir.offsetY;
-			r[2] += dir.offsetZ;
+			ForgeDirection dir = ForgeDirection.getOrientation(pos[3]);
+			pos[0] += dir.offsetX;
+			pos[1] += dir.offsetY;
+			pos[2] += dir.offsetZ;
 		}
+		
+		int x=0,y=0,z=0;
+		
+		while(pos[0] < 0){ pos[0] += 8;  x--;}
+		while(pos[0] > 7){ pos[0] -= 8;  x++;}
+		while(pos[1] < 0){ pos[1] += 8;  y--;}
+		while(pos[1] > 7){ pos[1] -= 8;  y++;}
+		while(pos[2] < 0){ pos[2] += 8;  z--;}
+		while(pos[2] > 7){ pos[2] -= 8;  z++;}
+		
 		boolean allx = (type & ALLX) > 0;
 		boolean ally = (type & ALLY) > 0;
 		boolean allz = (type & ALLZ) > 0;
-		block.setBlockBounds(allx ? 0 : r[0]/8f, 
-				             ally ? 0 : r[1]/8f,
-				             allz ? 0 : r[2]/8f,
-		            		 allx ? 1 : (r[0]+1)/8f, 
-				             ally ? 1 : (r[1]+1)/8f,
-				             allz ? 1 : (r[2]+1)/8f);
+		block.setBlockBounds(allx ? x+0 : x+pos[0]/8f, 
+				             ally ? y+0 : y+pos[1]/8f,
+				             allz ? z+0 : z+pos[2]/8f,
+		            		 allx ? x+1 : x+(pos[0]+1)/8f, 
+				             ally ? y+1 : y+(pos[1]+1)/8f,
+				             allz ? z+1 : z+(pos[2]+1)/8f);
 	}
 
 	public static boolean validOperation(World worldObj, int x, int y, int z,

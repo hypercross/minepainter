@@ -14,8 +14,12 @@ public class ItemLoader <T extends Item>{
 		this.item = item;
 	}
 	
+	public void load(String name){
+		GameRegistry.registerItem(item, name);
+	}
+	
 	public void load(){
-		GameRegistry.registerItem(item, item.getClass().getSimpleName());
+		load(item.getClass().getSimpleName().replace("$", "_"));
 	}
 	
 	@SideOnly(Side.CLIENT)

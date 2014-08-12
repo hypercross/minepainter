@@ -22,7 +22,7 @@ import net.minecraftforge.client.IItemRenderer;
 @SideOnly(Side.CLIENT)
 public class PieceRenderer implements IItemRenderer {
 	private RenderItem renderItem = new RenderItem();
-	private ItemStack is = new ItemStack(ModMinePainter.sculpture.block);
+	private ItemStack is;
 	private Minecraft mc = Minecraft.getMinecraft();
 	
 	@Override
@@ -42,6 +42,7 @@ public class PieceRenderer implements IItemRenderer {
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 		
+		if(is == null) is = new ItemStack(ModMinePainter.sculpture.block);
 		SculptureBlock sculpture = ModMinePainter.sculpture.block;
 		PieceItem piece = Utils.getItem(item); 
 		sculpture.setCurrentBlock(piece.getEditBlock(item), piece.getEditMeta(item));

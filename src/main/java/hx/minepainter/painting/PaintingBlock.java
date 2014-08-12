@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -15,7 +16,6 @@ public class PaintingBlock extends BlockContainer{
 
 	public PaintingBlock() {
 		super(Material.cloth);
-		this.setCreativeTab(ModMinePainter.tabMinePainter);
 		this.setBlockTextureName("minepainter:palette");
 	}
 
@@ -35,6 +35,10 @@ public class PaintingBlock extends BlockContainer{
 		return false;
 	}
 
+    @Override public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4) {
+        return null;
+    }
+    
     @Override public void setBlockBoundsBasedOnState(IBlockAccess iba,int x,int y,int z) {
     	PaintingPlacement placement = PaintingPlacement.of(iba.getBlockMetadata(x, y, z));
     	placement.setBlockBounds(this);
@@ -45,6 +49,6 @@ public class PaintingBlock extends BlockContainer{
     }
     
     @Override public int getRenderType(){
-    	return 0;
+    	return -1;
     }
 }

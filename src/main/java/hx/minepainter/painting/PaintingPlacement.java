@@ -59,26 +59,22 @@ public enum PaintingPlacement {
 	
 	public float[] painting2block(float x,float y){
 		float[] point = new float[3];
-		point[0] = xpos.offsetX * x + ypos.offsetX * y + (1 - normal.offsetX)/2;
-		point[1] = xpos.offsetY * x + ypos.offsetY * y + (1 - normal.offsetY)/2;
-		point[2] = xpos.offsetZ * x + ypos.offsetZ * y + (1 - normal.offsetZ)/2;
-		normalize(point);
+		point[0] = (1-(xpos.offsetX + ypos.offsetX + normal.offsetX))/2;
+		point[1] = (1-(xpos.offsetY + ypos.offsetY + normal.offsetY))/2;
+		point[2] = (1-(xpos.offsetZ + ypos.offsetZ + normal.offsetZ))/2;
+		point[0] += xpos.offsetX * x + ypos.offsetX * y;
+		point[1] += xpos.offsetY * x + ypos.offsetY * y;
+		point[2] += xpos.offsetZ * x + ypos.offsetZ * y;
 		return point;
 	}
 	
 	public float[] block2painting(float x,float y,float z){
 		float [] point = new float[2];
+		point[0] = (1 - xpos.offsetX - xpos.offsetY - xpos.offsetZ)/2;
+		point[1] = (1 - ypos.offsetX - ypos.offsetY - ypos.offsetZ)/2;
 		point[0] = xpos.offsetX * x + xpos.offsetY * y + xpos.offsetZ * z;
 		point[1] = ypos.offsetX * x + ypos.offsetY * y + ypos.offsetZ * z;
-		normalize(point);
 		return point;
-	}
-	
-	private void normalize(float[] point){
-		for(int i = 0; i < point.length; i ++){
-			while(point[i] > 1)point[i] -= 1;
-			while(point[i] < 0)point[i] += 1;
-		}
 	}
 	
 	public void setBlockBounds(Block b){

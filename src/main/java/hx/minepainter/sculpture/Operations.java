@@ -60,7 +60,6 @@ public class Operations {
 		return s;
 	}
 	
-	//TODO drop more scrap variants based on number
 	public static void dropScrap(World w, int x,int y,int z, Block block, byte meta, int amount){
 		Debug.log("dropping " + block.getUnlocalizedName() + " on " + (w.isRemote ? "client" : "server"));
 		if(block == Blocks.air)return;

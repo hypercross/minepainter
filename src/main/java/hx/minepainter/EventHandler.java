@@ -17,6 +17,7 @@ import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderWorldEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 
+//TODO auto craft pieces together
 public class EventHandler {
 
 	@SideOnly(Side.CLIENT)

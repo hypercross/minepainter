@@ -2,6 +2,7 @@ package hx.minepainter.painting;
 
 import hx.minepainter.ModMinePainter;
 import hx.minepainter.sculpture.Operations;
+import net.minecraft.block.Block;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -68,5 +69,14 @@ public enum PaintingPlacement {
 		point[0] = xpos.offsetX * x + xpos.offsetY * y + xpos.offsetZ * z;
 		point[1] = ypos.offsetX * x + ypos.offsetY * y + ypos.offsetZ * z;
 		return point;
+	}
+	
+	public void setBlockBounds(Block b){
+		b.setBlockBounds(0 + (1-normal.offsetX)/2,
+						 0 + (1-normal.offsetY)/2,
+						 0 + (1-normal.offsetZ)/2,
+						 1 - (1+normal.offsetX)/2,
+						 1 - (1+normal.offsetY)/2,
+						 1 - (1+normal.offsetZ)/2);
 	}
 }

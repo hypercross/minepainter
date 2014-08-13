@@ -28,24 +28,25 @@ public enum PaintingPlacement {
 		return values()[id % values().length];
 	}
 	
-	public static PaintingPlacement of(Vec3 vec){
-		double x = Math.abs(vec.xCoord), y = Math.abs(vec.yCoord), z = Math.abs(vec.zCoord);
+	public static PaintingPlacement of(Vec3 vec, int face){
 		
-		if(x > y && x > z)
-			return vec.xCoord > 0 ? XNEG : XPOS;
-		if(z > x && z > y)
-			return vec.zCoord > 0 ? ZNEG : ZPOS;
-			
-		if(vec.yCoord > 0){
-			if(x > z)
+		ForgeDirection dir = ForgeDirection.getOrientation(face);
+		switch(dir){
+		case SOUTH: return ZPOS;
+		case NORTH: return ZNEG;
+		case WEST:  return XNEG;
+		case EAST:  return XPOS;
+		case DOWN:
+			if(Math.abs(vec.xCoord) > Math.abs(vec.zCoord))
 				return vec.xCoord > 0 ? DOWNXNEG : DOWNXPOS;
 			return vec.zCoord > 0 ? DOWNZNEG: DOWNZPOS;
+		case UP:
+			if(Math.abs(vec.xCoord) > Math.abs(vec.zCoord))
+				return vec.xCoord > 0 ? UPXNEG : UPXPOS;
+			return vec.zCoord > 0 ? UPZNEG: UPZPOS;
+		default:
+			return null;
 		}
-			 
-		if(x > z)
-			return vec.xCoord > 0 ? UPXNEG : UPXPOS;
-		return vec.zCoord > 0 ? UPZNEG : UPZPOS;
-			
 	}
 	
 	ForgeDirection normal, ypos, xpos;

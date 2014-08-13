@@ -60,6 +60,7 @@ public class CommandImportPainting extends CommandBase {
 						}
 				}
 			};
+			worker.start();
 		}
 	}
 }

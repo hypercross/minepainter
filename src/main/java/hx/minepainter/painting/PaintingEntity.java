@@ -75,6 +75,12 @@ public class PaintingEntity extends TileEntity{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
+		readFromNBTToImage(nbt);
+		super.readFromNBT(nbt);
+	}
+	
+	public void readFromNBTToImage(NBTTagCompound nbt){
+		if(nbt == null)return;
 		byte[] data = nbt.getByteArray("image_data");
 		ByteArrayInputStream bais = new ByteArrayInputStream(data);
 		try{
@@ -83,11 +89,8 @@ public class PaintingEntity extends TileEntity{
 			if(worldObj != null && worldObj.isRemote)
 				this.getIcon().fill(img);
 		}catch(IOException e){
-			e.printStackTrace();
 			this.getIcon().fill(this.image);
 		}
-		
-		super.readFromNBT(nbt);
 	}
 	
 	public Packet getDescriptionPacket()

@@ -3,7 +3,10 @@ package hx.minepainter.item;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.ModMinePainter;
+import hx.minepainter.painting.PaintingEntity;
 import hx.minepainter.painting.PaintingPlacement;
+import hx.utils.Utils;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,13 +18,14 @@ public class CanvasItem extends Item{
 	public CanvasItem(){
 		super();
 		this.setCreativeTab(ModMinePainter.tabMinePainter);
-		this.setTextureName("painting");
+		this.setFull3D();
 	}
 	
 	@SideOnly(Side.CLIENT)
-    @Override
-    public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-        return 0xFFCCCC;
+	@Override public void registerIcons(IIconRegister r){}
+	
+	@Override public boolean getShareTag(){
+        return true;
     }
 	
 	 @Override
@@ -39,7 +43,14 @@ public class CanvasItem extends Item{
 		 
         PaintingPlacement pp = PaintingPlacement.of(ep.getLookVec(), face);
         w.setBlock(_x,_y,_z,ModMinePainter.painting.block, pp.ordinal(), 3);
+        PaintingEntity pe = Utils.getTE(w, _x, _y, _z);
+        pe.readFromNBTToImage(is.getTagCompound());
+        
+        if(!ep.capabilities.isCreativeMode)
+        	is.stackSize--;
         
         return true;
 	}
+	 
+	
 }

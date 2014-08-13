@@ -71,4 +71,8 @@ public class PaintingIcon implements IIcon{
 	public void release(){
 		this.sheet.icons.add(this);
 	}
+
+	public int glTexId() {
+		return this.sheet.glTexId;
+	}
 }

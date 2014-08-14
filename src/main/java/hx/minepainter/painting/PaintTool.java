@@ -21,8 +21,12 @@ public class PaintTool extends Item{
 		if(pe == null)return false;
 		float[] point = PaintingPlacement.of(w.getBlockMetadata(x, y, z)).block2painting(xs, ys, zs);
 		boolean changed = this.apply(pe.image, point, getColor(ep,is));
-		if(!w.isRemote)return changed;
-		if(changed)pe.getIcon().fill(pe.image);
+		if(!changed)return changed;
+		if(w.isRemote){
+			pe.getIcon().fill(pe.image);
+			return changed;
+		}
+		w.markBlockForUpdate(x, y, z);
 		return changed;
 	}
 	

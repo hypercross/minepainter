@@ -197,11 +197,14 @@ public class Sculpture {
 		return i;
 	}
 
+	// returns max light value
 	public int getLight() {
 		int light = 0;
+		int current = 0;
 		for(int i = 0; i < usage_count.length; i ++){
-			light += Block.getBlockById(block_ids[i]).getLightValue() * usage_count[i];
+			current = Block.getBlockById(block_ids[i]).getLightValue();
+			if(current > light)light = current;
 		}
-		return light / 512;
+		return current;
 	}
 }

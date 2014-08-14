@@ -64,7 +64,8 @@ public class SculptureEntity extends TileEntity{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		getRender().changed = true;
+		if(worldObj != null && worldObj.isRemote)
+			getRender().changed = true;
 		super.readFromNBT(nbt);
 		sculpture.read(nbt);
 	}

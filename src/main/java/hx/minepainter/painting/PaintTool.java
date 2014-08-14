@@ -20,8 +20,10 @@ public class PaintTool extends Item{
 		PaintingEntity pe = Utils.getTE(w, x, y, z);
 		if(pe == null)return false;
 		float[] point = PaintingPlacement.of(w.getBlockMetadata(x, y, z)).block2painting(xs, ys, zs);
-		return this.apply(pe.image, point, getColor(ep,is));
-		
+		boolean changed = this.apply(pe.image, point, getColor(ep,is));
+		if(!w.isRemote)return changed;
+		if(changed)pe.getIcon().fill(pe.image);
+		return changed;
 	}
 	
 	public int getColor(EntityPlayer ep, ItemStack is){
@@ -42,10 +44,11 @@ public class PaintTool extends Item{
 		
 		@Override public boolean apply(BufferedImage img, float[] point, int color){
 			
-			int x = (int) (point[0] * 8);
-			int y = (int) (point[1] * 8);
+			int x = (int) (point[0] * 16);
+			int y = (int) (point[1] * 16);
 			
-			img.getRaster().setPixel(x, y, new int[]{ (color >> 8) & 0xff, (color >> 4) & 0xff, color & 0xff});
+			img.setRGB(x, y, color);
+//			img.getRaster().setPixel(x, y, new int[]{ (color >> 8) & 0xff, (color >> 4) & 0xff, color & 0xff});
 			return true;
 		}
 	}

@@ -73,8 +73,8 @@ public enum PaintingPlacement {
 		float [] point = new float[2];
 		point[0] = (1 - xpos.offsetX - xpos.offsetY - xpos.offsetZ)/2;
 		point[1] = (1 - ypos.offsetX - ypos.offsetY - ypos.offsetZ)/2;
-		point[0] = xpos.offsetX * x + xpos.offsetY * y + xpos.offsetZ * z;
-		point[1] = ypos.offsetX * x + ypos.offsetY * y + ypos.offsetZ * z;
+		point[0] += xpos.offsetX * x + xpos.offsetY * y + xpos.offsetZ * z;
+		point[1] += ypos.offsetX * x + ypos.offsetY * y + ypos.offsetZ * z;
 		return point;
 	}
 	

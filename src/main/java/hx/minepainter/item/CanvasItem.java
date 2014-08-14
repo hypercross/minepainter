@@ -8,6 +8,7 @@ import hx.minepainter.painting.PaintingPlacement;
 import hx.utils.Utils;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -31,7 +32,7 @@ public class CanvasItem extends Item{
 	 @Override
     public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
 
-		if(!w.getBlock(x, y, z).isNormalCube())return false;
+		if(!w.getBlock(x, y, z).getMaterial().isSolid())return false;
 		 
         ForgeDirection dir = ForgeDirection.getOrientation(face);
         int _x = x + dir.offsetX;

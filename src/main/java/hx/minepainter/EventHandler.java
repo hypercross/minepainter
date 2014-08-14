@@ -33,8 +33,11 @@ public class EventHandler {
 //		InventoryPlayer ip = e.entityPlayer.inventory;
 //		for(int i = 0; i < ip.getSizeInventory(); i ++){
 //			ItemStack is = ip.getStackInSlot(i);
-//			if(!(is.getItem() instanceof PieceItem))continue;
+//			if(is == null)continue;
+//			if(is.getItem() != pi)continue;
 //			if(is.getItemDamage() != picked.getItemDamage())continue;
+//			if(is.stackSize <= 8)continue;
+//			  
 //		}
 //	}
 

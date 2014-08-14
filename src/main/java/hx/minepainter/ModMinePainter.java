@@ -1,6 +1,8 @@
 package hx.minepainter;
 
 import hx.minepainter.item.BarcutterItem;
+import hx.minepainter.item.CanvasItem;
+import hx.minepainter.item.CanvasRenderer;
 import hx.minepainter.item.ChiselItem;
 import hx.minepainter.item.PieceItem;
 import hx.minepainter.item.PieceRenderer;
@@ -56,6 +58,7 @@ public class ModMinePainter {
 	public static ItemLoader<PieceItem> bar = new ItemLoader(new PieceItem.Bar().setUnlocalizedName("sculpture_bar"));
 	public static ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover().setUnlocalizedName("sculpture_cover"));
 	public static ItemLoader<PaintTool> minibrush = new ItemLoader(new PaintTool.Mini());
+	public static ItemLoader<CanvasItem> canvas = new ItemLoader(new CanvasItem());
 	
 	public static SimpleNetworkWrapper network;
 	
@@ -71,6 +74,7 @@ public class ModMinePainter {
 		bar.load();
 		cover.load();
 		minibrush.load();
+		canvas.load();
 		
 		MinecraftForge.EVENT_BUS.register(new hx.minepainter.EventHandler());
 		network = NetworkRegistry.INSTANCE.newSimpleChannel("minepainter");
@@ -87,5 +91,6 @@ public class ModMinePainter {
 		piece.registerRendering(new PieceRenderer());
 		bar.registerRendering(new PieceRenderer.Bar());
 		cover.registerRendering(new PieceRenderer.Cover());
+		canvas.registerRendering(new CanvasRenderer());
 	}
 }

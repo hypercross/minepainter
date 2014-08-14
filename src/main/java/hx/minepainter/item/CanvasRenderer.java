@@ -7,7 +7,9 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 
 public class CanvasRenderer implements IItemRenderer{
@@ -32,20 +34,23 @@ public class CanvasRenderer implements IItemRenderer{
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
         
-        PaintingIcon pi = PaintingCache.get(item);
-        
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, pi.glTexId());
+    	IIcon icon = Items.painting.getIconFromDamage(0);
+    	if(item.hasTagCompound()){
+    		PaintingIcon pi = PaintingCache.get(item);
+    		GL11.glBindTexture(GL11.GL_TEXTURE_2D, pi.glTexId());
+    		icon = pi;
+    	}
         if(type == ItemRenderType.INVENTORY)
-        	renderInventory(pi);
+        	renderInventory(icon);
         else if(type == ItemRenderType.EQUIPPED || type == ItemRenderType.EQUIPPED_FIRST_PERSON)
-        	renderEquipped(pi);
+        	renderEquipped(icon);
         else{
         	GL11.glTranslatef(-0.5f, 0, 0);
-        	renderEquipped(pi);
+        	renderEquipped(icon);
         }
     }
     
-    private void renderInventory(PaintingIcon icon)
+    private void renderInventory(IIcon icon)
     {
         Tessellator tes = Tessellator.instance;
         tes.startDrawingQuads();
@@ -56,7 +61,7 @@ public class CanvasRenderer implements IItemRenderer{
         tes.draw();
     }
     
-    private void renderEquipped(PaintingIcon icon)
+    private void renderEquipped(IIcon icon)
     {
         Tessellator var5 = Tessellator.instance;
         float var7 = icon.getMinU();

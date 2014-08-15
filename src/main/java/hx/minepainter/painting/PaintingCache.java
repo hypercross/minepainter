@@ -13,7 +13,17 @@ public class PaintingCache {
 	public static final int res = 256; 
 
 	private static LinkedList<PaintingSheet> sheets = new LinkedList<PaintingSheet>();
-	private static ExpirableIconPool<ItemStack> item_pool = new ExpirableIconPool<ItemStack>(12);
+	private static ExpirablePool<ItemStack,PaintingIcon> item_pool = new ExpirablePool<ItemStack,PaintingIcon>(12){
+
+		@Override public void release(PaintingIcon v) {
+			v.release();
+		}
+
+		@Override public PaintingIcon get() {
+			return PaintingCache.get();
+		}
+		
+	};
 	
 	public static PaintingIcon get(){
 		for(PaintingSheet sheet : sheets){

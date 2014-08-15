@@ -3,15 +3,15 @@ package hx.minepainter.painting;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class ExpirableIconPool<T> {
+public abstract class ExpirablePool<T,V> {
 	
 	final int expire;
-	public ExpirableIconPool(int expire){
+	public ExpirablePool(int expire){
 		this.expire = expire;
 	}
 
 	HashMap<T,Integer> timeouts = new HashMap<T,Integer>();
-	HashMap<T,PaintingIcon> icons = new HashMap<T,PaintingIcon>();
+	HashMap<T,V> items = new HashMap<T,V>();
 	
 	boolean running = false;
 	
@@ -25,7 +25,7 @@ public class ExpirableIconPool<T> {
 						int count = timeouts.get(t); 
 						if(count <= 0){
 							iter.remove();
-							icons.remove(t).release();
+							release(items.remove(t));
 						}else timeouts.put(t, count - 1);
 					}
 					
@@ -34,25 +34,29 @@ public class ExpirableIconPool<T> {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					if(icons.isEmpty())running = false;
+					if(items.isEmpty())running = false;
 				}
 					
 			}
 		}).start();
 	}
 	
+	public abstract void release(V v);
+	
+	public abstract V get();
+	
 	public void stop(){
 		running = false;
 	}
 	
 	public boolean contains(T t){
-		return icons.containsKey(t);
+		return items.containsKey(t);
 	}
 	
-	public PaintingIcon get(T t){
-		if(!icons.containsKey(t))
-			icons.put(t, PaintingCache.get());
+	public V get(T t){
+		if(!items.containsKey(t))
+			items.put(t, get());
 		timeouts.put(t, expire);
-		return icons.get(t);
+		return items.get(t);
 	}
 }

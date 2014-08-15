@@ -3,6 +3,8 @@ package hx.minepainter.painting;
 import java.awt.image.BufferedImage;
 
 import hx.minepainter.ModMinePainter;
+import hx.minepainter.item.Palette;
+import hx.utils.Debug;
 import hx.utils.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -11,10 +13,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class PaintTool extends Item{
-	private static final int MASK_ALPHA = 0xff000000;
-	private static final int MASK_RED   = 0x00ff0000;
-	private static final int MASK_GREEN = 0x0000ff00;
-	private static final int MASK_BLUE  = 0x000000ff;
 	
 	public PaintTool(){
 		this.setCreativeTab(ModMinePainter.tabMinePainter);
@@ -39,11 +37,11 @@ public class PaintTool extends Item{
 				
 				PaintingEntity painting = Utils.getTE(w, _x, _y, _z);
 				
-				point[0] += i;
-				point[1] += j;
-				boolean _changed = apply(painting.image, point, getColor(ep,is));
 				point[0] -= i;
 				point[1] -= j;
+				boolean _changed = apply(painting.image, point, getColor(ep,is));
+				point[0] += i;
+				point[1] += j;
 				
 				if(_changed){
 					if(w.isRemote)pe.getIcon().fill(pe.image);
@@ -56,7 +54,15 @@ public class PaintTool extends Item{
 	}
 	
 	public int getColor(EntityPlayer ep, ItemStack is){
-		return is.getItemDamage();
+		int size = ep.inventory.getSizeInventory();
+		for(int i = 0; i < size; i ++){
+			ItemStack slot = ep.inventory.getStackInSlot(i);
+			if(slot == null)continue;
+			if(!(slot.getItem() instanceof Palette))continue;
+			
+			return Palette.getColors(slot)[0];
+		}
+		return 0;
 	}
 	
 	public boolean apply(BufferedImage img, float[] point, int color) {
@@ -99,8 +105,10 @@ public class PaintTool extends Item{
 			int x = (int) (point[0] * 16 + 16) - 16;
 			int y = (int) (point[1] * 16 + 16) - 16;
 			
-			int a75 = multiplyMasked(color , MASK_ALPHA, 0.75f); 
-			int a50 = multiplyMasked(color , MASK_ALPHA, 0.5f);
+			int a75 = (int)(((color >> 24) & 0xff) * 0.75f) << 24; 
+			a75 += color & 0xffffff;
+			int a50 = (int)(((color >> 24) & 0xff) * 0.5f) << 24;
+			a50 += color & 0xffffff;
 			
 			boolean changed = false;
 			for(int i = -1; i <=1; i++)
@@ -136,12 +144,6 @@ public class PaintTool extends Item{
 		    result += ((int)(255.0F * c_alpha) << 24);
 		    return result;
 		}
-		
-		private int multiplyMasked(int val, int mask, float scale){
-			int result = (int)((val & mask) * scale) & mask;
-			return result + (val & ~mask);
-		}
-		
 		
 	}
 	

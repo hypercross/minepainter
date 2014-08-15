@@ -5,6 +5,7 @@ import hx.minepainter.item.DroppedSculptureRenderer;
 import hx.minepainter.item.CanvasItem;
 import hx.minepainter.item.CanvasRenderer;
 import hx.minepainter.item.ChiselItem;
+import hx.minepainter.item.Palette;
 import hx.minepainter.item.PieceItem;
 import hx.minepainter.item.PieceItem.Bar;
 import hx.minepainter.item.PieceRenderer;
@@ -60,6 +61,8 @@ public class ModMinePainter {
 	public static ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover().setUnlocalizedName("sculpture_cover"));
 	public static ItemLoader<DroppedSculptureItem> droppedSculpture = new ItemLoader(new DroppedSculptureItem()); 
 	public static ItemLoader<PaintTool> minibrush = new ItemLoader(new PaintTool.Mini());
+	public static ItemLoader<PaintTool> mixerbrush = new ItemLoader(new PaintTool.Mixer());
+	public static ItemLoader<Palette> palette = new ItemLoader(new Palette());
 	public static ItemLoader<CanvasItem> canvas = new ItemLoader(new CanvasItem());
 	
 	public static SimpleNetworkWrapper network;
@@ -77,6 +80,8 @@ public class ModMinePainter {
 		cover.load();
 		droppedSculpture.load();
 		minibrush.load();
+		mixerbrush.load();
+		palette.load();
 		canvas.load();
 		
 		MinecraftForge.EVENT_BUS.register(new hx.minepainter.EventHandler());

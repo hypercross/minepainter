@@ -30,6 +30,10 @@ public class PaintingEntity extends TileEntity{
 		 }
 	}
 	
+	public BufferedImage getImg(){
+		return image;
+	}
+	
 	@SideOnly(Side.CLIENT)
 	private PaintingIcon icon;
 	

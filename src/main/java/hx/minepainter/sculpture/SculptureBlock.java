@@ -69,7 +69,10 @@ public class SculptureBlock extends BlockContainer{
 		if(dir.offsetX != 0)hit = st.getIntermediateWithXValue(ed, x + pos[0]/8f + (dir.offsetX+1)/16f);
 		else if(dir.offsetY != 0)hit = st.getIntermediateWithYValue(ed, y + pos[1]/8f + (dir.offsetY+1)/16f);
 		else if(dir.offsetZ != 0)hit = st.getIntermediateWithZValue(ed, z + pos[2]/8f + (dir.offsetZ+1)/16f);
-		if(hit == null)return null;
+		if(hit == null){
+			if(sculpture.isEmpty())return super.collisionRayTrace(w, x, y, z, st, ed);
+			return null;
+		}
 		
 		return new MovingObjectPosition(x,y,z,pos[3], hit);
 	}

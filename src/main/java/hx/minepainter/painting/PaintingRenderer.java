@@ -25,46 +25,62 @@ public class PaintingRenderer extends TileEntitySpecialRenderer{
 		GL11.glPushMatrix();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, icon.sheet.glTexId);
         RenderHelper.disableStandardItemLighting();
-		GL11.glTranslated(x+1/16f, y+1/16f, z+1/16f);
-		GL11.glScalef(0.875f, 0.875f, 0.875f);
+		GL11.glTranslated(x, y, z);
+//		GL11.glScalef(0.875f, 0.875f, 0.875f);
 		
 		//face
 		tes.startDrawingQuads();
-		float[] pos = placement.painting2block(0, 0);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMinV());
-		pos = placement.painting2block(0, 1);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMaxV());
-		pos = placement.painting2block(1, 1);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMaxU(), icon.getMaxV());
-		pos = placement.painting2block(1, 0);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMaxU(), icon.getMinV());
-		tes.draw();
-		
-		
-		//sides
-		tes.startDrawingQuads();
-		pos = placement.painting2block(0, 0);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMinV());
-		pos = placement.painting2blockWithShift(0, 0, 0);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMinV());
-		pos = placement.painting2blockWithShift(1, 0, 0);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMaxU(), icon.getMinV());
-		pos = placement.painting2block(1, 0);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMaxU(), icon.getMinV());
-		pos = placement.painting2block(1, 1);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMaxU(), icon.getMaxV());
-		pos = placement.painting2blockWithShift(1, 1, 0);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMaxU(), icon.getMaxV());
-		pos = placement.painting2blockWithShift(0, 1, 0);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMaxV());
-		pos = placement.painting2block(0, 1);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMaxV());
-		pos = placement.painting2block(0, 0);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMinV());
-		pos = placement.painting2blockWithShift(0, 0, 0);
-		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMinV());
+		addPoint(placement,0,0,icon);
+		addPoint(placement,0,1,icon);
+		addPoint(placement,1,1,icon);
+		addPoint(placement,1,0,icon);
 		tes.draw();
 		
 		GL11.glPopMatrix();
+	}
+	
+	private void addPoint(PaintingPlacement pp, int x,int y, IIcon icon){
+		float[] pos = pp.painting2blockWithShift(x, y, 0.001f);
+		Tessellator.instance.addVertexWithUV(pos[0], pos[1], pos[2], 
+				x == 0 ? icon.getMinU() : icon.getMaxU(), 
+				y == 0 ? icon.getMinV() : icon.getMaxV());
+	}
+	
+	private void drawSides(Tessellator tes, PaintingPlacement placement){		
+		//sides
+		
+		tes.startDrawingQuads();
+		addColoredPoint(placement,0,0,0.0625f);
+		addColoredPoint(placement,1,0,0.0625f);
+		addColoredPoint(placement,1,0,0f);
+		addColoredPoint(placement,0,0,0f);
+		tes.draw();
+		
+		tes.startDrawingQuads();
+		addColoredPoint(placement,1,0,0.0625f);
+		addColoredPoint(placement,1,1,0.0625f);
+		addColoredPoint(placement,1,1,0f);
+		addColoredPoint(placement,1,0,0f);
+		tes.draw();
+		
+		tes.startDrawingQuads();
+		addColoredPoint(placement,1,1,0.0625f);
+		addColoredPoint(placement,0,1,0.0625f);
+		addColoredPoint(placement,0,1,0f);
+		addColoredPoint(placement,1,1,0f);
+		tes.draw();
+		
+		tes.startDrawingQuads();
+		addColoredPoint(placement,0,1,0.0625f);
+		addColoredPoint(placement,0,0,0.0625f);
+		addColoredPoint(placement,0,0,0f);
+		addColoredPoint(placement,0,1,0f);
+		tes.draw();
+	}
+	
+	private void addColoredPoint(PaintingPlacement pp, int x,int y, float d){
+		float[] pos = pp.painting2blockWithShift(x, y, 0);
+		Tessellator.instance.setColorOpaque_I(0xffffff);
+		Tessellator.instance.addVertex(pos[0], pos[1], pos[2]);
 	}
 }

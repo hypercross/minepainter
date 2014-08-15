@@ -12,7 +12,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-//TODO add a block placer item for this! 
 public class PaintingBlock extends BlockContainer{
 
 	public PaintingBlock() {

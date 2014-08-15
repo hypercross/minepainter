@@ -1,12 +1,11 @@
 package hx.minepainter;
 
-import hx.minepainter.item.BarcutterItem;
 import hx.minepainter.item.CanvasItem;
 import hx.minepainter.item.CanvasRenderer;
 import hx.minepainter.item.ChiselItem;
 import hx.minepainter.item.PieceItem;
+import hx.minepainter.item.PieceItem.Bar;
 import hx.minepainter.item.PieceRenderer;
-import hx.minepainter.item.SawItem;
 import hx.minepainter.painting.PaintTool;
 import hx.minepainter.painting.PaintingBlock;
 import hx.minepainter.painting.PaintingEntity;
@@ -52,8 +51,8 @@ public class ModMinePainter {
 			new BlockLoader(new PaintingBlock(), PaintingEntity.class);
 	
 	public static ItemLoader<ChiselItem> chisel = new ItemLoader(new ChiselItem());
-	public static ItemLoader<BarcutterItem> barcutter = new ItemLoader(new BarcutterItem());
-	public static ItemLoader<SawItem> saw = new ItemLoader(new SawItem());
+	public static ItemLoader<ChiselItem> barcutter = new ItemLoader(new ChiselItem.Barcutter());
+	public static ItemLoader<ChiselItem> saw = new ItemLoader(new ChiselItem.Saw());
 	public static ItemLoader<PieceItem> piece = new ItemLoader(new PieceItem());
 	public static ItemLoader<PieceItem> bar = new ItemLoader(new PieceItem.Bar().setUnlocalizedName("sculpture_bar"));
 	public static ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover().setUnlocalizedName("sculpture_cover"));

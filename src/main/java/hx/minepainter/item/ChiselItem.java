@@ -57,4 +57,45 @@ public class ChiselItem extends Item{
 	public int getChiselFlags(EntityPlayer ep){
 		return 0;
 	}
+	
+	public static class Saw extends ChiselItem{
+
+		public Saw(){
+			super();
+			this.setUnlocalizedName("saw");
+			this.setTextureName("minepainter:diamond_chisel");
+		}
+
+		@Override
+		public int getChiselFlags(EntityPlayer ep){
+			int axis = Operations.getLookingAxis(ep);
+			switch(axis){
+			case 0: return Operations.ALLY | Operations.ALLZ;
+			case 1: return Operations.ALLX | Operations.ALLZ;
+			case 2: return Operations.ALLX | Operations.ALLY;
+			}
+			return 0;
+		}
+	}
+
+	public static class Barcutter extends ChiselItem{
+		
+		public Barcutter(){
+			super();
+			this.setUnlocalizedName("barcutter");
+			this.setTextureName("minepainter:iron_chisel");
+		}
+
+		@Override
+		public int getChiselFlags(EntityPlayer ep){
+			int axis = Operations.getLookingAxis(ep);
+			switch(axis){
+			case 0: return Operations.ALLX;
+			case 1: return Operations.ALLY;
+			case 2: return Operations.ALLZ;
+			}
+			return 0;
+		}
+	}
+
 }

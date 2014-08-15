@@ -2,12 +2,15 @@ package hx.minepainter.item;
 
 import org.lwjgl.opengl.GL11;
 
+import hx.minepainter.ModMinePainter;
 import hx.minepainter.painting.ExpirablePool;
 import hx.minepainter.sculpture.Sculpture;
+import hx.minepainter.sculpture.SculptureBlock;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.IItemRenderer;
@@ -59,7 +62,7 @@ public class DroppedsculptureRenderer implements IItemRenderer{
 		
 		public void clear(){
 			if(compiled())
-				GL11.glDeleteLists(glDispList, 1);
+				GLAllocation.deleteDisplayLists(glDispList);
 		}
 		
 		public void compile(NBTTagCompound nbt){
@@ -69,7 +72,19 @@ public class DroppedsculptureRenderer implements IItemRenderer{
 			
 			GL11.glNewList(glDispList, GL11.GL_COMPILE);
 			
+			SculptureBlock sb = ModMinePainter.sculpture.block;
 			
+			for(int i = 0; i < 512; i ++){
+				int x = (i >> 6) & 7;
+				int y = (i >> 3) & 7;
+				int z = (i >> 0) & 7;
+				
+				if(sculpture.getBlockAt(x, y, z, null) == Blocks.air)continue;
+				
+				sb.setCurrentBlock(sculpture.getBlockAt(x, y, z, null), sculpture.getMetaAt(x, y, z, null));
+				sb.setBlockBounds(x/8f, y/8f, z/8f, (x+1)/8f, (y+1)/8f, (z+1)/8f);
+				rb.renderBlockAsItem(sb, 0, 1f);
+			}
 			
 			GL11.glEndList();
 		}

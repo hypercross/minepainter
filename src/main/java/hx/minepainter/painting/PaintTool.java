@@ -24,14 +24,34 @@ public class PaintTool extends Item{
 		
 		PaintingEntity pe = Utils.getTE(w, x, y, z);
 		if(pe == null)return false;
-		float[] point = PaintingPlacement.of(w.getBlockMetadata(x, y, z)).block2painting(xs, ys, zs);
-		boolean changed = this.apply(pe.image, point, getColor(ep,is));
-		if(!changed)return changed;
-		if(w.isRemote){
-			pe.getIcon().fill(pe.image);
-			return changed;
-		}
-		w.markBlockForUpdate(x, y, z);
+		PaintingPlacement place = PaintingPlacement.of(w.getBlockMetadata(x, y, z));
+		float[] point = place.block2painting(xs, ys, zs);
+		
+		boolean changed = false;
+		for(int i = -1;i<=1;i++)
+			for(int j = -1;j<=1;j++){
+				int _x = x + place.xpos.offsetX * i + place.ypos.offsetX * j;
+				int _y = y + place.xpos.offsetY * i + place.ypos.offsetY * j;
+				int _z = z + place.xpos.offsetZ * i + place.ypos.offsetZ * j;
+				
+				if(w.getBlock(x, y, z) != ModMinePainter.painting.block)continue;
+				if(w.getBlockMetadata(x, y, z) != place.ordinal())continue;
+				
+				PaintingEntity painting = Utils.getTE(w, _x, _y, _z);
+				
+				point[0] += i;
+				point[1] += j;
+				boolean _changed = apply(painting.image, point, getColor(ep,is));
+				point[0] -= i;
+				point[1] -= j;
+				
+				if(_changed){
+					if(w.isRemote)pe.getIcon().fill(pe.image);
+					else w.markBlockForUpdate(_x, _y, _z);
+					changed = true;
+				}
+			}
+		
 		return changed;
 	}
 	
@@ -41,6 +61,10 @@ public class PaintTool extends Item{
 	
 	public boolean apply(BufferedImage img, float[] point, int color) {
 		return false;
+	}
+	
+	public boolean inBounds(int x,int y){
+		return x>=0 && x<16 && y>=0 && y<16;
 	}
 
 	public static class Mini extends PaintTool{
@@ -53,8 +77,10 @@ public class PaintTool extends Item{
 		
 		@Override public boolean apply(BufferedImage img, float[] point, int color){
 			
-			int x = (int) (point[0] * 16);
-			int y = (int) (point[1] * 16);
+			int x = (int) (point[0] * 16 + 16) - 16;
+			int y = (int) (point[1] * 16 + 16) - 16;
+			
+			if(!inBounds(x,y))return false;
 			
 			img.setRGB(x, y, color);
 			return true;
@@ -70,14 +96,26 @@ public class PaintTool extends Item{
 		
 		@Override public boolean apply(BufferedImage img, float[] point, int color){
 			
-			int x = (int) (point[0] * 16);
-			int y = (int) (point[1] * 16);
+			int x = (int) (point[0] * 16 + 16) - 16;
+			int y = (int) (point[1] * 16 + 16) - 16;
 			
 			int a75 = multiplyMasked(color , MASK_ALPHA, 0.75f); 
 			int a50 = multiplyMasked(color , MASK_ALPHA, 0.5f);
 			
-			img.setRGB(x,y, mix(color, img.getRGB(x, y)));
-			return true;
+			boolean changed = false;
+			for(int i = -1; i <=1; i++)
+				for(int j = -1; j <= 1; j++){
+					if(!inBounds(x+i,y+j))continue;
+					changed = true;
+					
+					int to_blend = Math.abs(i) + Math.abs(j);
+					if(to_blend == 0)to_blend = color;
+					else if(to_blend == 1)to_blend = a75;
+					else to_blend = a50;
+					
+					img.setRGB(x+i, y+j, mix(to_blend, img.getRGB(x+i, y+j)));
+				}
+			return changed;
 		}
 		
 		private int mix(int color,int original){
@@ -103,5 +141,9 @@ public class PaintTool extends Item{
 			int result = (int)((val & mask) * scale) & mask;
 			return result + (val & ~mask);
 		}
+		
+		
 	}
+	
+	
 }

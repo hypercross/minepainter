@@ -20,6 +20,7 @@ public class PaintingBlock extends BlockContainer{
 	public PaintingBlock() {
 		super(Material.cloth);
 		this.setBlockTextureName("minepainter:palette");
+		this.setHardness(0.2f);
 	}
 
     @Override public void registerBlockIcons(IIconRegister register){}

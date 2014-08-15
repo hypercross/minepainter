@@ -43,7 +43,7 @@ public class Operations {
 					Block tgt_block = w.getBlock(tx, ty, tz);
 					int tgt_meta = w.getBlockMetadata(tx, ty, tz);
 					
-					if(tgt_block == Blocks.air)
+					if(tgt_block == Blocks.air && block != Blocks.air)
 						w.setBlock(tx, ty, tz, ModMinePainter.sculpture.block);
 					else if(sculptable(tgt_block,tgt_meta))
 						convertToFullSculpture(w,tx,ty,tz);
@@ -56,6 +56,7 @@ public class Operations {
 					int metaFormer = se.sculpture.getMetaAt(_x, _y, _z, null);
 					addDrop(droplist, former, metaFormer);
 					se.sculpture.setBlockAt(_x, _y, _z, block, meta);
+					if(se.sculpture.isEmpty())w.setBlock(x, y, z, Blocks.air);
 					if(w.isRemote)se.getRender().changed = true;
 					else w.markBlockForUpdate(tx, ty, tz);
 					s++;

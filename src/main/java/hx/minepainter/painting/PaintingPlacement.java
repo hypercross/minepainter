@@ -57,16 +57,19 @@ public enum PaintingPlacement {
 		this.xpos = normal.getRotation(ypos);
 	}
 	
-	
-	public float[] painting2block(float x,float y){
+	public float[] painting2blockWithShift(float x,float y,float shift){
 		float[] point = new float[3];
 		point[0] = (1-(xpos.offsetX + ypos.offsetX + normal.offsetX))/2;
 		point[1] = (1-(xpos.offsetY + ypos.offsetY + normal.offsetY))/2;
 		point[2] = (1-(xpos.offsetZ + ypos.offsetZ + normal.offsetZ))/2;
-		point[0] += xpos.offsetX * x + ypos.offsetX * y;
-		point[1] += xpos.offsetY * x + ypos.offsetY * y;
-		point[2] += xpos.offsetZ * x + ypos.offsetZ * y;
+		point[0] += xpos.offsetX * x + ypos.offsetX * y + normal.offsetX*shift;
+		point[1] += xpos.offsetY * x + ypos.offsetY * y + normal.offsetY*shift;
+		point[2] += xpos.offsetZ * x + ypos.offsetZ * y + normal.offsetZ*shift;
 		return point;
+	}
+	
+	public float[] painting2block(float x,float y){
+		return painting2blockWithShift(x,y,1/16f);
 	}
 	
 	public float[] block2painting(float x,float y,float z){

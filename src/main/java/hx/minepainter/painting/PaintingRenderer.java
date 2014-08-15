@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class PaintingRenderer extends TileEntitySpecialRenderer{
 
@@ -27,6 +28,7 @@ public class PaintingRenderer extends TileEntitySpecialRenderer{
 		GL11.glTranslated(x+1/16f, y+1/16f, z+1/16f);
 		GL11.glScalef(0.875f, 0.875f, 0.875f);
 		
+		//face
 		tes.startDrawingQuads();
 		float[] pos = placement.painting2block(0, 0);
 		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMinV());
@@ -38,7 +40,31 @@ public class PaintingRenderer extends TileEntitySpecialRenderer{
 		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMaxU(), icon.getMinV());
 		tes.draw();
 		
+		
+		//sides
+		tes.startDrawingQuads();
+		pos = placement.painting2block(0, 0);
+		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMinV());
+		pos = placement.painting2blockWithShift(0, 0, 0);
+		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMinV());
+		pos = placement.painting2blockWithShift(1, 0, 0);
+		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMaxU(), icon.getMinV());
+		pos = placement.painting2block(1, 0);
+		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMaxU(), icon.getMinV());
+		pos = placement.painting2block(1, 1);
+		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMaxU(), icon.getMaxV());
+		pos = placement.painting2blockWithShift(1, 1, 0);
+		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMaxU(), icon.getMaxV());
+		pos = placement.painting2blockWithShift(0, 1, 0);
+		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMaxV());
+		pos = placement.painting2block(0, 1);
+		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMaxV());
+		pos = placement.painting2block(0, 0);
+		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMinV());
+		pos = placement.painting2blockWithShift(0, 0, 0);
+		tes.addVertexWithUV(pos[0], pos[1], pos[2], icon.getMinU(), icon.getMinV());
+		tes.draw();
+		
 		GL11.glPopMatrix();
 	}
-
 }

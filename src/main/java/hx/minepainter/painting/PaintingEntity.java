@@ -63,6 +63,10 @@ public class PaintingEntity extends TileEntity{
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
+		writeImageToNBT(nbt);
+	}
+	
+	public void writeImageToNBT(NBTTagCompound nbt){
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
 			ImageIO.write(image, "png", baos);

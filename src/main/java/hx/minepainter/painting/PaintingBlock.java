@@ -2,10 +2,13 @@ package hx.minepainter.painting;
 
 import hx.minepainter.ModMinePainter;
 import hx.utils.Utils;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -50,5 +53,18 @@ public class PaintingBlock extends BlockContainer{
     
     @Override public int getRenderType(){
     	return -1;
+    }
+    
+    @Override public void breakBlock(World w,int x,int y,int z,Block b, int meta){
+    	
+    	ItemStack is = new ItemStack(ModMinePainter.canvas.item);
+    	NBTTagCompound nbt = new NBTTagCompound();
+    	PaintingEntity pe = Utils.getTE(w, x, y, z);
+    	
+    	pe.writeImageToNBT(nbt);
+    	is.setTagCompound(nbt);
+    	this.dropBlockAsItem(w, x, y, z, is);
+    	
+    	super.breakBlock(w, x, y, z, b, meta);
     }
 }

@@ -34,8 +34,8 @@ public class PaintTool extends Item{
 				int _y = y + place.xpos.offsetY * i + place.ypos.offsetY * j;
 				int _z = z + place.xpos.offsetZ * i + place.ypos.offsetZ * j;
 				
-				if(w.getBlock(x, y, z) != ModMinePainter.painting.block)continue;
-				if(w.getBlockMetadata(x, y, z) != place.ordinal())continue;
+				if(w.getBlock(_x, _y, _z) != ModMinePainter.painting.block)continue;
+				if(w.getBlockMetadata(_x, _y, _z) != place.ordinal())continue;
 				
 				PaintingEntity painting = Utils.getTE(w, _x, _y, _z);
 				

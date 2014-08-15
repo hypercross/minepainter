@@ -16,7 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.IItemRenderer;
 
 @SideOnly(Side.CLIENT)
-public class DroppedsculptureRenderer implements IItemRenderer{
+public class DroppedSculptureRenderer implements IItemRenderer{
 	RenderBlocks rb = new RenderBlocks();
 
 	ExpirablePool<ItemStack, CompiledRender> renders = new ExpirablePool<ItemStack, CompiledRender>(12){

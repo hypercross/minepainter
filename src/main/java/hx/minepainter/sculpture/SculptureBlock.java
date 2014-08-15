@@ -11,8 +11,10 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -128,6 +130,17 @@ public class SculptureBlock extends BlockContainer{
     	if(te == null || !(te instanceof SculptureEntity))return super.getLightValue(world, x, y, z);
     	SculptureEntity se = (SculptureEntity) te;
     	return se.sculpture.getLight();
+    }
+    
+    @Override public void breakBlock(World w, int x,int y,int z,Block b, int meta){
+    	SculptureEntity se = Utils.getTE(w, x, y, z);
+    	NBTTagCompound nbt = new NBTTagCompound();
+    	ItemStack is = new ItemStack(ModMinePainter.droppedSculpture.item);
+    	
+    	se.sculpture.write(nbt);
+    	is.setTagCompound(nbt);
+    	this.dropBlockAsItem(w, x, y, z, is);
+    	super.breakBlock(w, x, y, z, b, meta);
     }
 //
 //    @Override public int getLightOpacity(){

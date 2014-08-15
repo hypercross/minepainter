@@ -205,6 +205,6 @@ public class Sculpture {
 			current = Block.getBlockById(block_ids[i]).getLightValue();
 			if(current > light)light = current;
 		}
-		return current;
+		return light;
 	}
 }

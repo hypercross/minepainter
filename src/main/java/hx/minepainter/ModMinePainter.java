@@ -1,5 +1,7 @@
 package hx.minepainter;
 
+import hx.minepainter.item.DroppedSculptureItem;
+import hx.minepainter.item.DroppedSculptureRenderer;
 import hx.minepainter.item.CanvasItem;
 import hx.minepainter.item.CanvasRenderer;
 import hx.minepainter.item.ChiselItem;
@@ -56,6 +58,7 @@ public class ModMinePainter {
 	public static ItemLoader<PieceItem> piece = new ItemLoader(new PieceItem());
 	public static ItemLoader<PieceItem> bar = new ItemLoader(new PieceItem.Bar().setUnlocalizedName("sculpture_bar"));
 	public static ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover().setUnlocalizedName("sculpture_cover"));
+	public static ItemLoader<DroppedSculptureItem> droppedSculpture = new ItemLoader(new DroppedSculptureItem()); 
 	public static ItemLoader<PaintTool> minibrush = new ItemLoader(new PaintTool.Mini());
 	public static ItemLoader<CanvasItem> canvas = new ItemLoader(new CanvasItem());
 	
@@ -72,6 +75,7 @@ public class ModMinePainter {
 		piece.load();
 		bar.load();
 		cover.load();
+		droppedSculpture.load();
 		minibrush.load();
 		canvas.load();
 		
@@ -90,6 +94,7 @@ public class ModMinePainter {
 		piece.registerRendering(new PieceRenderer());
 		bar.registerRendering(new PieceRenderer.Bar());
 		cover.registerRendering(new PieceRenderer.Cover());
+		droppedSculpture.registerRendering(new DroppedSculptureRenderer());
 		canvas.registerRendering(new CanvasRenderer());
 	}
 }

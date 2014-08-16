@@ -20,6 +20,7 @@ public class CanvasItem extends Item{
 		super();
 		this.setCreativeTab(ModMinePainter.tabMinePainter);
 		this.setFull3D();
+		this.setUnlocalizedName("canvas");
 	}
 	
 	@SideOnly(Side.CLIENT)

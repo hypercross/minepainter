@@ -28,6 +28,7 @@ public class Palette extends Item{
 		setCreativeTab(ModMinePainter.tabMinePainter);
 		this.setMaxStackSize(1);
 		this.setTextureName("minepainter:palette");
+		this.setUnlocalizedName("palette");
 	}
 	
         @Override

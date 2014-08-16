@@ -15,6 +15,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class DroppedSculptureItem extends Item{
 
+	public DroppedSculptureItem(){
+		super();
+		this.setUnlocalizedName("dropped_sculpture");
+	}
 	
 	public void readTo(ItemStack is, Sculpture sculpture){
 		if(is.hasTagCompound())

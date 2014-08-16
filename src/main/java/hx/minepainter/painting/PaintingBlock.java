@@ -1,5 +1,7 @@
 package hx.minepainter.painting;
 
+import java.util.Random;
+
 import hx.minepainter.ModMinePainter;
 import hx.utils.Utils;
 import net.minecraft.block.Block;
@@ -7,6 +9,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -22,6 +25,7 @@ public class PaintingBlock extends BlockContainer{
 		super(Material.cloth);
 		this.setBlockTextureName("minepainter:palette");
 		this.setHardness(0.2f);
+		this.setBlockName("painting");
 	}
 
     @Override public void registerBlockIcons(IIconRegister register){}
@@ -76,6 +80,13 @@ public class PaintingBlock extends BlockContainer{
     	if(w.getBlock(tx, ty, tz).getMaterial().isSolid())return;
     	
     	w.setBlockToAir(x, y, z);
+    }
+    
+    protected ItemStack createStackedBlock(int p_149644_1_){return null;}
+    
+    public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
+    {
+        return null;
     }
     
     @Override public void breakBlock(World w,int x,int y,int z,Block b, int meta){

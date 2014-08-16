@@ -98,8 +98,9 @@ public class SculptureBlock extends BlockContainer{
 	
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side){
-		if(x>=0 && y>=0 && z>=0 && x<8 && y<8 && z<8)
-			return iba.isAirBlock(x, y, z);
+//		if(x>=0 && y>=0 && z>=0 && x<8 && y<8 && z<8)
+//			return iba.isAirBlock(x, y, z);
+		if(iba.getBlock(x, y, z) == this.current)return false;
 		return iba.isAirBlock(x, y, z) || !iba.getBlock(x, y, z).isOpaqueCube();
 	}
 	

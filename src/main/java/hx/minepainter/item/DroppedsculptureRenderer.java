@@ -6,12 +6,14 @@ import hx.minepainter.ModMinePainter;
 import hx.minepainter.painting.ExpirablePool;
 import hx.minepainter.sculpture.Sculpture;
 import hx.minepainter.sculpture.SculptureBlock;
+import hx.minepainter.sculpture.SculptureRenderBlocks;
 import hx.utils.Debug;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -27,7 +29,7 @@ import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 
 @SideOnly(Side.CLIENT)
 public class DroppedSculptureRenderer implements IItemRenderer{
-	RenderBlocks rb = new RenderBlocks();
+	SculptureRenderBlocks rb = new SculptureRenderBlocks();
 	RenderItem renderItem = new RenderItem();
 	ItemStack is;
 
@@ -112,17 +114,29 @@ public class DroppedSculptureRenderer implements IItemRenderer{
 				sb.setBlockBounds(x/8f, y/8f, z/8f, (x+1)/8f, (y+1)/8f, (z+1)/8f);
 				
 				if(type == ItemRenderType.INVENTORY){
-					renderItem.renderItemIntoGUI(
-							Minecraft.getMinecraft().fontRenderer,
-							Minecraft.getMinecraft().renderEngine, is, 0, 0);
-				}else if(type == ItemRenderType.ENTITY){
+//					renderItem.renderItemIntoGUI(
+//							Minecraft.getMinecraft().fontRenderer,
+//							Minecraft.getMinecraft().renderEngine, is, 0, 0);
 					GL11.glPushMatrix();
+			        GL11.glEnable(GL11.GL_BLEND);
+			        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+		            GL11.glTranslatef(-2f, 3f, -3.0F + 50);
+		            GL11.glScalef(10.0F, 10.0F, 10.0F);
+		            GL11.glTranslatef(1.0F, 0.5F, 1.0F);
+		            GL11.glScalef(1.0F, 1.0F, -1.0F);
+		            GL11.glRotatef(210.0F, 1.0F, 0.0F, 0.0F);
+		            GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
+		            GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+					rb.cull(sculpture, x, y, z);
+		            rb.renderBlockAsItem(sb, 0, 1.0F);
+		            GL11.glEnable(GL11.GL_CULL_FACE);
+		            GL11.glPopMatrix();
+				}else {
+					GL11.glPushMatrix();
+					rb.cull(sculpture, x, y, z);
 					rb.renderBlockAsItem(sb, 0, 1f);
 					GL11.glPopMatrix();
 				}
-				else 
-					Minecraft.getMinecraft().entityRenderer.itemRenderer.renderItem((EntityLivingBase) data[1],
-							is, 0, type);
 			}
 			
 			GL11.glEndList();

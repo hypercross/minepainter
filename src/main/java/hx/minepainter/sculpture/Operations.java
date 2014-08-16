@@ -119,6 +119,7 @@ public class Operations {
 		if(b == Blocks.bedrock)return false;
 		if(b == Blocks.cactus)return false;
 		if(b == Blocks.glass)return true;
+		if(b == Blocks.stained_glass)return true;
 		if(b == Blocks.leaves)return false;
 
 		if(b.hasTileEntity(blockMeta))return false;

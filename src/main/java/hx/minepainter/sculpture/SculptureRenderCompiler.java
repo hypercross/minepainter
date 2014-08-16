@@ -80,7 +80,6 @@ public class SculptureRenderCompiler {
 			if(b == Blocks.air)continue;
 			int meta = slice.getBlockMetadata(x, y, z);
 			sculpture.setCurrentBlock(b, meta);
-			sculpture.setSubCoordinate(x,y,z);
 			
 			tes.setTranslation(-x, -y, -z);
 //			rb.renderStandardBlock(ModMinePainter.sculpture.block, x,y,z);

@@ -6,12 +6,15 @@ import hx.minepainter.ModMinePainter;
 import hx.minepainter.painting.ExpirablePool;
 import hx.minepainter.sculpture.Sculpture;
 import hx.minepainter.sculpture.SculptureBlock;
+import hx.utils.Debug;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -55,7 +58,7 @@ public class DroppedSculptureRenderer implements IItemRenderer{
 	@Override
 	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
 			ItemRendererHelper helper) {
-		return false;
+		return type == ItemRenderType.ENTITY;
 	}
 
 	@Override
@@ -112,8 +115,12 @@ public class DroppedSculptureRenderer implements IItemRenderer{
 					renderItem.renderItemIntoGUI(
 							Minecraft.getMinecraft().fontRenderer,
 							Minecraft.getMinecraft().renderEngine, is, 0, 0);
-				}else if(type == ItemRenderType.ENTITY)
+				}else if(type == ItemRenderType.ENTITY){
+					GL11.glPushMatrix();
 					rb.renderBlockAsItem(sb, 0, 1f);
+					GL11.glPopMatrix();
+//					renderBlockAsItem(sb, rb);
+				}
 				else 
 					Minecraft.getMinecraft().entityRenderer.itemRenderer.renderItem((EntityLivingBase) data[1],
 							is, 0, type);
@@ -125,5 +132,40 @@ public class DroppedSculptureRenderer implements IItemRenderer{
 			sb.setBlockBounds(0,0,0,1,1,1);
 		}
 		
+		private void renderBlockAsItem(Block par1Block,RenderBlocks renderer){
+			Tessellator var4 = Tessellator.instance;
+			int par2 = 0;
+			
+//			GL11.glPushMatrix();
+            GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
+			GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+	        var4.startDrawingQuads();
+	        var4.setNormal(0.0F, -1.0F, 0.0F);
+	        renderer.renderFaceYNeg(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getIcon(0, par2));
+	        var4.draw();
+	        var4.startDrawingQuads();
+	        var4.setNormal(0.0F, 1.0F, 0.0F);
+	        renderer.renderFaceYPos(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getIcon(1, par2));
+	        var4.draw();
+	        var4.startDrawingQuads();
+	        var4.setNormal(0.0F, 0.0F, -1.0F);
+	        renderer.renderFaceZNeg(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getIcon(2, par2));
+	        var4.draw();
+	        var4.startDrawingQuads();
+	        var4.setNormal(0.0F, 0.0F, 1.0F);
+	        renderer.renderFaceZPos(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getIcon(3, par2));
+	        var4.draw();
+	        var4.startDrawingQuads();
+	        var4.setNormal(-1.0F, 0.0F, 0.0F);
+	        renderer.renderFaceXNeg(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getIcon(4, par2));
+	        var4.draw();
+	        var4.startDrawingQuads();
+	        var4.setNormal(1.0F, 0.0F, 0.0F);
+	        renderer.renderFaceXPos(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getIcon(5, par2));
+	        var4.draw();
+	        GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+//	        GL11.glPopMatrix();
+	        
+		}
 	}
 }

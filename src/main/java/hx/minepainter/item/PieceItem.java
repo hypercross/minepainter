@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 public class PieceItem extends ChiselItem{
 
 	public PieceItem(){
+		this.setCreativeTab(null);
 		this.setUnlocalizedName("sculpture_piece");
 		this.setTextureName("");
 		this.setHasSubtypes(true);

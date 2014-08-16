@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -54,6 +55,27 @@ public class PaintingBlock extends BlockContainer{
     
     @Override public int getRenderType(){
     	return -1;
+    }
+    
+    @Override public ItemStack getPickBlock(MovingObjectPosition target, World world,int x,int y,int z){
+    	ItemStack is = new ItemStack(ModMinePainter.canvas.item);
+    	NBTTagCompound nbt = new NBTTagCompound();
+    	PaintingEntity pe = Utils.getTE(world, x, y, z);
+    	
+    	pe.writeImageToNBT(nbt);
+    	is.setTagCompound(nbt);
+    	return is;
+    }
+    
+    @Override
+    public void onNeighborBlockChange(World w, int x, int y, int z, Block block) {
+    	PaintingPlacement pp = PaintingPlacement.of(w.getBlockMetadata(x, y, z));
+    	int tx = x - pp.normal.offsetX;
+    	int ty = y - pp.normal.offsetY;
+    	int tz = z - pp.normal.offsetZ;
+    	if(w.getBlock(tx, ty, tz).getMaterial().isSolid())return;
+    	
+    	w.setBlockToAir(x, y, z);
     }
     
     @Override public void breakBlock(World w,int x,int y,int z,Block b, int meta){

@@ -127,6 +127,16 @@ public class SculptureBlock extends BlockContainer{
 	{
 		return false;
 	}
+    
+    @Override public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z){
+    	SculptureEntity se = Utils.getTE(world, x, y, z);
+    	NBTTagCompound nbt = new NBTTagCompound();
+    	ItemStack is = new ItemStack(ModMinePainter.droppedSculpture.item);
+    	
+    	se.sculpture.write(nbt);
+    	is.setTagCompound(nbt);
+    	return is;
+    }
   
     @Override public int getLightValue(IBlockAccess world,int x,int y,int z){
     	TileEntity te = world.getTileEntity(x, y, z);

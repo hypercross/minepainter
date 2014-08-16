@@ -81,7 +81,7 @@ public class Operations {
 	}
 	
 	public static void dropScrap(World w, int x,int y,int z, Block block, byte meta, int amount){
-		Debug.log("dropping " + block.getUnlocalizedName() + " on " + (w.isRemote ? "client" : "server"));
+//		Debug.log("dropping " + block.getUnlocalizedName() + " on " + (w.isRemote ? "client" : "server"));
 		if(block == Blocks.air)return;
 		
 		int covers = amount / 64;

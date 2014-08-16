@@ -16,39 +16,16 @@ public class PaintTool extends Item{
 	
 	public PaintTool(){
 		this.setCreativeTab(ModMinePainter.tabMinePainter);
+		this.setMaxStackSize(1);
 	}
 
 	public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
 		
-		PaintingEntity pe = Utils.getTE(w, x, y, z);
-		if(pe == null)return false;
-		PaintingPlacement place = PaintingPlacement.of(w.getBlockMetadata(x, y, z));
-		float[] point = place.block2painting(xs, ys, zs);
+		if(!w.isRemote)return false;
 		
-		boolean changed = false;
-		for(int i = -1;i<=1;i++)
-			for(int j = -1;j<=1;j++){
-				int _x = x + place.xpos.offsetX * i + place.ypos.offsetX * j;
-				int _y = y + place.xpos.offsetY * i + place.ypos.offsetY * j;
-				int _z = z + place.xpos.offsetZ * i + place.ypos.offsetZ * j;
-				
-				if(w.getBlock(_x, _y, _z) != ModMinePainter.painting.block)continue;
-				if(w.getBlockMetadata(_x, _y, _z) != place.ordinal())continue;
-				
-				PaintingEntity painting = Utils.getTE(w, _x, _y, _z);
-				
-				point[0] -= i;
-				point[1] -= j;
-				boolean _changed = apply(painting.image, point, getColor(ep,is));
-				point[0] += i;
-				point[1] += j;
-				
-				if(_changed){
-					if(w.isRemote)pe.getIcon().fill(pe.image);
-					else w.markBlockForUpdate(_x, _y, _z);
-					changed = true;
-				}
-			}
+		boolean changed = paintAt(w,x,y,z,xs,ys,zs,getColor(ep,is));
+		
+		if(changed)ModMinePainter.network.sendToServer(new PaintingOperationMessage(this,x,y,z,xs,ys,zs,getColor(ep,is)));
 		
 		return changed;
 	}
@@ -71,6 +48,39 @@ public class PaintTool extends Item{
 	
 	public boolean inBounds(int x,int y){
 		return x>=0 && x<16 && y>=0 && y<16;
+	}
+	
+	public boolean paintAt(World w,int x,int y,int z,float xs,float ys,float zs,int color){
+		PaintingEntity pe = Utils.getTE(w, x, y, z);
+		if(pe == null)return false;
+		PaintingPlacement place = PaintingPlacement.of(w.getBlockMetadata(x, y, z));
+		float[] point = place.block2painting(xs, ys, zs);
+		
+		boolean changed = false;
+		for(int i = -1;i<=1;i++)
+			for(int j = -1;j<=1;j++){
+				int _x = x + place.xpos.offsetX * i + place.ypos.offsetX * j;
+				int _y = y + place.xpos.offsetY * i + place.ypos.offsetY * j;
+				int _z = z + place.xpos.offsetZ * i + place.ypos.offsetZ * j;
+				
+				if(w.getBlock(_x, _y, _z) != ModMinePainter.painting.block)continue;
+				if(w.getBlockMetadata(_x, _y, _z) != place.ordinal())continue;
+				
+				PaintingEntity painting = Utils.getTE(w, _x, _y, _z);
+				
+				point[0] -= i;
+				point[1] -= j;
+				boolean _changed = apply(painting.image, point, color);
+				point[0] += i;
+				point[1] += j;
+				
+				if(_changed){
+					if(w.isRemote)pe.getIcon().fill(pe.image);
+					else w.markBlockForUpdate(_x, _y, _z);
+					changed = true;
+				}
+			}
+		return changed;
 	}
 
 	public static class Mini extends PaintTool{

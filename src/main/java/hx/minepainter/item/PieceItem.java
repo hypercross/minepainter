@@ -36,6 +36,10 @@ public class PieceItem extends ChiselItem{
 		return Operations.PLACE | Operations.CONSUME;
 	}
 	
+	public int getWorthPiece(){
+		return 1;
+	}
+	
 	public static class Bar extends PieceItem{
 		@Override
 		public int getChiselFlags(EntityPlayer ep){
@@ -46,6 +50,10 @@ public class PieceItem extends ChiselItem{
 			case 2 : return Operations.PLACE | Operations.ALLZ | Operations.CONSUME;
 			}
 			return Operations.PLACE;
+		}
+		
+		public int getWorthPiece(){
+			return 8;
 		}
 	}
 	
@@ -59,6 +67,10 @@ public class PieceItem extends ChiselItem{
 			case 2 : return Operations.PLACE | Operations.ALLX | Operations.ALLY | Operations.CONSUME;
 			}
 			return Operations.PLACE;
+		}
+		
+		public int getWorthPiece(){
+			return 64;
 		}
 	}
 }

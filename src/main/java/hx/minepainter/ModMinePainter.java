@@ -12,6 +12,7 @@ import hx.minepainter.item.PieceRenderer;
 import hx.minepainter.painting.PaintTool;
 import hx.minepainter.painting.PaintingBlock;
 import hx.minepainter.painting.PaintingEntity;
+import hx.minepainter.painting.PaintingOperationMessage;
 import hx.minepainter.painting.PaintingRenderer;
 import hx.minepainter.sculpture.SculptureBlock;
 import hx.minepainter.sculpture.SculptureEntity;
@@ -84,10 +85,14 @@ public class ModMinePainter {
 		palette.load();
 		canvas.load();
 		
+		new Crafting().registerRecipes();
+		
 		MinecraftForge.EVENT_BUS.register(new hx.minepainter.EventHandler());
 		network = NetworkRegistry.INSTANCE.newSimpleChannel("minepainter");
 		network.registerMessage(SculptureOperationMessage.SculptureOperationHandler.class, 
 				SculptureOperationMessage.class, 0, Side.SERVER);
+		network.registerMessage(PaintingOperationMessage.PaintingOperationHandler.class, 
+				PaintingOperationMessage.class, 1, Side.SERVER);
 	}
 	
 	@SideOnly(Side.CLIENT)

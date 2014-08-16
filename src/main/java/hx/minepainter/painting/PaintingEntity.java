@@ -1,5 +1,7 @@
 package hx.minepainter.painting;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
@@ -10,6 +12,8 @@ import javax.imageio.ImageIO;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemDye;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -24,10 +28,17 @@ public class PaintingEntity extends TileEntity{
 		 image = new BufferedImage(16,16, BufferedImage.TYPE_INT_ARGB);
 		 
 //		 WritableRaster raster = image.getRaster();
-		 for(int i = 0 ; i < 256; i ++){
-			 image.setRGB(i/16, i%16, 0xff000000 + 0xff111111 * ((i/16 + i%16) / 2) );
+		 for(int i = 0 ; i < 16; i ++){
+			 image.setRGB(i, 0, getColorForDye(i) | 0xff000000);
 //			 raster.setSample(i/16, i%16, 0, i%2 == 0 ? 0xffffffff : 0xff000000);
 		 }
+		 Graphics g = image.getGraphics();
+		 g.setColor(Color.white);
+		 g.fillRect(0, 1, 16, 15);
+	}
+	
+	public int getColorForDye(int dye_index){
+		return ItemDye.field_150922_c[dye_index];
 	}
 	
 	public BufferedImage getImg(){

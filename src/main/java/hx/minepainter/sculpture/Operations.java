@@ -229,11 +229,12 @@ public class Operations {
 		xyzf[0] = x; xyzf[1] = y; xyzf[2] = z;  xyzf[3] = f;
 	}
 	
-	
 	public static final int PLACE = 1;
 	public static final int ALLX = 2;
 	public static final int ALLY = 4;
 	public static final int ALLZ = 8;
+	public static final int DAMAGE = 16;
+	public static final int CONSUME = 32;
 	
 	public static void setBlockBoundsFromRaytrace(int[] pos, Block block, int type){
 		pos = pos.clone();

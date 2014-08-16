@@ -137,6 +137,10 @@ public class SculptureBlock extends BlockContainer{
     
     @Override public void breakBlock(World w, int x,int y,int z,Block b, int meta){
     	SculptureEntity se = Utils.getTE(w, x, y, z);
+    	if(se.sculpture().isEmpty()){
+    		super.breakBlock(w, x, y, z, b, meta);
+    		return;
+    	}
     	NBTTagCompound nbt = new NBTTagCompound();
     	ItemStack is = new ItemStack(ModMinePainter.droppedSculpture.item);
     	

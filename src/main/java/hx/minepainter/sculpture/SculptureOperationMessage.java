@@ -1,7 +1,12 @@
 package hx.minepainter.sculpture;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
+import hx.minepainter.item.ChiselItem;
+import hx.utils.Utils;
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -61,6 +66,21 @@ public class SculptureOperationMessage implements IMessage{
 			World w = ctx.getServerHandler().playerEntity.worldObj;
 			if(Operations.validOperation(w, message.x, message.y, message.z, message.pos, message.flags))
 				Operations.applyOperation(w, message.x, message.y, message.z, message.pos, message.flags, message.block, message.meta);
+			
+			EntityPlayer ep = ctx.getServerHandler().playerEntity;
+			ItemStack is = ep.getCurrentEquippedItem();
+			
+			if((message.flags & Operations.DAMAGE) > 0)
+				is.damageItem(1, ep);
+			else if((Operations.CONSUME & message.flags) > 0){
+				if(!ep.capabilities.isCreativeMode){
+					is.stackSize--;
+					if(is.stackSize <= 0){
+						ForgeEventFactory.onPlayerDestroyItem(ep,is);
+						ep.inventory.mainInventory[ep.inventory.currentItem] = null;
+					}
+				}
+			}				
 			
 			return null;
 		}

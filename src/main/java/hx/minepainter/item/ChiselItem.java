@@ -24,6 +24,8 @@ public class ChiselItem extends Item{
 		this.setCreativeTab(ModMinePainter.tabMinePainter);
 		this.setUnlocalizedName("chisel");
 		this.setTextureName("minepainter:stone_chisel");
+		this.setMaxStackSize(1);
+		this.setMaxDamage(240);
 	}
 	
 	@Override
@@ -55,7 +57,7 @@ public class ChiselItem extends Item{
 	}
 	
 	public int getChiselFlags(EntityPlayer ep){
-		return 0;
+		return Operations.DAMAGE;
 	}
 	
 	public static class Saw extends ChiselItem{
@@ -70,9 +72,9 @@ public class ChiselItem extends Item{
 		public int getChiselFlags(EntityPlayer ep){
 			int axis = Operations.getLookingAxis(ep);
 			switch(axis){
-			case 0: return Operations.ALLY | Operations.ALLZ;
-			case 1: return Operations.ALLX | Operations.ALLZ;
-			case 2: return Operations.ALLX | Operations.ALLY;
+			case 0: return Operations.ALLY | Operations.ALLZ | Operations.DAMAGE;
+			case 1: return Operations.ALLX | Operations.ALLZ | Operations.DAMAGE;
+			case 2: return Operations.ALLX | Operations.ALLY | Operations.DAMAGE;
 			}
 			return 0;
 		}
@@ -90,9 +92,9 @@ public class ChiselItem extends Item{
 		public int getChiselFlags(EntityPlayer ep){
 			int axis = Operations.getLookingAxis(ep);
 			switch(axis){
-			case 0: return Operations.ALLX;
-			case 1: return Operations.ALLY;
-			case 2: return Operations.ALLZ;
+			case 0: return Operations.ALLX | Operations.DAMAGE;
+			case 1: return Operations.ALLY | Operations.DAMAGE;
+			case 2: return Operations.ALLZ | Operations.DAMAGE;
 			}
 			return 0;
 		}

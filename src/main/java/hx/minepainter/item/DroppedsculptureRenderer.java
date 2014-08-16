@@ -119,7 +119,6 @@ public class DroppedSculptureRenderer implements IItemRenderer{
 					GL11.glPushMatrix();
 					rb.renderBlockAsItem(sb, 0, 1f);
 					GL11.glPopMatrix();
-//					renderBlockAsItem(sb, rb);
 				}
 				else 
 					Minecraft.getMinecraft().entityRenderer.itemRenderer.renderItem((EntityLivingBase) data[1],
@@ -130,42 +129,6 @@ public class DroppedSculptureRenderer implements IItemRenderer{
 			
 			sb.setCurrentBlock(null, 0);
 			sb.setBlockBounds(0,0,0,1,1,1);
-		}
-		
-		private void renderBlockAsItem(Block par1Block,RenderBlocks renderer){
-			Tessellator var4 = Tessellator.instance;
-			int par2 = 0;
-			
-//			GL11.glPushMatrix();
-            GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
-			GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-	        var4.startDrawingQuads();
-	        var4.setNormal(0.0F, -1.0F, 0.0F);
-	        renderer.renderFaceYNeg(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getIcon(0, par2));
-	        var4.draw();
-	        var4.startDrawingQuads();
-	        var4.setNormal(0.0F, 1.0F, 0.0F);
-	        renderer.renderFaceYPos(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getIcon(1, par2));
-	        var4.draw();
-	        var4.startDrawingQuads();
-	        var4.setNormal(0.0F, 0.0F, -1.0F);
-	        renderer.renderFaceZNeg(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getIcon(2, par2));
-	        var4.draw();
-	        var4.startDrawingQuads();
-	        var4.setNormal(0.0F, 0.0F, 1.0F);
-	        renderer.renderFaceZPos(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getIcon(3, par2));
-	        var4.draw();
-	        var4.startDrawingQuads();
-	        var4.setNormal(-1.0F, 0.0F, 0.0F);
-	        renderer.renderFaceXNeg(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getIcon(4, par2));
-	        var4.draw();
-	        var4.startDrawingQuads();
-	        var4.setNormal(1.0F, 0.0F, 0.0F);
-	        renderer.renderFaceXPos(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getIcon(5, par2));
-	        var4.draw();
-	        GL11.glTranslatef(0.5F, 0.5F, 0.5F);
-//	        GL11.glPopMatrix();
-	        
 		}
 	}
 }

@@ -27,6 +27,10 @@ public class Sculpture {
 		normalize();
 	}
 	
+	public Rotation getRotation(){
+		return r;
+	}
+	
 	public void write(NBTTagCompound nbt){
 		nbt.setIntArray("block_ids", block_ids);
 		nbt.setByteArray("block_metas", block_metas);

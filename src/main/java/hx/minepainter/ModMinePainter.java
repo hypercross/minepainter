@@ -9,6 +9,7 @@ import hx.minepainter.item.Palette;
 import hx.minepainter.item.PieceItem;
 import hx.minepainter.item.PieceItem.Bar;
 import hx.minepainter.item.PieceRenderer;
+import hx.minepainter.item.WrenchItem;
 import hx.minepainter.painting.PaintTool;
 import hx.minepainter.painting.PaintingBlock;
 import hx.minepainter.painting.PaintingEntity;
@@ -40,7 +41,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 //TODO add a sculpture motor block thing
 //TODO add a set of sculpture 'brush' that replaces materials
 //TODO wear a painting
-@Mod(modid = "minepainter", version = "0.2.4")
+@Mod(modid = "minepainter", version = "0.2.5")
 public class ModMinePainter {
 	
 	public static CreativeTabs tabMinePainter = new CreativeTabs("minepainter"){
@@ -62,7 +63,8 @@ public class ModMinePainter {
 	public static ItemLoader<PieceItem> piece = new ItemLoader(new PieceItem());
 	public static ItemLoader<PieceItem> bar = new ItemLoader(new PieceItem.Bar());
 	public static ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover());
-	public static ItemLoader<DroppedSculptureItem> droppedSculpture = new ItemLoader(new DroppedSculptureItem()); 
+	public static ItemLoader<DroppedSculptureItem> droppedSculpture = new ItemLoader(new DroppedSculptureItem());
+	public static ItemLoader<WrenchItem> wrench = new ItemLoader(new WrenchItem());
 	public static ItemLoader<PaintTool> minibrush = new ItemLoader(new PaintTool.Mini());
 	public static ItemLoader<PaintTool> mixerbrush = new ItemLoader(new PaintTool.Mixer());
 	public static ItemLoader<PaintTool> bucket = new ItemLoader(new PaintTool.Bucket());
@@ -85,6 +87,7 @@ public class ModMinePainter {
 		bar.load();
 		cover.load();
 		droppedSculpture.load();
+		wrench.load();
 		minibrush.load();
 		mixerbrush.load();
 		bucket.load();

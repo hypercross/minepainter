@@ -27,7 +27,7 @@ public class SculptureRenderCompiler {
 
 	int glDisplayList = -1;
 	int light;
-	boolean changed = true;
+	public boolean changed = true;
 	boolean context = false;
 	float[][][] neighborAO = new float[3][3][3];
 	

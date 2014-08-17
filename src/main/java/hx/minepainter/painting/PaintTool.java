@@ -136,12 +136,17 @@ public class PaintTool extends Item{
 	    }
 	    
 	    @Override public int getColorFromItemStack(ItemStack par1ItemStack, int par2){
-			if(par2==1)return ItemDye.field_150922_c[par1ItemStack.getItemDamage()];
+			if(par2==1)return getColor(par1ItemStack.getItemDamage(),0);
 			return super.getColorFromItemStack(par1ItemStack, par2);
 		}
 	    
 	    @Override public int getColor(EntityPlayer ep, ItemStack is){
-	    	return ItemDye.field_150922_c[is.getItemDamage()] | 0xff000000;
+	    	return getColor(is.getItemDamage(), 0xff000000);
+	    }
+	    
+	    private int getColor(int dmg, int mask){
+	    	if(dmg<16)return ItemDye.field_150922_c[dmg] | mask;
+	    	return 0xffffff;
 	    }
 		
 		@Override public boolean apply(BufferedImage img, float[] point, int color){
@@ -156,8 +161,7 @@ public class PaintTool extends Item{
 			for(int i = 0; i < 256; i ++){
 				x = i / 16;
 				y = i % 16;
-				if(img.getRGB(x,y) == from_color)
-					img.setRGB(x, y, color);
+				img.setRGB(x, y, color);
 			}
 			
 			return true;
@@ -224,8 +228,31 @@ public class PaintTool extends Item{
 			this.setUnlocalizedName("eraser").setTextureName("minepainter:eraser");
 		}
 		
-		@Override public int getColor(EntityPlayer ep, ItemStack is){
-			return 0;
+		@Override public boolean apply(BufferedImage img, float[] point, int color){
+			
+			int x = (int) (point[0] * 16 + 16) - 16;
+			int y = (int) (point[1] * 16 + 16) - 16;
+			
+			boolean changed = false;
+			for(int i = -1; i <=1; i++)
+				for(int j = -1; j <= 1; j++){
+					if(!inBounds(x+i,y+j))continue;
+					changed = true;
+					
+					color = img.getRGB(x+i, y+j);
+					int a75 = (int)(((color >> 24) & 0xff) * 0.75f) << 24; 
+					a75 += color & 0xffffff;
+					int a50 = (int)(((color >> 24) & 0xff) * 0.5f) << 24;
+					a50 += color & 0xffffff;
+					
+					int to_blend = Math.abs(i) + Math.abs(j);
+					if(to_blend == 0)to_blend = 0;
+					else if(to_blend == 1)to_blend = a50;
+					else to_blend = a75;
+					
+					img.setRGB(x+i, y+j, to_blend);
+				}
+			return changed;
 		}
 	}
 }

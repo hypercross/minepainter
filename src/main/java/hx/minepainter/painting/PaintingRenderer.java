@@ -25,6 +25,8 @@ public class PaintingRenderer extends TileEntitySpecialRenderer{
 		GL11.glPushMatrix();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, icon.sheet.glTexId);
         RenderHelper.disableStandardItemLighting();
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_BLEND);
 		GL11.glTranslated(x, y, z);
 //		GL11.glScalef(0.875f, 0.875f, 0.875f);
 		
@@ -37,6 +39,7 @@ public class PaintingRenderer extends TileEntitySpecialRenderer{
 		tes.draw();
 		
 		GL11.glPopMatrix();
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
 	private void addPoint(PaintingPlacement pp, int x,int y, IIcon icon){

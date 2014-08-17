@@ -157,7 +157,7 @@ public class Crafting {
 					bucket = is;
 					continue;
 				}
-				if(is.getItem() instanceof ItemDye){
+				if(is.getItem() instanceof ItemDye || is.getItem() == Items.slime_ball){
 					if(dye != null)return false;
 					dye = is;
 					continue;
@@ -181,14 +181,14 @@ public class Crafting {
 					bucket = is;
 					continue;
 				}
-				if(is.getItem() instanceof ItemDye){
+				if(is.getItem() instanceof ItemDye || is.getItem() == Items.slime_ball){
 					if(dye != null)return null;
 					dye = is;
 					continue;
 				}
 			}
 			ItemStack newbucket = new ItemStack(ModMinePainter.bucket.item);
-			newbucket.setItemDamage(dye.getItemDamage());
+			newbucket.setItemDamage(dye.getItem() == Items.slime_ball ? 16 : dye.getItemDamage());
 			return newbucket;
 		}
 	};

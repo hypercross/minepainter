@@ -51,9 +51,11 @@ public class SculptureRenderCompiler {
 		if(glDisplayList != -1 && !changed)return false;
 		
 		if(glDisplayList < 0)glDisplayList = GLAllocation.generateDisplayLists(1);
+		GL11.glPushMatrix();
 		GL11.glNewList(glDisplayList, GL11.GL_COMPILE);
 		build(slice);
 		GL11.glEndList();
+		GL11.glPopMatrix();
 		
 		changed = false;
 		return true;
@@ -67,7 +69,7 @@ public class SculptureRenderCompiler {
 		TextureManager tm = Minecraft.getMinecraft().renderEngine;
 		tm.bindTexture(TextureMap.locationBlocksTexture);
 		
-		Tessellator tes = Tessellator.instance;
+		Tessellator tes = new Tessellator();
 		tes.startDrawingQuads();
 		tes.setTranslation(0d,0d,0d);
 		

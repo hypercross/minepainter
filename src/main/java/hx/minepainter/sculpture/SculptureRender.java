@@ -30,7 +30,10 @@ public class SculptureRender implements ISimpleBlockRenderingHandler{
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
 			Block block, int modelId, RenderBlocks renderer) {
 
+		if(world.getBlock(x, y, z) != ModMinePainter.sculpture.block)return false;
+		
 		SculptureEntity se = (SculptureEntity) world.getTileEntity(x, y, z);
+		
 		se.getRender().updateLight(block.getMixedBrightnessForBlock(world, x, y, z));
 		se.getRender().updateAO(world, x, y, z);
 		

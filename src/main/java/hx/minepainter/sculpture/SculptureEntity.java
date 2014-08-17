@@ -8,6 +8,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public class SculptureEntity extends TileEntity{
 
@@ -28,6 +29,12 @@ public class SculptureEntity extends TileEntity{
 	
 	@Override @SideOnly(Side.CLIENT)
 	public void updateEntity(){
+		super.updateEntity();
+		updateRender();
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void updateRender(){
 		if(this.worldObj.isRemote){
 			BlockSlice slice = BlockSlice.at(worldObj, xCoord, yCoord, zCoord);
 			if(getRender().update(slice))
@@ -36,8 +43,7 @@ public class SculptureEntity extends TileEntity{
 		}
 	}
 	
-	
-    @Override
+    @Override @SideOnly(Side.CLIENT)
 	public void invalidate()
 	{
         super.invalidate();
@@ -45,7 +51,7 @@ public class SculptureEntity extends TileEntity{
         	getRender().clear();
 	}
 	
-        @Override
+    @Override @SideOnly(Side.CLIENT)
 	public void onChunkUnload()
 	{
         super.onChunkUnload();

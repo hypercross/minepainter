@@ -28,7 +28,19 @@ public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 	    GL11.glEnable(GL11.GL_BLEND);
 	    OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-	    se.updateRender();
+	    
+	    if(!se.getRender().ready() && !se.getRender().hasContext()){
+	    	
+	    	int lightX = (int) (OpenGlHelper.lastBrightnessX);
+	    	int lightY = (int) (OpenGlHelper.lastBrightnessY);
+	    	int light = lightY * 65536 + lightX; 
+	    	
+	    	se.getRender().initFromSculptureAndLight(se.sculpture(), light);
+	    }
+	    else
+	    	se.updateRender();
+
+	    
 	    
 		GL11.glPushMatrix();
 		GL11.glTranslated(xd,yd,zd);		

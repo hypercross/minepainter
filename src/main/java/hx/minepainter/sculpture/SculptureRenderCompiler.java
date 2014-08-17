@@ -28,6 +28,7 @@ public class SculptureRenderCompiler {
 	int glDisplayList = -1;
 	int light;
 	boolean changed = true;
+	boolean context = false;
 	float[][][] neighborAO = new float[3][3][3];
 	
 	public void updateAO(IBlockAccess w, int x,int y,int z){
@@ -42,13 +43,19 @@ public class SculptureRenderCompiler {
 				neighborAO[dx][dy][dz] = ao;
 			}
 		}
+		context = true;
 	}
 	
 	public void updateLight(int light){
 		if(light != this.light)
 			changed = true;
 		this.light = light;
+		context = true;
 	}	
+	
+	public boolean hasContext(){
+		return context;
+	}
 	
 	public boolean update(BlockSlice slice){
 		if(glDisplayList != -1 && !changed)return false;
@@ -129,6 +136,10 @@ public class SculptureRenderCompiler {
 		off[2] = ObfuscationReflectionHelper.getPrivateValue(Tessellator.class, Tessellator.instance, xoff+2);
 		
 		return off;
+	}
+
+	public void initFromSculptureAndLight(Sculpture sculpture,int light) {
+		this.update(BlockSlice.of(sculpture, light));
 	}
 	
 }

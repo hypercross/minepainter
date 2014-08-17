@@ -2,13 +2,18 @@ package hx.minepainter.painting;
 
 import java.awt.image.BufferedImage;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.ModMinePainter;
 import hx.minepainter.item.Palette;
 import hx.utils.Debug;
 import hx.utils.Utils;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -103,6 +108,62 @@ public class PaintTool extends Item{
 		}
 	}
 	
+	public static class Bucket extends PaintTool{
+		IIcon fill;
+		public Bucket(){
+			super();
+			this.setUnlocalizedName("paint_bucket");
+			this.setTextureName("minepainter:bucket");
+			this.setHasSubtypes(true);
+		}
+		
+		@Override public boolean requiresMultipleRenderPasses(){
+	        return true;
+	    }
+		
+	    @Override public int getRenderPasses(int metadata){
+			return 2;
+		}
+	    
+	    @Override public IIcon getIcon(ItemStack is, int renderPass){
+			if(renderPass == 0)return itemIcon;
+			return fill;
+		}
+	    
+	    @SideOnly(Side.CLIENT) @Override public void registerIcons(IIconRegister par1IconRegister){
+	        super.registerIcons(par1IconRegister);
+	        fill = par1IconRegister.registerIcon("minepainter:bucket_fill");
+	    }
+	    
+	    @Override public int getColorFromItemStack(ItemStack par1ItemStack, int par2){
+			if(par2==1)return ItemDye.field_150922_c[par1ItemStack.getItemDamage()];
+			return super.getColorFromItemStack(par1ItemStack, par2);
+		}
+	    
+	    @Override public int getColor(EntityPlayer ep, ItemStack is){
+	    	return ItemDye.field_150922_c[is.getItemDamage()] | 0xff000000;
+	    }
+		
+		@Override public boolean apply(BufferedImage img, float[] point, int color){
+			
+			int x = (int) (point[0] * 16 + 16) - 16;
+			int y = (int) (point[1] * 16 + 16) - 16;
+			
+			if(!inBounds(x,y))return false;
+			
+			int from_color = img.getRGB(x, y);
+			
+			for(int i = 0; i < 256; i ++){
+				x = i / 16;
+				y = i % 16;
+				if(img.getRGB(x,y) == from_color)
+					img.setRGB(x, y, color);
+			}
+			
+			return true;
+		}
+	}
+	
 	public static class Mixer extends PaintTool{
 		
 		public Mixer(){
@@ -157,5 +218,14 @@ public class PaintTool extends Item{
 		
 	}
 	
-	
+	public static class Eraser extends Mixer{
+		public Eraser(){
+			super();
+			this.setUnlocalizedName("eraser").setTextureName("minepainter:eraser");
+		}
+		
+		@Override public int getColor(EntityPlayer ep, ItemStack is){
+			return 0;
+		}
+	}
 }

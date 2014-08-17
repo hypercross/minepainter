@@ -65,8 +65,10 @@ public class ModMinePainter {
 	public static ItemLoader<DroppedSculptureItem> droppedSculpture = new ItemLoader(new DroppedSculptureItem()); 
 	public static ItemLoader<PaintTool> minibrush = new ItemLoader(new PaintTool.Mini());
 	public static ItemLoader<PaintTool> mixerbrush = new ItemLoader(new PaintTool.Mixer());
+	public static ItemLoader<PaintTool> bucket = new ItemLoader(new PaintTool.Bucket());
 	public static ItemLoader<Palette> palette = new ItemLoader(new Palette());
 	public static ItemLoader<CanvasItem> canvas = new ItemLoader(new CanvasItem());
+	
 	
 	public static SimpleNetworkWrapper network;
 	
@@ -84,6 +86,7 @@ public class ModMinePainter {
 		droppedSculpture.load();
 		minibrush.load();
 		mixerbrush.load();
+		bucket.load();
 		palette.load();
 		canvas.load();
 		

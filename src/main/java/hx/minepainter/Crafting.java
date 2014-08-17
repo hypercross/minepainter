@@ -1,11 +1,14 @@
 package hx.minepainter;
 
 import hx.minepainter.item.PieceItem;
+import hx.minepainter.painting.PaintTool;
 import hx.utils.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemBucket;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
@@ -47,6 +50,8 @@ public class Crafting {
                 'Y', new ItemStack(Items.stick));
 		
 		GameRegistry.addRecipe(scrap);
+		
+		GameRegistry.addRecipe(fillBucket);
 	}
 	
 	private IRecipe scrap = new IRecipe(){
@@ -124,6 +129,67 @@ public class Crafting {
 		@Override
 		public ItemStack getRecipeOutput() {
 			return null;
+		}
+	};
+	
+	private IRecipe fillBucket = new IRecipe(){
+		@Override
+		public int getRecipeSize() {
+			return 0;
+		}
+
+		@Override
+		public ItemStack getRecipeOutput() {
+			return null;
+		}
+		
+		@Override
+		public boolean matches(InventoryCrafting ic, World w) {
+			ItemStack bucket = null;
+			ItemStack dye = null;
+			
+			int size = ic.getSizeInventory();
+			for(int i = 0 ; i < size; i ++){
+				ItemStack is = ic.getStackInSlot(i);
+				if(is == null)continue;
+				if(is.getItem() instanceof PaintTool.Bucket || is.getItem() instanceof ItemBucket){
+					if(bucket != null)return false;
+					bucket = is;
+					continue;
+				}
+				if(is.getItem() instanceof ItemDye){
+					if(dye != null)return false;
+					dye = is;
+					continue;
+				}
+				return false;
+			}
+			return bucket != null && dye != null;
+		}
+		
+		@Override
+		public ItemStack getCraftingResult(InventoryCrafting ic) {
+			ItemStack bucket = null;
+			ItemStack dye = null;
+			
+			int size = ic.getSizeInventory();
+			for(int i = 0 ; i < size; i ++){
+				ItemStack is = ic.getStackInSlot(i);
+				if(is == null)continue;
+				if(is.getItem() instanceof PaintTool.Bucket || is.getItem() instanceof ItemBucket){
+					if(bucket != null)return null;
+					bucket = is;
+					continue;
+				}
+				if(is.getItem() instanceof ItemDye){
+					if(dye != null)return null;
+					dye = is;
+					continue;
+				}
+			}
+			ItemStack newbucket = new ItemStack(ModMinePainter.bucket.item);
+			newbucket.setItemDamage(dye.getItemDamage());
+			return newbucket;
 		}
 	};
 }

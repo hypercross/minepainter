@@ -36,6 +36,7 @@ public class SculptureEntity extends TileEntity{
 		}
 	}
 	
+	
     @Override
 	public void invalidate()
 	{

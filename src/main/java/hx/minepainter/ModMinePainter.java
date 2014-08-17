@@ -40,7 +40,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 //TODO add a sculpture motor block thing
 //TODO add a set of sculpture 'brush' that replaces materials
 //TODO wear a painting
-@Mod(modid = "minepainter", version = "0.2.2")
+@Mod(modid = "minepainter", version = "0.2.3")
 public class ModMinePainter {
 	
 	public static CreativeTabs tabMinePainter = new CreativeTabs("minepainter"){
@@ -101,7 +101,7 @@ public class ModMinePainter {
 	@EventHandler
 	public void preInitClient(FMLInitializationEvent e){
 //		sculpture.registerRendering(new SculptureRender(), null);
-		sculpture.registerRendering(null, new SculptureEntityRenderer());
+		sculpture.registerRendering(new SculptureRender(), new SculptureEntityRenderer());
 		painting.registerRendering(null, new PaintingRenderer());
 		
 		piece.registerRendering(new PieceRenderer());

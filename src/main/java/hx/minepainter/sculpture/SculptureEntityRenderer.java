@@ -1,9 +1,12 @@
 package hx.minepainter.sculpture;
 
 import hx.minepainter.ModMinePainter;
+import hx.utils.Debug;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -12,6 +15,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+@SideOnly(Side.CLIENT)
 public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 
 	@Override
@@ -21,8 +25,7 @@ public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 		Block block = ModMinePainter.sculpture.block;
 		World world = se.getWorldObj();
 		int x = (int) xd, y = (int) yd, z = (int) zd;
-		se.getRender().updateLight(block.getMixedBrightnessForBlock(world, x, y, z));
-		se.getRender().updateAO(world, x, y, z);
+//		se.updateEntity();
 
 		RenderHelper.disableStandardItemLighting();
 		GL11.glShadeModel(GL11.GL_SMOOTH);

@@ -34,13 +34,13 @@ public class SculptureRender implements ISimpleBlockRenderingHandler{
 		se.getRender().updateLight(block.getMixedBrightnessForBlock(world, x, y, z));
 		se.getRender().updateAO(world, x, y, z);
 		
-		GL11.glPushMatrix();
-		GL11.glTranslated(x,y,z);
-		GL11.glTranslated(-chunk_x, -chunk_y, -chunk_z);		
-		if(se.getRender().ready())GL11.glCallList(se.getRender().glDisplayList);
-		GL11.glPopMatrix();
+//		GL11.glPushMatrix();
+//		GL11.glTranslated(x,y,z);
+//		GL11.glTranslated(-chunk_x, -chunk_y, -chunk_z);		
+//		if(se.getRender().ready())GL11.glCallList(se.getRender().glDisplayList);
+//		GL11.glPopMatrix();
 		
-		return true;
+		return false;
 	}
 
 	@Override

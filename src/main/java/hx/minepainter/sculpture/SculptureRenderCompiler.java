@@ -1,10 +1,13 @@
 package hx.minepainter.sculpture;
 
+import java.lang.reflect.Field;
+
 import hx.minepainter.ModMinePainter;
 import hx.utils.Debug;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -69,9 +72,11 @@ public class SculptureRenderCompiler {
 		TextureManager tm = Minecraft.getMinecraft().renderEngine;
 		tm.bindTexture(TextureMap.locationBlocksTexture);
 		
-		Tessellator tes = new Tessellator();
+		Tessellator tes = Tessellator.instance;
+		double[] offs = getTesOffsets();
+		tes.setTranslation(0, 0, 0);
 		tes.startDrawingQuads();
-		tes.setTranslation(0d,0d,0d);
+		
 		
 		for(int i = 0; i < 512; i ++){
 			int x = (i >> 6) & 7;
@@ -93,6 +98,7 @@ public class SculptureRenderCompiler {
 		sculpture.setBlockBounds(0,0,0,1,1,1);
 		rb.blockAccess = null;
 		tes.draw();
+		tes.setTranslation(offs[0], offs[1], offs[2]);
 	}
 
 	public void clear(){
@@ -104,4 +110,25 @@ public class SculptureRenderCompiler {
 	public boolean ready() {
 		return glDisplayList>=0;
 	}
+	
+	private double[] getTesOffsets(){
+		double[] off = new double[3];
+		
+		int count = 0;
+		int xoff = 0;
+		Field[] fields = Tessellator.class.getDeclaredFields();
+		for(int i = 0;i < fields.length; i++)
+			if(fields[i].getType() == double.class){
+				count++;
+				if(count == 3)xoff = i-2;
+			}else
+				count = 0;
+		
+		off[0] = ObfuscationReflectionHelper.getPrivateValue(Tessellator.class, Tessellator.instance, xoff  );
+		off[1] = ObfuscationReflectionHelper.getPrivateValue(Tessellator.class, Tessellator.instance, xoff+1);
+		off[2] = ObfuscationReflectionHelper.getPrivateValue(Tessellator.class, Tessellator.instance, xoff+2);
+		
+		return off;
+	}
+	
 }

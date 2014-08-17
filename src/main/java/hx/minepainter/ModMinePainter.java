@@ -16,6 +16,7 @@ import hx.minepainter.painting.PaintingOperationMessage;
 import hx.minepainter.painting.PaintingRenderer;
 import hx.minepainter.sculpture.SculptureBlock;
 import hx.minepainter.sculpture.SculptureEntity;
+import hx.minepainter.sculpture.SculptureEntityRenderer;
 import hx.minepainter.sculpture.SculptureOperationMessage;
 import hx.minepainter.sculpture.SculptureRender;
 import hx.utils.BlockLoader;
@@ -28,6 +29,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -38,7 +40,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 //TODO add a sculpture motor block thing
 //TODO add a set of sculpture 'brush' that replaces materials
 //TODO wear a painting
-@Mod(modid = "minepainter", version = "0.2.1")
+@Mod(modid = "minepainter", version = "0.2.2")
 public class ModMinePainter {
 	
 	public static CreativeTabs tabMinePainter = new CreativeTabs("minepainter"){
@@ -69,7 +71,7 @@ public class ModMinePainter {
 	public static SimpleNetworkWrapper network;
 	
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent e){
+	public void preInit(FMLInitializationEvent e){
 		sculpture.load();
 		painting.load();
 		
@@ -97,8 +99,9 @@ public class ModMinePainter {
 	
 	@SideOnly(Side.CLIENT)
 	@EventHandler
-	public void preInitClient(FMLPreInitializationEvent e){
+	public void preInitClient(FMLInitializationEvent e){
 		sculpture.registerRendering(new SculptureRender(), null);
+//		sculpture.registerRendering(null, new SculptureEntityRenderer());
 		painting.registerRendering(null, new PaintingRenderer());
 		
 		piece.registerRendering(new PieceRenderer());

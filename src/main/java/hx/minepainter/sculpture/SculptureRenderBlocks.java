@@ -1,5 +1,7 @@
 package hx.minepainter.sculpture;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import hx.utils.Debug;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -7,6 +9,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
+@SideOnly(Side.CLIENT)
 public class SculptureRenderBlocks extends RenderBlocks{
 
 	private double[] overrideBounds = new double[6];

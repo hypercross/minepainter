@@ -100,8 +100,8 @@ public class ModMinePainter {
 	@SideOnly(Side.CLIENT)
 	@EventHandler
 	public void preInitClient(FMLInitializationEvent e){
-		sculpture.registerRendering(new SculptureRender(), null);
-//		sculpture.registerRendering(null, new SculptureEntityRenderer());
+//		sculpture.registerRendering(new SculptureRender(), null);
+		sculpture.registerRendering(null, new SculptureEntityRenderer());
 		painting.registerRendering(null, new PaintingRenderer());
 		
 		piece.registerRendering(new PieceRenderer());

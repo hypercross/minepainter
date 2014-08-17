@@ -28,6 +28,7 @@ public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 	    GL11.glEnable(GL11.GL_BLEND);
 	    OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+	    se.updateRender();
 	    
 		GL11.glPushMatrix();
 		GL11.glTranslated(xd,yd,zd);		

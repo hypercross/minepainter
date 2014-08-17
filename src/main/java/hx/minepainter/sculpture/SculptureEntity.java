@@ -27,12 +27,6 @@ public class SculptureEntity extends TileEntity{
 		return render;
 	}
 	
-	@Override @SideOnly(Side.CLIENT)
-	public void updateEntity(){
-		super.updateEntity();
-		updateRender();
-	}
-	
 	@SideOnly(Side.CLIENT)
 	public void updateRender(){
 		if(this.worldObj.isRemote){

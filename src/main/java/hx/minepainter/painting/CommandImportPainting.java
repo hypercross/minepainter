@@ -39,7 +39,7 @@ public class CommandImportPainting extends CommandBase {
 		}
 		try {
 			BufferedImage img = ImageIO.read(new URL(url));
-			//TODO add that image
+			//TODO [DEFER] add that image
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

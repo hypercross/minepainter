@@ -39,8 +39,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-//TODO add a sculpture motor block thing
-//TODO add a sculpture printer block
+//TODO [DEFER] add a sculpture motor block thing
+//TODO [DEFER] add a sculpture printer block
 @Mod(modid = "minepainter", version = "0.2.6")
 public class ModMinePainter {
 	

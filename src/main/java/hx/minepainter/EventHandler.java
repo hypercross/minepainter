@@ -26,26 +26,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
-//TODO auto craft pieces together
 public class EventHandler {
 	
-//	@SubscribeEvent
-//	public void onPickupSculptureScrap(EntityItemPickupEvent e){
-//		if(!(e.item.getEntityItem().getItem() instanceof PieceItem))return;
-//		
-//		ItemStack picked = e.item.getEntityItem();
-//		PieceItem pi = Utils.getItem(picked);
-//		InventoryPlayer ip = e.entityPlayer.inventory;
-//		for(int i = 0; i < ip.getSizeInventory(); i ++){
-//			ItemStack is = ip.getStackInSlot(i);
-//			if(is == null)continue;
-//			if(is.getItem() != pi)continue;
-//			if(is.getItemDamage() != picked.getItemDamage())continue;
-//			if(is.stackSize <= 8)continue;
-//			  
-//		}
-//	}
-
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onPreRenderWorld(RenderWorldEvent.Pre e){

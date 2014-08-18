@@ -23,7 +23,9 @@ public class WrenchItem extends Item{
 		
 		SculptureEntity se = Utils.getTE(w, x, y, z);
 		
-		se.sculpture().getRotation().rotate(face);
+		if(ep.isSneaking())se.sculpture().getRotation().rotate(face);
+		else se.sculpture().getRotation().rotate(face ^ 1);
+		
 		if(w.isRemote)se.getRender().changed = true;
 		else w.markBlockForUpdate(x, y, z);
 		

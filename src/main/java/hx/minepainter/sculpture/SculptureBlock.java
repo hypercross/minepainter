@@ -26,7 +26,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-//TODO add hooks for block bounds
 //TODO add hooks for transparent blocks
 public class SculptureBlock extends BlockContainer{
 

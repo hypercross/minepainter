@@ -40,8 +40,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 //TODO add a sculpture motor block thing
-//TODO add a set of sculpture 'brush' that replaces materials
-//TODO wear a painting
+//TODO add a sculpture printer block
 @Mod(modid = "minepainter", version = "0.2.6")
 public class ModMinePainter {
 	

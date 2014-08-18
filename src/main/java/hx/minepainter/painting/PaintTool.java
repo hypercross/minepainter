@@ -59,6 +59,7 @@ public class PaintTool extends Item{
 	}
 	
 	public boolean paintAt(World w,int x,int y,int z,float xs,float ys,float zs,int color){
+		if(w.getBlock(x, y, z) != ModMinePainter.painting.block)return false;
 		PaintingEntity pe = Utils.getTE(w, x, y, z);
 		if(pe == null)return false;
 		PaintingPlacement place = PaintingPlacement.of(w.getBlockMetadata(x, y, z));

@@ -17,7 +17,7 @@ public class BlockLoader<T extends Block> {
 	public final Class<? extends TileEntity> tileEntityClass;
 	
 	@SideOnly(Side.CLIENT)
-	public int renderID = -1;
+	public int renderID;
 	
 	public BlockLoader(T block, Class<? extends TileEntity> clazz){
 		this.block = block;

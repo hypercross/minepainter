@@ -27,6 +27,7 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -47,7 +48,7 @@ public class ModMinePainter {
 	public static CreativeTabs tabMinePainter = new CreativeTabs("minepainter"){
 
 		@Override public Item getTabIconItem() {
-			return Item.getItemFromBlock(Blocks.stone);
+			return ModMinePainter.mixerbrush.item;
 		}
 		
 	};

@@ -8,12 +8,15 @@ import hx.minepainter.ModMinePainter;
 import hx.minepainter.item.Palette;
 import hx.utils.Debug;
 import hx.utils.Utils;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -115,6 +118,14 @@ public class PaintTool extends Item{
 			this.setUnlocalizedName("paint_bucket");
 			this.setTextureName("minepainter:bucket");
 			this.setHasSubtypes(true);
+		}
+		
+		@Override public ItemStack onItemRightClick(ItemStack is, World w, EntityPlayer ep){
+			MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(w, ep, true);
+			if(mop == null)return is;
+			Material m = w.getBlock(mop.blockX, mop.blockY, mop.blockZ).getMaterial();
+			if(m.isLiquid())return new ItemStack(Items.bucket);
+			return is;
 		}
 		
 		@Override public boolean requiresMultipleRenderPasses(){

@@ -42,7 +42,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 //TODO add a sculpture motor block thing
 //TODO add a set of sculpture 'brush' that replaces materials
 //TODO wear a painting
-@Mod(modid = "minepainter", version = "0.2.5")
+@Mod(modid = "minepainter", version = "0.2.6")
 public class ModMinePainter {
 	
 	public static CreativeTabs tabMinePainter = new CreativeTabs("minepainter"){

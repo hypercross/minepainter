@@ -42,12 +42,28 @@ public class Crafting {
 		GameRegistry.addRecipe(new ItemStack(ModMinePainter.barcutter.item),
                 "X ", " Y",
                 'X', new ItemStack(Items.iron_ingot),
-                'Y', new ItemStack(Items.stick));
+                'Y', new ItemStack(ModMinePainter.chisel.item));
 		
 		GameRegistry.addRecipe(new ItemStack(ModMinePainter.saw.item),
                 "X ", " Y",
                 'X', new ItemStack(Items.diamond),
-                'Y', new ItemStack(Items.stick));
+                'Y', new ItemStack(ModMinePainter.barcutter.item));
+		
+		GameRegistry.addRecipe(new ItemStack(ModMinePainter.palette.item),
+				"X", "Y",
+				'X', new ItemStack(Blocks.planks),
+				'Y', new ItemStack(ModMinePainter.chisel.item));
+		
+		GameRegistry.addRecipe(new ItemStack(ModMinePainter.eraser.item),
+				"XX ", "YY ", "ZZ ",
+				'X', new ItemStack(Items.slime_ball),
+				'Y', new ItemStack(Items.paper),
+				'Z', new ItemStack(Items.dye, 1, 4));
+		
+		GameRegistry.addRecipe(new ItemStack(ModMinePainter.wrench.item),
+				"XX ","YX ", " X ",
+				'X', new ItemStack(Items.iron_ingot),
+				'Y', new ItemStack(Items.dye, 1, 1));
 		
 		GameRegistry.addRecipe(scrap);
 		
@@ -152,7 +168,7 @@ public class Crafting {
 			for(int i = 0 ; i < size; i ++){
 				ItemStack is = ic.getStackInSlot(i);
 				if(is == null)continue;
-				if(is.getItem() instanceof PaintTool.Bucket || is.getItem() instanceof ItemBucket){
+				if(is.getItem() instanceof PaintTool.Bucket || is.getItem() == Items.water_bucket){
 					if(bucket != null)return false;
 					bucket = is;
 					continue;
@@ -176,7 +192,7 @@ public class Crafting {
 			for(int i = 0 ; i < size; i ++){
 				ItemStack is = ic.getStackInSlot(i);
 				if(is == null)continue;
-				if(is.getItem() instanceof PaintTool.Bucket || is.getItem() instanceof ItemBucket){
+				if(is.getItem() instanceof PaintTool.Bucket || is.getItem() == Items.water_bucket){
 					if(bucket != null)return null;
 					bucket = is;
 					continue;

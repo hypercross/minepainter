@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 public class PieceItem extends ChiselItem{
 
@@ -17,6 +18,13 @@ public class PieceItem extends ChiselItem{
 		this.setHasSubtypes(true);
 		this.setMaxStackSize(64);
 		this.setMaxDamage(0);
+	}
+	
+	@Override
+    public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
+		boolean happened = super.onItemUse(is, ep, w, x, y, z, face, xs, ys, zs);
+		if(happened)w.playSoundEffect(x+0.5d, y+0.5d, z+0.5d, getEditBlock(is).stepSound.soundName, 0.5f, 0.5f);
+		return happened;
 	}
 	
 	@Override public void registerIcons(IIconRegister r){}

@@ -26,6 +26,9 @@ public class WrenchItem extends Item{
 		se.sculpture().getRotation().rotate(face);
 		if(w.isRemote)se.getRender().changed = true;
 		else w.markBlockForUpdate(x, y, z);
+		
+		w.playSoundEffect(x+0.5d, y+0.5d, z+0.5d, "tile.piston.out", 0.5f, 0.5f);
+		
 		return true;
 	}
 }

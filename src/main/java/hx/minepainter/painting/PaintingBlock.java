@@ -21,6 +21,8 @@ import net.minecraft.world.World;
 
 public class PaintingBlock extends BlockContainer{
 
+	public boolean ignore_bounds_on_state;
+	
 	public PaintingBlock() {
 		super(Material.cloth);
 		this.setBlockTextureName("minepainter:palette");
@@ -49,6 +51,7 @@ public class PaintingBlock extends BlockContainer{
     }
     
     @Override public void setBlockBoundsBasedOnState(IBlockAccess iba,int x,int y,int z) {
+    	if(ignore_bounds_on_state)return;
     	PaintingPlacement placement = PaintingPlacement.of(iba.getBlockMetadata(x, y, z));
     	placement.setBlockBounds(this);
     }

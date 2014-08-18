@@ -1,5 +1,6 @@
 package hx.minepainter.item;
 
+import hx.minepainter.ModMinePainter;
 import hx.minepainter.painting.PaintingCache;
 import hx.minepainter.painting.PaintingIcon;
 
@@ -34,7 +35,7 @@ public class CanvasRenderer implements IItemRenderer{
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
         
-    	IIcon icon = Items.painting.getIconFromDamage(0);
+    	IIcon icon = ModMinePainter.canvas.item.getIconFromDamage(0);
     	if(item.hasTagCompound()){
     		PaintingIcon pi = PaintingCache.get(item);
     		GL11.glBindTexture(GL11.GL_TEXTURE_2D, pi.glTexId());

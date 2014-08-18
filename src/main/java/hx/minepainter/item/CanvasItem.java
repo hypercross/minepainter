@@ -21,10 +21,8 @@ public class CanvasItem extends Item{
 		this.setCreativeTab(ModMinePainter.tabMinePainter);
 		this.setFull3D();
 		this.setUnlocalizedName("canvas");
+		this.setTextureName("minepainter:canvas");
 	}
-	
-	@SideOnly(Side.CLIENT)
-	@Override public void registerIcons(IIconRegister r){}
 	
 	@Override public boolean getShareTag(){
         return true;

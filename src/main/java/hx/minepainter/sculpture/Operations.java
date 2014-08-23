@@ -56,8 +56,8 @@ public class Operations {
 					int metaFormer = se.sculpture.getMetaAt(_x, _y, _z, null);
 					addDrop(droplist, former, metaFormer);
 					se.sculpture.setBlockAt(_x, _y, _z, block, meta);
-					if(se.sculpture.isEmpty())w.setBlock(x, y, z, Blocks.air);
-					if(w.isRemote)se.getRender().changed = true;
+					if(se.sculpture.isEmpty())w.setBlock(tx, ty, tz, Blocks.air);
+					if(w.isRemote)se.getRender().changed  = true;
 					else w.markBlockForUpdate(tx, ty, tz);
 					s++;
 				}

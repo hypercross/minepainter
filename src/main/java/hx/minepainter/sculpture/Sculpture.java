@@ -206,6 +206,7 @@ public class Sculpture {
 		int light = 0;
 		int current = 0;
 		for(int i = 0; i < usage_count.length; i ++){
+			if(usage_count[i] <= 0)continue;
 			current = Block.getBlockById(block_ids[i]).getLightValue();
 			if(current > light)light = current;
 		}

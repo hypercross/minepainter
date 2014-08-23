@@ -55,6 +55,7 @@ public class SculptureBlock extends BlockContainer{
 	public SculptureBlock() {
 		super(Material.rock);
 		this.setHardness(1.0f);
+		this.setBlockName("sculpture");
 	}
 
 	@Override

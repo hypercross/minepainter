@@ -92,8 +92,12 @@ public class Palette extends Item{
 			PaintingPlacement pp = PaintingPlacement.of(face);
 			float[] point = pp.block2painting(_x, _y, _z);
 			
+			int px = (int) (point[0] * 16 + 16) - 16;
+			int py = (int) (point[1] * 16 + 16) - 16;
+			if(px>15 || px<0 || py>15||py<0)return false;
+			
 			int[] colors = getColors(is); 
-			colors[0] = pe.getImg().getRGB((int)(point[0] * 16), (int)(point[1] * 16));
+			colors[0] = pe.getImg().getRGB(px,py);
 			setColors(is, colors);
 			return true;
 		}

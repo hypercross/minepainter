@@ -1,5 +1,10 @@
 package hx.minepainter;
 
+import static net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED;
+import static net.minecraftforge.client.IItemRenderer.ItemRendererHelper.BLOCK_3D;
+
+import org.lwjgl.opengl.GL11;
+
 import hx.minepainter.item.ChiselItem;
 import hx.minepainter.item.PieceItem;
 import hx.minepainter.painting.PaintTool;
@@ -15,18 +20,52 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
-public class EventHandler {
+public class EventHandler {	
+	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onDrawPlayerHelmet(RenderPlayerEvent.Specials.Pre event){
+		if(!event.renderHelmet)return;
+		
+		ItemStack is = event.entityPlayer.getEquipmentInSlot(4);
+		if(is == null || is.getItem() != ModMinePainter.droppedSculpture.item)
+			return;
+		
+//		Debug.log("drawing custom helmet");
+		event.renderHelmet = false;
+		
+		GL11.glPushMatrix();
+		event.renderer.modelBipedMain.bipedHead.postRender(0.0625F);
+		event.renderer.modelBipedMain.bipedHead.showModel = false;
+    
+        float f1 = 0.625F;
+        GL11.glTranslatef(0.0F, -0.25F, 0.0F);
+        GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
+        GL11.glScalef(f1, -f1, -f1);
+
+        GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+        RenderManager.instance.itemRenderer.renderItem(event.entityPlayer, is, 0);
+        
+        GL11.glPopMatrix();
+	}
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent

@@ -7,6 +7,7 @@ import hx.minepainter.sculpture.Sculpture;
 import hx.minepainter.sculpture.SculptureEntity;
 import hx.utils.Utils;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,6 +32,10 @@ public class DroppedSculptureItem extends Item{
 	@Override public boolean getShareTag(){
         return true;
     }
+	
+	@Override public boolean isValidArmor(ItemStack stack, int armorType, Entity entity){
+		return armorType == 0;
+	}
 	
 	@Override public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
 

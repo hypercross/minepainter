@@ -60,7 +60,7 @@ public class DroppedSculptureRenderer implements IItemRenderer{
 	@Override
 	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
 			ItemRendererHelper helper) {
-		return type == ItemRenderType.ENTITY;
+		return type == ItemRenderType.ENTITY || helper == ItemRendererHelper.EQUIPPED_BLOCK;
 	}
 
 	@Override

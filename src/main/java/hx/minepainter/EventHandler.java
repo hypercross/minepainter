@@ -49,10 +49,10 @@ public class EventHandler {
 		if(is == null || is.getItem() != ModMinePainter.droppedSculpture.item)
 			return;
 		
-//		Debug.log("drawing custom helmet");
 		event.renderHelmet = false;
 		
 		GL11.glPushMatrix();
+		event.renderer.modelBipedMain.bipedHead.showModel = true;
 		event.renderer.modelBipedMain.bipedHead.postRender(0.0625F);
 		event.renderer.modelBipedMain.bipedHead.showModel = false;
     
@@ -67,10 +67,24 @@ public class EventHandler {
         GL11.glPopMatrix();
 	}
 	
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public void onPreRenderWorld(RenderWorldEvent.Pre e){
-		SculptureRender.setCurrentChunkPos(e.renderer.posX,e.renderer.posY, e.renderer.posZ);
+	@SideOnly(Side.CLIENT) @SubscribeEvent
+	public void onDrawPlayerHead(RenderPlayerEvent.Pre event){
+		ItemStack is = event.entityPlayer.getEquipmentInSlot(4);
+		if(is == null || is.getItem() != ModMinePainter.droppedSculpture.item)
+			return;
+		
+		event.renderer.modelBipedMain.bipedHead.showModel = false;
+		event.renderer.modelBipedMain.bipedHeadwear.showModel = false;
+	}
+	
+	@SideOnly(Side.CLIENT) @SubscribeEvent
+	public void onDrawPlayerHead(RenderPlayerEvent.Post event){
+		ItemStack is = event.entityPlayer.getEquipmentInSlot(4);
+		if(is == null || is.getItem() != ModMinePainter.droppedSculpture.item)
+			return;
+		
+		event.renderer.modelBipedMain.bipedHead.showModel = true;
+		event.renderer.modelBipedMain.bipedHeadwear.showModel = true;
 	}
 	
 	@SideOnly(Side.CLIENT)

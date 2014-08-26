@@ -1,6 +1,10 @@
 package hx.minepainter.painting;
 
+import hx.minepainter.ModMinePainter;
+
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,6 +14,9 @@ import javax.imageio.ImageIO;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class CommandImportPainting extends CommandBase {
 	private static LinkedBlockingQueue<Runnable> tasks = new LinkedBlockingQueue<Runnable>();
@@ -38,7 +45,34 @@ public class CommandImportPainting extends CommandBase {
 			}
 		}
 		try {
-			BufferedImage img = ImageIO.read(new URL(url));
+			BufferedImage img = null;
+			if(url.startsWith("http://")){
+				img = ImageIO.read(new URL(url));
+			}else{
+				img = ImageIO.read(new File(url));
+			}
+			BufferedImage slot = new BufferedImage(16,16, BufferedImage.TYPE_INT_ARGB);
+			for(int i = 0; i < w;i ++)
+				for(int j = 0; j < h; j++){
+					slot.getGraphics().drawImage(img, 0, 0, 16, 16, i * img.getWidth() / w, 
+																    j * img.getHeight() / h, 
+																    (i+1) * img.getWidth() / w, 
+																    (j+1) * img.getHeight() / h, null);
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					ImageIO.write(slot, "png", baos);
+					ItemStack is = new ItemStack(ModMinePainter.canvas.item);
+			    	NBTTagCompound nbt = new NBTTagCompound();
+			    	nbt.setByteArray("image_data", baos.toByteArray());
+			    	is.setTagCompound(nbt);
+			    	
+			    	EntityItem entityitem = new EntityItem(var1.getEntityWorld(), 
+			    			var1.getPlayerCoordinates().posX + 0.5f, 
+			    			var1.getPlayerCoordinates().posY + 0.5f, 
+			    			var1.getPlayerCoordinates().posZ + 0.5f, is);
+		            entityitem.delayBeforeCanPickup = 0;
+		            var1.getEntityWorld().spawnEntityInWorld(entityitem);
+				}
+			
 			//TODO [DEFER] add that image
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

@@ -42,7 +42,7 @@ public class Rotation {
 //		Debug.log(r[6],r[7],r[8]);
 	}
 	
-	private Rotation(int axis1, int axis2){
+	Rotation(int axis1, int axis2){
 		int to1 = axis1 * 3 + axis2;
 		int to2 = axis2 * 3 + axis1;
 		

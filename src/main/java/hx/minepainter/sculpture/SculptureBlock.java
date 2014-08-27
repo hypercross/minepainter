@@ -190,4 +190,25 @@ public class SculptureBlock extends BlockContainer{
     {
     	return null;
     }
+    
+    public boolean push(World w, int x,int y,int z, int face, Hinge hinge){
+    	ForgeDirection push = ForgeDirection.getOrientation(face);
+    	int rotate = hinge.getRotationFace(push);
+    	ForgeDirection shift = hinge.getShift(push);
+    	
+    	int tx = x+shift.offsetX, ty = y+shift.offsetY, tz = z+shift.offsetZ;
+    	
+    	if(!w.isAirBlock(tx,ty,tz))return false;
+    	
+    	SculptureEntity se = Utils.getTE(w, x, y, z);
+    	Sculpture sculpture = se.sculpture;
+    	
+    	w.setBlockToAir(x, y, z);
+    	w.setBlock(tx, ty, tz, ModMinePainter.sculpture.block);
+    	se = Utils.getTE(w, tx, ty, tz);
+    	se.sculpture = sculpture;
+    	sculpture.r.rotate(rotate);
+    	
+    	return true;
+    }
 }

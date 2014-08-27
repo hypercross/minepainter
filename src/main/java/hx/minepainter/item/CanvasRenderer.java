@@ -12,6 +12,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
 
 public class CanvasRenderer implements IItemRenderer{
 
@@ -27,7 +28,8 @@ public class CanvasRenderer implements IItemRenderer{
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
     	if(type == ItemRenderType.ENTITY){
     		return helper == ItemRendererHelper.ENTITY_ROTATION ||
-    			   helper == ItemRendererHelper.ENTITY_BOBBING;
+    			   helper == ItemRendererHelper.ENTITY_BOBBING ||
+    			   helper == ItemRendererHelper.EQUIPPED_BLOCK;
     	}
         return false;
     }

@@ -46,22 +46,23 @@ public class EventHandler {
 		if(!event.renderHelmet)return;
 		
 		ItemStack is = event.entityPlayer.getEquipmentInSlot(4);
-		if(is == null || is.getItem() != ModMinePainter.droppedSculpture.item)
-			return;
+		if(!needsHelmetRenderHook(is))return;
 		
 		event.renderHelmet = false;
 		
 		GL11.glPushMatrix();
-		event.renderer.modelBipedMain.bipedHead.showModel = true;
-		event.renderer.modelBipedMain.bipedHead.postRender(0.0625F);
-		event.renderer.modelBipedMain.bipedHead.showModel = false;
+		if(needsHeadHiding(is)){
+			event.renderer.modelBipedMain.bipedHead.showModel = true;
+			event.renderer.modelBipedMain.bipedHead.postRender(0.0625F);
+			event.renderer.modelBipedMain.bipedHead.showModel = false;
+		}else
+			event.renderer.modelBipedMain.bipedHead.postRender(0.0625F);			
     
         float f1 = 0.625F;
         GL11.glTranslatef(0.0F, -0.25F, 0.0F);
         GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
         GL11.glScalef(f1, -f1, -f1);
 
-        GL11.glTranslatef(0.5f, 0.5f, 0.5f);
         RenderManager.instance.itemRenderer.renderItem(event.entityPlayer, is, 0);
         
         GL11.glPopMatrix();
@@ -70,8 +71,7 @@ public class EventHandler {
 	@SideOnly(Side.CLIENT) @SubscribeEvent
 	public void onDrawPlayerHead(RenderPlayerEvent.Pre event){
 		ItemStack is = event.entityPlayer.getEquipmentInSlot(4);
-		if(is == null || is.getItem() != ModMinePainter.droppedSculpture.item)
-			return;
+		if(!needsHeadHiding(is))return;
 		
 		event.renderer.modelBipedMain.bipedHead.showModel = false;
 		event.renderer.modelBipedMain.bipedHeadwear.showModel = false;
@@ -80,11 +80,25 @@ public class EventHandler {
 	@SideOnly(Side.CLIENT) @SubscribeEvent
 	public void onDrawPlayerHead(RenderPlayerEvent.Post event){
 		ItemStack is = event.entityPlayer.getEquipmentInSlot(4);
-		if(is == null || is.getItem() != ModMinePainter.droppedSculpture.item)
-			return;
+		if(!needsHeadHiding(is))return;
 		
 		event.renderer.modelBipedMain.bipedHead.showModel = true;
 		event.renderer.modelBipedMain.bipedHeadwear.showModel = true;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	private boolean needsHelmetRenderHook(ItemStack is){
+		if(is == null)return false;
+		if(is.getItem() == ModMinePainter.droppedSculpture.item)return true;
+		if(is.getItem() == ModMinePainter.canvas.item)return true;
+		return false;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	private boolean needsHeadHiding(ItemStack is){
+		if(is == null)return false;
+		if(is.getItem() == ModMinePainter.droppedSculpture.item)return true;
+		return false;
 	}
 	
 	@SideOnly(Side.CLIENT)

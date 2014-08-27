@@ -101,6 +101,11 @@ public class DroppedSculptureRenderer implements IItemRenderer{
 			
 			if(type == ItemRenderType.INVENTORY){
 				RenderHelper.enableGUIStandardItemLighting();
+			}else if(type == ItemRenderType.EQUIPPED ||
+				type == ItemRenderType.EQUIPPED_FIRST_PERSON){
+				GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+			}else if(type == ItemRenderType.ENTITY){
+				GL11.glTranslatef(0, 0.5f, 0f);
 			}
 			
 			for(int i = 0; i < 512; i ++){

@@ -2,6 +2,9 @@ package hx.minepainter.painting;
 
 import hx.minepainter.ModMinePainter;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -51,10 +54,13 @@ public class CommandImportPainting extends CommandBase {
 			}else{
 				img = ImageIO.read(new File(url));
 			}
-			BufferedImage slot = new BufferedImage(16,16, BufferedImage.TYPE_INT_ARGB);
+			
 			for(int i = 0; i < w;i ++)
 				for(int j = 0; j < h; j++){
-					slot.getGraphics().drawImage(img, 0, 0, 16, 16, i * img.getWidth() / w, 
+					
+					BufferedImage slot = new BufferedImage(16,16, BufferedImage.TYPE_INT_ARGB);
+					Graphics g = slot.getGraphics();
+					g.drawImage(img, 0, 0, 16, 16, i * img.getWidth() / w, 
 																    j * img.getHeight() / h, 
 																    (i+1) * img.getWidth() / w, 
 																    (j+1) * img.getHeight() / h, null);

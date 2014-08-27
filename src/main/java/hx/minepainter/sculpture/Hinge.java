@@ -27,7 +27,7 @@ public enum Hinge {
 		this.dir2 = dir2;
 	}
 	
-	public int getRotation(ForgeDirection push){
+	public int getRotationFace(ForgeDirection push){
 		if(push == dir1 || push == dir2.getOpposite())return dir1.getRotation(dir2).ordinal();
 		if(push == dir2 || push == dir1.getOpposite())return dir2.getRotation(dir1).ordinal();
 		return -1;

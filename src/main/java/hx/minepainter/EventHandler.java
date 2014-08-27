@@ -6,6 +6,7 @@ import static net.minecraftforge.client.IItemRenderer.ItemRendererHelper.BLOCK_3
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import hx.minepainter.item.CanvasRenderer;
 import hx.minepainter.item.ChiselItem;
 import hx.minepainter.item.PieceItem;
 import hx.minepainter.painting.PaintTool;
@@ -66,7 +67,9 @@ public class EventHandler {
         GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
         GL11.glScalef(f1, -f1, -f1);
 
+        CanvasRenderer.overrideUseRenderHelper = true;
         RenderManager.instance.itemRenderer.renderItem(event.entityPlayer, is, 0);
+        CanvasRenderer.overrideUseRenderHelper = false;
         
         GL11.glPopMatrix();
 	}

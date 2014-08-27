@@ -28,9 +28,9 @@ public class CanvasRenderer implements IItemRenderer{
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
     	if(type == ItemRenderType.ENTITY){
     		return helper == ItemRendererHelper.ENTITY_ROTATION ||
-    			   helper == ItemRendererHelper.ENTITY_BOBBING ||
-    			   helper == ItemRendererHelper.EQUIPPED_BLOCK;
+    			   helper == ItemRendererHelper.ENTITY_BOBBING;
     	}
+		if(helper == ItemRendererHelper.EQUIPPED_BLOCK)return true;
         return false;
     }
 

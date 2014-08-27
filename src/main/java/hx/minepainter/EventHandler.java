@@ -4,6 +4,7 @@ import static net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED;
 import static net.minecraftforge.client.IItemRenderer.ItemRendererHelper.BLOCK_3D;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import hx.minepainter.item.ChiselItem;
 import hx.minepainter.item.PieceItem;
@@ -55,8 +56,10 @@ public class EventHandler {
 			event.renderer.modelBipedMain.bipedHead.showModel = true;
 			event.renderer.modelBipedMain.bipedHead.postRender(0.0625F);
 			event.renderer.modelBipedMain.bipedHead.showModel = false;
-		}else
-			event.renderer.modelBipedMain.bipedHead.postRender(0.0625F);			
+		}else{
+			event.renderer.modelBipedMain.bipedHead.postRender(0.0625F);
+			GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
+		}
     
         float f1 = 0.625F;
         GL11.glTranslatef(0.0F, -0.25F, 0.0F);

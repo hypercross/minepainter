@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.ModMinePainter;
 import hx.minepainter.sculpture.Sculpture;
+import hx.minepainter.sculpture.SculptureBlock;
 import hx.minepainter.sculpture.SculptureEntity;
 import hx.utils.Utils;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -52,6 +53,7 @@ public class DroppedSculptureItem extends Item{
         w.setBlock(_x, _y, _z, ModMinePainter.sculpture.block);
         SculptureEntity se = Utils.getTE(w, _x, _y, _z);
         se.sculpture().read(is.getTagCompound());
+        SculptureBlock.applyPlayerRotation(se.sculpture().getRotation(), ep, false);
         
         if(!ep.capabilities.isCreativeMode)
         	is.stackSize--;

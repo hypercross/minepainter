@@ -19,7 +19,6 @@ public enum Hinge {
 	X1Y0(ForgeDirection.EAST, 	ForgeDirection.DOWN),
 	X1Y1(ForgeDirection.EAST, 	ForgeDirection.UP);
 	
-	private int face;
 	private ForgeDirection dir1, dir2; 
 	private static float mm = -0.1f, mM = 0.1f, Mm = 0.9f, MM = 1.1f;
 	
@@ -28,19 +27,19 @@ public enum Hinge {
 		this.dir2 = dir2;
 	}
 	
-	public int rotated(ForgeDirection push){
+	public int getRotation(ForgeDirection push){
 		if(push == dir1 || push == dir2.getOpposite())return dir1.getRotation(dir2).ordinal();
 		if(push == dir2 || push == dir1.getOpposite())return dir2.getRotation(dir1).ordinal();
 		return -1;
 	}
 	
-	public ForgeDirection moved(ForgeDirection push){
+	public ForgeDirection getShift(ForgeDirection push){
 		if(push == dir1 || push == dir2.getOpposite())return dir1;
 		if(push == dir2 || push == dir1.getOpposite())return dir2;
 		return null;
 	}
 	
-	public Hinge pushed(ForgeDirection push){
+	public Hinge getPushed(ForgeDirection push){
 		if(push == dir1 || push == dir2.getOpposite())return rotate(2);
 		if(push == dir2 || push == dir1.getOpposite())return rotate(1);
 		return this;
@@ -49,9 +48,11 @@ public enum Hinge {
 	private Hinge rotate(int count){
 		int base = this.ordinal() & ~3;
 		int partial = this.ordinal() & 3;
-		return Hinge.values()[base + (partial+1)%3];
+		return Hinge.values()[base + (partial+1) % 4];
 	}
 	
+	/** get a hinge from sub-block x,y,z coords.
+	 */
 	public static Hinge of(float x,float y,float z){
 		float dx = Math.abs(x - 0.5f);
 		float dy = Math.abs(y - 0.5f);

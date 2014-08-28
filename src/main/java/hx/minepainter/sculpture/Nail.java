@@ -5,6 +5,11 @@ import hx.utils.Utils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 
+//TODO render nails on a sculpture
+//TODO keep nails on transposition
+//TODO remove and place sculpture set together
+//TODO look for hinge in the entire sculpture set
+//TODO 
 public class Nail {
 
 	public static final Nail None = new Nail();

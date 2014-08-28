@@ -28,6 +28,7 @@ public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 		RenderHelper.disableStandardItemLighting();
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 	    GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
 	    OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 	    
 	    if(!se.getRender().ready() && !se.getRender().hasContext()){

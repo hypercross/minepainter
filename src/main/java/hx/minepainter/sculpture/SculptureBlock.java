@@ -169,6 +169,11 @@ public class SculptureBlock extends BlockContainer{
     	is.setTagCompound(nbt);
     	this.dropBlockAsItem(w, x, y, z, is);
     	
+    	if(se.getHinge() != null){
+    		is = new ItemStack(ModMinePainter.hinge.item);
+    		this.dropBlockAsItem(w, x, y, z, is);
+    	}
+    	
         return super.removedByPlayer(w, ep, x, y, z);
     }
     

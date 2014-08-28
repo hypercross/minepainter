@@ -26,6 +26,12 @@ public class WrenchItem extends Item{
 		if(ep.isSneaking())se.sculpture().getRotation().rotate(face);
 		else se.sculpture().getRotation().rotate(face ^ 1);
 		
+		if(se.getHinge() != null){
+			se.setHinge(null);
+			ItemStack nis = new ItemStack(ModMinePainter.hinge.item);
+    		ModMinePainter.sculpture.block.dropScrap(w, x, y, z, nis);
+		}
+		
 		if(w.isRemote)se.getRender().changed = true;
 		else w.markBlockForUpdate(x, y, z);
 		

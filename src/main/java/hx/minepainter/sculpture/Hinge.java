@@ -56,7 +56,7 @@ public enum Hinge {
 		int x = dir1.offsetX + dir2.offsetX + 1;
 		int y = dir1.offsetY + dir2.offsetY + 1;
 		int z = dir1.offsetZ + dir2.offsetZ + 1;
-		Debug.log("bounds : ", x,y,z);
+//		Debug.log("bounds : ", x,y,z);
 		block.setBlockBounds(bounds[x], bounds[y], bounds[z],
 							bounds[x+1], bounds[y+1], bounds[z+1]);
 	}

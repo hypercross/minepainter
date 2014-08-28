@@ -245,12 +245,8 @@ public class SculptureBlock extends BlockContainer{
     	if(shift == null)return false;
     	
     	sculpture_set.clear();
-    	
-    	try{
-    		add_connected(w,x,y,z);
-    	}catch(IllegalStateException e){
-    		return false;
-    	}
+    	add_connected(w,x,y,z);
+    	if(sculpture_set.size() > 256)return false;
     	
     	boolean flag = true;
     	for(Location loc : sculpture_set)
@@ -267,7 +263,7 @@ public class SculptureBlock extends BlockContainer{
     	if(sculpture_set.contains(loc))return;    	
     	
     	sculpture_set.add(loc);
-    	if(sculpture_set.size() > 256)throw new IllegalStateException("Too many sculptures!");
+    	if(sculpture_set.size() > 256)return;
     	Nail nail = Nail.fromSculpture(w, x, y, z);
     	for(int i = 0; i < 6; i ++){
     		if(!nail.isOnFace(i))continue;

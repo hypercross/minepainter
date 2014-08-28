@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.IIcon;
 
+@SideOnly(Side.CLIENT)
 public class PaintingIcon implements IIcon{
 
 	final PaintingSheet sheet;

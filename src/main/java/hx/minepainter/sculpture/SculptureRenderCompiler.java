@@ -13,6 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -84,7 +85,6 @@ public class SculptureRenderCompiler {
 		tes.setTranslation(0, 0, 0);
 		tes.startDrawingQuads();
 		
-		
 		for(int i = 0; i < 512; i ++){
 			int x = (i >> 6) & 7;
 			int y = (i >> 3) & 7;
@@ -96,12 +96,21 @@ public class SculptureRenderCompiler {
 			sculpture.setCurrentBlock(b, meta);
 			
 			tes.setTranslation(-x, -y, -z);
-//			rb.renderStandardBlock(ModMinePainter.sculpture.block, x,y,z);
 			sculpture.setBlockBounds(x/8f, y/8f, z/8f, (x+1)/8f, (y+1)/8f, (z+1)/8f);
 			rb.renderBlockByRenderType(sculpture, x,y,z);
 		}
 		
-		ModMinePainter.sculpture.block.setCurrentBlock(null,0);
+		Hinge hinge = Hinge.fromSculpture((SculptureEntity) slice.getTileEntity(0, 0, 0));
+		if(hinge != null){
+			hinge.setRenderBounds(sculpture);
+			sculpture.setCurrentBlock(Blocks.iron_block, 0);
+			tes.setTranslation(0, 0, 0);
+			rb.setRenderBoundsFromBlock(sculpture);
+			rb.renderAllFaces = true;
+			rb.renderStandardBlockWithColorMultiplier(sculpture, 0,0,0, 1f,1f,1f);
+		}
+		
+		sculpture.setCurrentBlock(null,0);
 		sculpture.setBlockBounds(0,0,0,1,1,1);
 		rb.blockAccess = null;
 		tes.draw();

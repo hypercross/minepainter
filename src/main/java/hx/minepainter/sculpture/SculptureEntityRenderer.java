@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -27,6 +28,7 @@ public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 		RenderHelper.disableStandardItemLighting();
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 	    GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
 	    OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 	    
 	    if(!se.getRender().ready() && !se.getRender().hasContext()){
@@ -46,6 +48,8 @@ public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 		GL11.glTranslated(xd,yd,zd);		
 		GL11.glCallList(se.getRender().glDisplayList);
 		GL11.glPopMatrix();
+
+		
 		
 		GL11.glDisable(GL11.GL_BLEND);
         GL11.glShadeModel(GL11.GL_FLAT);

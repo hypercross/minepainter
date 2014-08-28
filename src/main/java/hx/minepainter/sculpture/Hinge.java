@@ -1,5 +1,13 @@
 package hx.minepainter.sculpture;
 
+import hx.minepainter.ModMinePainter;
+import hx.utils.Debug;
+import hx.utils.Utils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public enum Hinge {
@@ -19,40 +27,43 @@ public enum Hinge {
 	X1Y0(ForgeDirection.EAST, 	ForgeDirection.DOWN),
 	X1Y1(ForgeDirection.EAST, 	ForgeDirection.UP);
 	
-	private int face;
-	private ForgeDirection dir1, dir2; 
-	private static float mm = -0.1f, mM = 0.1f, Mm = 0.9f, MM = 1.1f;
+	public final ForgeDirection dir1, dir2; 
+	private static float[] bounds = new float[]{-0.05f, 0.1f, 0.9f, 1.05f}; 
 	
 	Hinge(ForgeDirection dir1, ForgeDirection dir2){
 		this.dir1 = dir1;
 		this.dir2 = dir2;
 	}
 	
-	public int rotated(ForgeDirection push){
+	public void toNBT(NBTTagCompound nbt){
+		nbt.setByte("hinge", (byte) (this.ordinal()+1));
+	}
+	
+	public int getRotationFace(ForgeDirection push){
 		if(push == dir1 || push == dir2.getOpposite())return dir1.getRotation(dir2).ordinal();
 		if(push == dir2 || push == dir1.getOpposite())return dir2.getRotation(dir1).ordinal();
 		return -1;
 	}
 	
-	public ForgeDirection moved(ForgeDirection push){
+	public ForgeDirection getShift(ForgeDirection push){
 		if(push == dir1 || push == dir2.getOpposite())return dir1;
 		if(push == dir2 || push == dir1.getOpposite())return dir2;
 		return null;
 	}
 	
-	public Hinge pushed(ForgeDirection push){
-		if(push == dir1 || push == dir2.getOpposite())return rotate(2);
-		if(push == dir2 || push == dir1.getOpposite())return rotate(1);
-		return this;
+	@SideOnly(Side.CLIENT)
+	public void setRenderBounds(Block block){
+		int x = dir1.offsetX + dir2.offsetX + 1;
+		int y = dir1.offsetY + dir2.offsetY + 1;
+		int z = dir1.offsetZ + dir2.offsetZ + 1;
+//		Debug.log("bounds : ", x,y,z);
+		block.setBlockBounds(bounds[x], bounds[y], bounds[z],
+							bounds[x+1], bounds[y+1], bounds[z+1]);
 	}
 	
-	private Hinge rotate(int count){
-		int base = this.ordinal() & ~3;
-		int partial = this.ordinal() & 3;
-		return Hinge.values()[base + (partial+1)%3];
-	}
-	
-	public static Hinge of(float x,float y,float z){
+	/** get a hinge from sub-block x,y,z coords.
+	 */
+	public static Hinge placedAt(float x,float y,float z){
 		float dx = Math.abs(x - 0.5f);
 		float dy = Math.abs(y - 0.5f);
 		float dz = Math.abs(z - 0.5f);
@@ -75,5 +86,22 @@ public enum Hinge {
 		}
 		
 		return Hinge.values()[ordinal];
+	}
+	
+	public static Hinge fromSculpture(IBlockAccess iba, int x,int y,int z){
+		if(iba.getBlock(x, y, z) != ModMinePainter.sculpture.block)return null;
+		SculptureEntity se = Utils.getTE(iba, x, y, z);
+		return fromSculpture(se);
+	}
+
+	public static Hinge fromSculpture(SculptureEntity se) {
+		if(se == null)return null;
+		return se.getHinge();
+	}
+	
+	public static Hinge fromNBT(NBTTagCompound nbt){
+		byte thing  = nbt.getByte("hinge");
+		if(thing == 0)return null;
+		return Hinge.values()[thing-1];
 	}
 }

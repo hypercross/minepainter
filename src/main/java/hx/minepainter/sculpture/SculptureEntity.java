@@ -13,12 +13,26 @@ import net.minecraft.world.World;
 public class SculptureEntity extends TileEntity{
 
 	Sculpture sculpture = new Sculpture();
+	Hinge hinge = null;
+	final Nail nail = new Nail();
 	
 	@SideOnly(Side.CLIENT)
 	private SculptureRenderCompiler render;
 	
 	public Sculpture sculpture(){
 		return sculpture;
+	}
+	
+	public Hinge getHinge(){
+		return hinge;
+	}
+	
+	public void setHinge(Hinge h){
+		this.hinge = h;
+	}
+	
+	public Nail getNail(){
+		return nail;
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -59,6 +73,8 @@ public class SculptureEntity extends TileEntity{
 	{
 		super.writeToNBT(nbt);
 		sculpture.write(nbt);
+		if(hinge!=null)hinge.toNBT(nbt);
+		nail.writeTo(nbt);
 	}
 
 	@Override
@@ -68,6 +84,8 @@ public class SculptureEntity extends TileEntity{
 			getRender().changed = true;
 		super.readFromNBT(nbt);
 		sculpture.read(nbt);
+		hinge = Hinge.fromNBT(nbt);
+		nail.readFrom(nbt);
 	}
 	
 	public Packet getDescriptionPacket()

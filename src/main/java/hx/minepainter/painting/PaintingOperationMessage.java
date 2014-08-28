@@ -47,7 +47,7 @@ public class PaintingOperationMessage implements IMessage{
 			message.tool.paintAt(ctx.getServerHandler().playerEntity.worldObj, 
 					message.x, message.y, message.z, 
 					message.xs, message.ys, message.zs, 
-					message.color);
+					message.color, ctx.getServerHandler().playerEntity.isSneaking());
 			
 			return null;
 		}

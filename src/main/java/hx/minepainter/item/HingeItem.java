@@ -1,20 +1,22 @@
 package hx.minepainter.item;
 
 import hx.minepainter.ModMinePainter;
+import hx.minepainter.sculpture.Hinge;
 import hx.minepainter.sculpture.SculptureEntity;
 import hx.utils.Utils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class WrenchItem extends Item{
+public class HingeItem extends Item{
 
-	public WrenchItem(){
+	public HingeItem(){
 		this.setCreativeTab(ModMinePainter.tabMinePainter);
-		this.setUnlocalizedName("wrench");
-		this.setTextureName("minepainter:wrench");
-		this.setMaxStackSize(1);
+		this.setUnlocalizedName("hinge");
+		this.setTextureName("minepainter:hinge");
+		this.setMaxStackSize(16);
 	}
 	
 	@Override
@@ -23,19 +25,14 @@ public class WrenchItem extends Item{
 		
 		SculptureEntity se = Utils.getTE(w, x, y, z);
 		
-		if(ep.isSneaking())se.sculpture().getRotation().rotate(face);
-		else se.sculpture().getRotation().rotate(face ^ 1);
-		
-		if(se.getHinge() != null){
-			se.setHinge(null);
-			ItemStack nis = new ItemStack(ModMinePainter.hinge.item);
-    		ModMinePainter.sculpture.block.dropScrap(w, x, y, z, nis);
-		}
+		se.setHinge(Hinge.placedAt(xs, ys, zs));
 		
 		if(w.isRemote)se.getRender().changed = true;
 		else w.markBlockForUpdate(x, y, z);
 		
-		w.playSoundEffect(x+0.5d, y+0.5d, z+0.5d, "tile.piston.out", 0.5f, 0.5f);
+		if(!ep.capabilities.isCreativeMode)is.stackSize--;
+		
+		w.playSoundEffect(x+0.5d, y+0.5d, z+0.5d, Blocks.iron_block.stepSound.getBreakSound(), 0.5f, 0.5f);
 		
 		return true;
 	}

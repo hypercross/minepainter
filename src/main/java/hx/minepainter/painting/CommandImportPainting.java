@@ -79,7 +79,6 @@ public class CommandImportPainting extends CommandBase {
 		            var1.getEntityWorld().spawnEntityInWorld(entityitem);
 				}
 			
-			//TODO [DEFER] add that image
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

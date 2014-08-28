@@ -6,15 +6,21 @@ import hx.minepainter.painting.PaintingIcon;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
 
+@SideOnly(Side.CLIENT)
 public class CanvasRenderer implements IItemRenderer{
-
+	public static boolean overrideUseRenderHelper = false;
+	
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type) {
         return type == ItemRenderType.INVENTORY ||
@@ -25,6 +31,7 @@ public class CanvasRenderer implements IItemRenderer{
 
     @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
+    	if(overrideUseRenderHelper)return true;
     	if(type == ItemRenderType.ENTITY){
     		return helper == ItemRendererHelper.ENTITY_ROTATION ||
     			   helper == ItemRendererHelper.ENTITY_BOBBING;

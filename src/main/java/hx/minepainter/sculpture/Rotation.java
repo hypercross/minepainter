@@ -18,6 +18,12 @@ public class Rotation {
 		if(r[2] + r[5] + r[8] < 0)this.z = 7 + this.z;
 	}
 	
+	public void applyUnbounded(int x,int y,int z){
+		this.x = x*r[0] + y*r[3] + z*r[6];
+		this.y = x*r[1] + y*r[4] + z*r[7];
+		this.z = x*r[2] + y*r[5] + z*r[8];
+	}
+	
 	public void multiply(Rotation r){
 		byte[] result = new byte[9];
 		for(int i = 0 ; i < 9; i ++){

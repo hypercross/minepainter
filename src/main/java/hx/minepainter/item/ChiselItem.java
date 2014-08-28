@@ -17,16 +17,14 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-//TODO redraw the three chisel items
-//TODO use the names Chisel (piece) , Bow saw (bar), Rip Saw (face) 
-//TODO adjust craftings
+//TODO adjust craftings and lang files
 public class ChiselItem extends Item{
 	
 	public ChiselItem(){
 		super();
 		this.setCreativeTab(ModMinePainter.tabMinePainter);
 		this.setUnlocalizedName("chisel");
-		this.setTextureName("minepainter:stone_chisel");
+		this.setTextureName("minepainter:chisel");
 		this.setMaxStackSize(1);
 		this.setMaxDamage(240);
 	}
@@ -49,7 +47,7 @@ public class ChiselItem extends Item{
 		
 		ModMinePainter.network.sendToServer(new SculptureOperationMessage(pos,x,y,z,editBlock,editMeta,flags));
 		
-		w.playSoundEffect(x+0.5d, y+0.5d, z+0.5d, getEditBlock(is).stepSound.soundName, 0.5f, 0.5f);
+		w.playSoundEffect(x+0.5d, y+0.5d, z+0.5d, getEditBlock(is).stepSound.func_150496_b(), 0.5f, 0.5f);
 		
 		return true;
 	}
@@ -71,7 +69,7 @@ public class ChiselItem extends Item{
 		public Saw(){
 			super();
 			this.setUnlocalizedName("saw");
-			this.setTextureName("minepainter:diamond_chisel");
+			this.setTextureName("minepainter:saw");
 		}
 
 		@Override
@@ -91,7 +89,7 @@ public class ChiselItem extends Item{
 		public Barcutter(){
 			super();
 			this.setUnlocalizedName("barcutter");
-			this.setTextureName("minepainter:iron_chisel");
+			this.setTextureName("minepainter:shaver");
 		}
 
 		@Override

@@ -31,7 +31,7 @@ public class PaintTool extends Item{
 		
 		if(!w.isRemote)return false;
 		
-		boolean changed = paintAt(w,x,y,z,xs,ys,zs,getColor(ep,is));
+		boolean changed = paintAt(w,x,y,z,xs,ys,zs,getColor(ep,is), ep.isSneaking());
 		
 		if(changed)ModMinePainter.network.sendToServer(new PaintingOperationMessage(this,x,y,z,xs,ys,zs,getColor(ep,is)));
 		
@@ -50,7 +50,7 @@ public class PaintTool extends Item{
 		return 0;
 	}
 	
-	public boolean apply(BufferedImage img, float[] point, int color) {
+	public boolean apply(BufferedImage img, float[] point, int color, boolean isSneaking) {
 		return false;
 	}
 	
@@ -58,7 +58,7 @@ public class PaintTool extends Item{
 		return x>=0 && x<16 && y>=0 && y<16;
 	}
 	
-	public boolean paintAt(World w,int x,int y,int z,float xs,float ys,float zs,int color){
+	public boolean paintAt(World w,int x,int y,int z,float xs,float ys,float zs,int color,boolean isSneaking){
 		if(w.getBlock(x, y, z) != ModMinePainter.painting.block)return false;
 		PaintingEntity pe = Utils.getTE(w, x, y, z);
 		if(pe == null)return false;
@@ -79,7 +79,7 @@ public class PaintTool extends Item{
 				
 				point[0] -= i;
 				point[1] -= j;
-				boolean _changed = apply(painting.image, point, color);
+				boolean _changed = apply(painting.image, point, color, isSneaking);
 				point[0] += i;
 				point[1] += j;
 				
@@ -100,7 +100,7 @@ public class PaintTool extends Item{
 			this.setTextureName("minepainter:brush_small");
 		}
 		
-		@Override public boolean apply(BufferedImage img, float[] point, int color){
+		@Override public boolean apply(BufferedImage img, float[] point, int color, boolean isSneaking){
 			
 			int x = (int) (point[0] * 16 + 16) - 16;
 			int y = (int) (point[1] * 16 + 16) - 16;
@@ -161,7 +161,7 @@ public class PaintTool extends Item{
 	    	return 0xffffff;
 	    }
 		
-		@Override public boolean apply(BufferedImage img, float[] point, int color){
+		@Override public boolean apply(BufferedImage img, float[] point, int color,boolean isSneaking){
 			
 			int x = (int) (point[0] * 16 + 16) - 16;
 			int y = (int) (point[1] * 16 + 16) - 16;
@@ -187,7 +187,7 @@ public class PaintTool extends Item{
 			this.setUnlocalizedName("mixer_brush").setTextureName("minepainter:brush");
 		}
 		
-		@Override public boolean apply(BufferedImage img, float[] point, int color){
+		@Override public boolean apply(BufferedImage img, float[] point, int color, boolean isSneaking){
 			
 			int x = (int) (point[0] * 16 + 16) - 16;
 			int y = (int) (point[1] * 16 + 16) - 16;
@@ -240,7 +240,7 @@ public class PaintTool extends Item{
 			this.setUnlocalizedName("eraser").setTextureName("minepainter:eraser");
 		}
 		
-		@Override public boolean apply(BufferedImage img, float[] point, int color){
+		@Override public boolean apply(BufferedImage img, float[] point, int color, boolean isSneaking){
 			
 			int x = (int) (point[0] * 16 + 16) - 16;
 			int y = (int) (point[1] * 16 + 16) - 16;
@@ -248,6 +248,7 @@ public class PaintTool extends Item{
 			boolean changed = false;
 			for(int i = -1; i <=1; i++)
 				for(int j = -1; j <= 1; j++){
+					if(isSneaking && (i != 0 || j != 0))continue;
 					if(!inBounds(x+i,y+j))continue;
 					changed = true;
 					

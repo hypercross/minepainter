@@ -5,6 +5,7 @@ import hx.minepainter.item.DroppedSculptureRenderer;
 import hx.minepainter.item.CanvasItem;
 import hx.minepainter.item.CanvasRenderer;
 import hx.minepainter.item.ChiselItem;
+import hx.minepainter.item.HingeItem;
 import hx.minepainter.item.Palette;
 import hx.minepainter.item.PieceItem;
 import hx.minepainter.item.PieceItem.Bar;
@@ -67,6 +68,7 @@ public class ModMinePainter {
 	public static ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover());
 	public static ItemLoader<DroppedSculptureItem> droppedSculpture = new ItemLoader(new DroppedSculptureItem());
 	public static ItemLoader<WrenchItem> wrench = new ItemLoader(new WrenchItem());
+	public static ItemLoader<HingeItem> hinge = new ItemLoader(new HingeItem());
 	public static ItemLoader<PaintTool> minibrush = new ItemLoader(new PaintTool.Mini());
 	public static ItemLoader<PaintTool> mixerbrush = new ItemLoader(new PaintTool.Mixer());
 	public static ItemLoader<PaintTool> bucket = new ItemLoader(new PaintTool.Bucket());
@@ -90,6 +92,7 @@ public class ModMinePainter {
 		cover.load();
 		droppedSculpture.load();
 		wrench.load();
+		hinge.load();
 		minibrush.load();
 		mixerbrush.load();
 		bucket.load();

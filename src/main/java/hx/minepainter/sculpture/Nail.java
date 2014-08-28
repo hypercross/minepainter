@@ -1,10 +1,18 @@
 package hx.minepainter.sculpture;
 
+import hx.minepainter.ModMinePainter;
+import hx.utils.Utils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 
 public class Nail {
 
+	public static final Nail None = new Nail();
+	public static final Nail All = new Nail();
+	static{
+		All.flag = -1;
+	}
+	
 	byte flag = 0;
 	
 	public void readFrom(NBTTagCompound nbt){
@@ -23,12 +31,11 @@ public class Nail {
 		return (flag & (1 << face)) > 0;
 	}
 	
-	private static Nail ALL = new Nail();
-	static{
-		ALL.flag = -1;
-	}
 	public static Nail fromSculpture(IBlockAccess iba, int x, int y, int z){
-		//TODO implement nail save/load
-		return ALL;
+		if(iba.getBlock(x, y, z) != ModMinePainter.sculpture.block)return Nail.None;
+		SculptureEntity se = Utils.getTE(iba, x, y, z);
+		if(se == null)return Nail.None;
+		
+		return se.getNail();
 	}
 }

@@ -215,12 +215,14 @@ public class SculptureBlock extends BlockContainer{
     	
     	SculptureEntity se = Utils.getTE(w, x, y, z);
     	Sculpture sculpture = se.sculpture;
+    	sculpture.r.rotate(rotate);
+    	Hinge hinge = se.getHinge();
     	
     	w.setBlockToAir(x, y, z);
     	w.setBlock(tx, ty, tz, ModMinePainter.sculpture.block);
     	se = Utils.getTE(w, tx, ty, tz);
     	se.sculpture = sculpture;
-    	sculpture.r.rotate(rotate);
+    	if(hinge != null)se.setHinge(HingeRotationTable.rotate(hinge, rotate));
     	
     	return true;
     }
@@ -254,9 +256,10 @@ public class SculptureBlock extends BlockContainer{
     }
     
     private void add_connected(World w,int x,int y,int z){
-    	Location loc = new Location(x,y,z);
-    	if(sculpture_set.contains(loc))return;
     	if(w.getBlock(x, y, z) != ModMinePainter.sculpture.block)return;
+    	
+    	Location loc = new Location(x,y,z);
+    	if(sculpture_set.contains(loc))return;    	
     	
     	sculpture_set.add(loc);
     	if(sculpture_set.size() > 256)throw new IllegalStateException("Too many sculptures!");

@@ -1,9 +1,12 @@
 package hx.minepainter.sculpture;
 
+import hx.minepainter.ModMinePainter;
 import hx.utils.Debug;
+import hx.utils.Utils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -24,12 +27,16 @@ public enum Hinge {
 	X1Y0(ForgeDirection.EAST, 	ForgeDirection.DOWN),
 	X1Y1(ForgeDirection.EAST, 	ForgeDirection.UP);
 	
-	private ForgeDirection dir1, dir2; 
+	public final ForgeDirection dir1, dir2; 
 	private static float[] bounds = new float[]{-0.05f, 0.1f, 0.9f, 1.05f}; 
 	
 	Hinge(ForgeDirection dir1, ForgeDirection dir2){
 		this.dir1 = dir1;
 		this.dir2 = dir2;
+	}
+	
+	public void toNBT(NBTTagCompound nbt){
+		nbt.setByte("hinge", (byte) (this.ordinal()+1));
 	}
 	
 	public int getRotationFace(ForgeDirection push){
@@ -42,18 +49,6 @@ public enum Hinge {
 		if(push == dir1 || push == dir2.getOpposite())return dir1;
 		if(push == dir2 || push == dir1.getOpposite())return dir2;
 		return null;
-	}
-	
-	public Hinge getPushed(ForgeDirection push){
-		if(push == dir1 || push == dir2.getOpposite())return rotate(2);
-		if(push == dir2 || push == dir1.getOpposite())return rotate(1);
-		return this;
-	}
-	
-	private Hinge rotate(int count){
-		int base = this.ordinal() & ~3;
-		int partial = this.ordinal() & 3;
-		return Hinge.values()[base + (partial+1) % 4];
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -94,12 +89,19 @@ public enum Hinge {
 	}
 	
 	public static Hinge fromSculpture(IBlockAccess iba, int x,int y,int z){
-		//TODO implement hinge save/load
-		return Hinge.Z0X0;
+		if(iba.getBlock(x, y, z) != ModMinePainter.sculpture.block)return null;
+		SculptureEntity se = Utils.getTE(iba, x, y, z);
+		return fromSculpture(se);
 	}
 
 	public static Hinge fromSculpture(SculptureEntity se) {
-		// TODO Auto-generated method stub
-		return Hinge.Z0X0;
+		if(se == null)return null;
+		return se.getHinge();
+	}
+	
+	public static Hinge fromNBT(NBTTagCompound nbt){
+		byte thing  = nbt.getByte("hinge");
+		if(thing == 0)return null;
+		return Hinge.values()[thing-1];
 	}
 }

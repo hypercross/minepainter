@@ -67,6 +67,7 @@ public class DroppedSculptureRenderer implements IItemRenderer{
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 		CompiledRender cr = renders.get(item);
 		if(!cr.compiled(type))cr.compile(item.getTagCompound(),type,data);
+		if(!cr.compiled(type))return;
 		TextureManager tm = Minecraft.getMinecraft().renderEngine;
 		tm.bindTexture(TextureMap.locationBlocksTexture);
 		GL11.glCallList(cr.glDispList);
@@ -89,6 +90,7 @@ public class DroppedSculptureRenderer implements IItemRenderer{
 		
 		public void compile(NBTTagCompound nbt, ItemRenderType type, Object... data){
 			this.type = type;
+			if(nbt == null)return;
 			sculpture.read(nbt);
 			
 			if(glDispList < 0)glDispList = GLAllocation.generateDisplayLists(1);

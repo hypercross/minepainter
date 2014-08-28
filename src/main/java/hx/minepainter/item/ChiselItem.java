@@ -47,7 +47,7 @@ public class ChiselItem extends Item{
 		
 		ModMinePainter.network.sendToServer(new SculptureOperationMessage(pos,x,y,z,editBlock,editMeta,flags));
 		
-		w.playSoundEffect(x+0.5d, y+0.5d, z+0.5d, getEditBlock(is).stepSound.soundName, 0.5f, 0.5f);
+		w.playSoundEffect(x+0.5d, y+0.5d, z+0.5d, getEditBlock(is).stepSound.func_150496_b(), 0.5f, 0.5f);
 		
 		return true;
 	}

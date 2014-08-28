@@ -198,10 +198,13 @@ public class SculptureBlock extends BlockContainer{
     }
     
     public boolean onBlockActivated(World w,int x,int y,int z,EntityPlayer ep, int face, float xs, float ys, float zs){
-    	if(ep.getCurrentEquippedItem() != null)
-    		return false;
+//    	if(ep.getCurrentEquippedItem() != null)
+//    		return false;
     	
-    	return push(w,x,y,z,face);
+    	if(ep.isSneaking())
+    		return push(w,x,y,z,face^1);
+    	else
+    		return push(w,x,y,z,face);
     }
     
     public boolean transpose(World w, int x,int y, int z, int dx, int dy, int dz, int rotate, ForgeDirection shift){

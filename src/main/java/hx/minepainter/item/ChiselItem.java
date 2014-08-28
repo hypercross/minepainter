@@ -17,9 +17,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-//TODO redraw the three chisel items
-//TODO use the names Chisel (piece) , Shaver (bar), Ripsaw (face) 
-//TODO adjust craftings
+//TODO adjust craftings and lang files
 public class ChiselItem extends Item{
 	
 	public ChiselItem(){

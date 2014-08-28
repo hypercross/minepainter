@@ -106,6 +106,8 @@ public class SculptureRenderCompiler {
 			hinge.setRenderBounds(sculpture);
 			sculpture.setCurrentBlock(Blocks.iron_block, 0);
 			tes.setTranslation(0, 0, 0);
+			rb.setRenderBoundsFromBlock(sculpture);
+			rb.renderAllFaces = true;
 			rb.renderStandardBlockWithColorMultiplier(sculpture, 0,0,0, 1f,1f,1f);
 		}
 		

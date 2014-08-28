@@ -25,7 +25,7 @@ public enum Hinge {
 	X1Y1(ForgeDirection.EAST, 	ForgeDirection.UP);
 	
 	private ForgeDirection dir1, dir2; 
-	private static float[] bounds = new float[]{-0.1f, 0.1f, 0.9f, 1.1f}; 
+	private static float[] bounds = new float[]{-0.05f, 0.1f, 0.9f, 1.05f}; 
 	
 	Hinge(ForgeDirection dir1, ForgeDirection dir2){
 		this.dir1 = dir1;

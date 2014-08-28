@@ -2,6 +2,7 @@ package hx.minepainter.sculpture;
 
 import java.util.List;
 import java.util.Random;
+import java.util.TreeSet;
 
 import hx.minepainter.ModMinePainter;
 import hx.utils.Debug;
@@ -191,12 +192,24 @@ public class SculptureBlock extends BlockContainer{
     	return null;
     }
     
-    public boolean push(World w, int x,int y,int z, int face, Hinge hinge){
-    	ForgeDirection push = ForgeDirection.getOrientation(face);
-    	int rotate = hinge.getRotationFace(push);
-    	ForgeDirection shift = hinge.getShift(push);
+    public boolean onBlockActivated(World w,int x,int y,int z,EntityPlayer ep, int face, float xs, float ys, float zs){
+    	if(ep.getCurrentEquippedItem() != null)
+    		return false;
+    	
+    	return push(w,x,y,z,face);
+    }
+    
+    public boolean transpose(World w, int x,int y, int z, int dx, int dy, int dz, int rotate, ForgeDirection shift){
     	
     	int tx = x+shift.offsetX, ty = y+shift.offsetY, tz = z+shift.offsetZ;
+    	
+    	Rotation r = new Rotation();
+    	r.rotate(rotate);
+    	r.applyUnbounded(dx, dy, dz);
+    	tx += r.x; ty += r.y; tz += r.z;
+    	x+=dx; y+=dy; z+=dz;
+    	
+    	Debug.log("from " + x + "," + y + "," + z + " to " + tx + "," + ty + "," + tz);
     	
     	if(!w.isAirBlock(tx,ty,tz))return false;
     	
@@ -210,5 +223,48 @@ public class SculptureBlock extends BlockContainer{
     	sculpture.r.rotate(rotate);
     	
     	return true;
+    }
+    
+    TreeSet<Location> sculpture_set = new TreeSet<Location>();
+    public boolean push(World w, int x,int y,int z, int face){
+    	Hinge hinge = Hinge.fromSculpture(w, x, y, z);
+    	if(hinge == null)return false;
+    	
+    	ForgeDirection push = ForgeDirection.getOrientation(face^1);
+    	int rotate = hinge.getRotationFace(push);
+    	ForgeDirection shift = hinge.getShift(push);
+    	
+    	
+    	if(shift == null)return false;
+    	
+    	sculpture_set.clear();
+    	
+    	try{
+    		add_connected(w,x,y,z);
+    	}catch(IllegalStateException e){
+    		return false;
+    	}
+    	
+    	boolean flag = true;
+    	for(Location loc : sculpture_set)
+    		flag &= transpose(w,x,y,z,loc.x-x,loc.y-y,loc.z-z,rotate,shift);
+    	
+    	sculpture_set.clear();
+    	return flag;
+    }
+    
+    private void add_connected(World w,int x,int y,int z){
+    	Location loc = new Location(x,y,z);
+    	if(sculpture_set.contains(loc))return;
+    	if(w.getBlock(x, y, z) != ModMinePainter.sculpture.block)return;
+    	
+    	sculpture_set.add(loc);
+    	if(sculpture_set.size() > 256)throw new IllegalStateException("Too many sculptures!");
+    	Nail nail = Nail.fromSculpture(w, x, y, z);
+    	for(int i = 0; i < 6; i ++){
+    		if(!nail.isOnFace(i))continue;
+    		ForgeDirection dir = ForgeDirection.getOrientation(i);
+    		add_connected(w,x+dir.offsetX,y+dir.offsetY,z+dir.offsetZ);
+    	}
     }
 }

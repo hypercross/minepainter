@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 //TODO redraw the three chisel items
-//TODO use the names Chisel (piece) , Bow saw (bar), Rip Saw (face) 
+//TODO use the names Chisel (piece) , Shaver (bar), Ripsaw (face) 
 //TODO adjust craftings
 public class ChiselItem extends Item{
 	

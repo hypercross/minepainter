@@ -7,8 +7,12 @@ import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.item.ItemStack;
 
+@SideOnly(Side.CLIENT)
 public class PaintingCache {
 	public static final int res = 256; 
 

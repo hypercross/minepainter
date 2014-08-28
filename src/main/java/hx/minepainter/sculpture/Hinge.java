@@ -1,5 +1,6 @@
 package hx.minepainter.sculpture;
 
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public enum Hinge {
@@ -53,7 +54,7 @@ public enum Hinge {
 	
 	/** get a hinge from sub-block x,y,z coords.
 	 */
-	public static Hinge of(float x,float y,float z){
+	public static Hinge placedAt(float x,float y,float z){
 		float dx = Math.abs(x - 0.5f);
 		float dy = Math.abs(y - 0.5f);
 		float dz = Math.abs(z - 0.5f);
@@ -76,5 +77,10 @@ public enum Hinge {
 		}
 		
 		return Hinge.values()[ordinal];
+	}
+	
+	public static Hinge fromSculpture(IBlockAccess iba, int x,int y,int z){
+		//TODO implement hinge save/load
+		return Hinge.Z0X0;
 	}
 }

@@ -182,7 +182,7 @@ public class SculptureBlock extends BlockContainer{
     	else rotation = look.zCoord > 0 ? 2 : 0;
     	
     	if(reverse)rotation = (4 - rotation) % 4;
-    	Debug.log("rotation : " + rotation);
+//    	Debug.log("rotation : " + rotation);
     	
     	for(int i = 0; i < rotation; i ++)r.rotate(1);
     }
@@ -209,7 +209,7 @@ public class SculptureBlock extends BlockContainer{
     	tx += r.x; ty += r.y; tz += r.z;
     	x+=dx; y+=dy; z+=dz;
     	
-    	Debug.log("from " + x + "," + y + "," + z + " to " + tx + "," + ty + "," + tz);
+//    	Debug.log("from " + x + "," + y + "," + z + " to " + tx + "," + ty + "," + tz);
     	
     	if(!w.isAirBlock(tx,ty,tz))return false;
     	

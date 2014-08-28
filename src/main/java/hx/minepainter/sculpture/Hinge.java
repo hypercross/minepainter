@@ -1,5 +1,9 @@
 package hx.minepainter.sculpture;
 
+import hx.utils.Debug;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -21,7 +25,7 @@ public enum Hinge {
 	X1Y1(ForgeDirection.EAST, 	ForgeDirection.UP);
 	
 	private ForgeDirection dir1, dir2; 
-	private static float mm = -0.1f, mM = 0.1f, Mm = 0.9f, MM = 1.1f;
+	private static float[] bounds = new float[]{-0.1f, 0.1f, 0.9f, 1.1f}; 
 	
 	Hinge(ForgeDirection dir1, ForgeDirection dir2){
 		this.dir1 = dir1;
@@ -50,6 +54,16 @@ public enum Hinge {
 		int base = this.ordinal() & ~3;
 		int partial = this.ordinal() & 3;
 		return Hinge.values()[base + (partial+1) % 4];
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void setRenderBounds(Block block){
+		int x = dir1.offsetX + dir2.offsetX + 1;
+		int y = dir1.offsetY + dir2.offsetY + 1;
+		int z = dir1.offsetZ + dir2.offsetZ + 1;
+		Debug.log("bounds : ", x,y,z);
+		block.setBlockBounds(bounds[x], bounds[y], bounds[z],
+							bounds[x+1], bounds[y+1], bounds[z+1]);
 	}
 	
 	/** get a hinge from sub-block x,y,z coords.
@@ -81,6 +95,11 @@ public enum Hinge {
 	
 	public static Hinge fromSculpture(IBlockAccess iba, int x,int y,int z){
 		//TODO implement hinge save/load
+		return Hinge.Z0X0;
+	}
+
+	public static Hinge fromSculpture(SculptureEntity se) {
+		// TODO Auto-generated method stub
 		return Hinge.Z0X0;
 	}
 }

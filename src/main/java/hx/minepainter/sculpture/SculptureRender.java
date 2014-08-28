@@ -15,11 +15,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class SculptureRender implements ISimpleBlockRenderingHandler{
-
-	private static int chunk_x,chunk_y,chunk_z;
-	public static void setCurrentChunkPos(int x,int y,int z){
-		chunk_x = x; chunk_y = y; chunk_z = z;
-	}
 	
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId,
@@ -36,12 +31,6 @@ public class SculptureRender implements ISimpleBlockRenderingHandler{
 		
 		se.getRender().updateLight(block.getMixedBrightnessForBlock(world, x, y, z));
 		se.getRender().updateAO(world, x, y, z);
-		
-//		GL11.glPushMatrix();
-//		GL11.glTranslated(x,y,z);
-//		GL11.glTranslated(-chunk_x, -chunk_y, -chunk_z);		
-//		if(se.getRender().ready())GL11.glCallList(se.getRender().glDisplayList);
-//		GL11.glPopMatrix();
 		
 		return false;
 	}

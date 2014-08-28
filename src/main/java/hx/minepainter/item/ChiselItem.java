@@ -26,7 +26,7 @@ public class ChiselItem extends Item{
 		super();
 		this.setCreativeTab(ModMinePainter.tabMinePainter);
 		this.setUnlocalizedName("chisel");
-		this.setTextureName("minepainter:stone_chisel");
+		this.setTextureName("minepainter:chisel");
 		this.setMaxStackSize(1);
 		this.setMaxDamage(240);
 	}
@@ -71,7 +71,7 @@ public class ChiselItem extends Item{
 		public Saw(){
 			super();
 			this.setUnlocalizedName("saw");
-			this.setTextureName("minepainter:diamond_chisel");
+			this.setTextureName("minepainter:saw");
 		}
 
 		@Override
@@ -91,7 +91,7 @@ public class ChiselItem extends Item{
 		public Barcutter(){
 			super();
 			this.setUnlocalizedName("barcutter");
-			this.setTextureName("minepainter:iron_chisel");
+			this.setTextureName("minepainter:shaver");
 		}
 
 		@Override

@@ -101,7 +101,15 @@ public class SculptureRenderCompiler {
 			rb.renderBlockByRenderType(sculpture, x,y,z);
 		}
 		
-		ModMinePainter.sculpture.block.setCurrentBlock(null,0);
+		Hinge hinge = Hinge.fromSculpture((SculptureEntity) slice.getTileEntity(0, 0, 0));
+		if(hinge != null){
+			hinge.setRenderBounds(sculpture);
+			sculpture.setCurrentBlock(Blocks.iron_block, 0);
+			tes.setTranslation(0, 0, 0);
+			rb.renderStandardBlockWithColorMultiplier(sculpture, 0,0,0, 1f,1f,1f);
+		}
+		
+		sculpture.setCurrentBlock(null,0);
 		sculpture.setBlockBounds(0,0,0,1,1,1);
 		rb.blockAccess = null;
 		tes.draw();

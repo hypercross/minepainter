@@ -53,6 +53,7 @@ public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 		
 		GL11.glDisable(GL11.GL_BLEND);
         GL11.glShadeModel(GL11.GL_FLAT);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
         RenderHelper.enableStandardItemLighting();
 	}
 

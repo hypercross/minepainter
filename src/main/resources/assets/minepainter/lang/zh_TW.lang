@@ -1,7 +1,9 @@
 itemGroup.minepainter=雕塑與像素畫
-item.chisel.name=石雕刻刀
-item.barcutter.name=鐵雕刻刀
-item.saw.name=鉆石雕刻刀
+item.chisel.name=鑿子
+item.barcutter.name=刨子
+item.saw.name=鋸子
+item.handle.name=柄
+item.hinge.name=鉸鏈
 item.canvas.name=畫布
 item.palette.name=調色板
 item.mini_brush.name=小畫筆

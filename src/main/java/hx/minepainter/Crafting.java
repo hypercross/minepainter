@@ -12,6 +12,7 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Crafting {
@@ -32,26 +33,36 @@ public class Crafting {
 		
 		GameRegistry.addRecipe(new ItemStack(ModMinePainter.canvas.item),
                 "XXX", "XXX",
-                'X', new ItemStack(Blocks.wool));
+                'X', new ItemStack(Blocks.wool,1,OreDictionary.WILDCARD_VALUE));
+		
+		GameRegistry.addShapelessRecipe(new ItemStack(ModMinePainter.handle.item),
+				Items.leather, Items.leather, Items.stick);
 		
 		GameRegistry.addRecipe(new ItemStack(ModMinePainter.chisel.item),
                 "X ", " Y",
-                'X', new ItemStack(Blocks.cobblestone),
-                'Y', new ItemStack(Items.stick));
+                'X', new ItemStack(Items.diamond),
+                'Y', new ItemStack(ModMinePainter.handle.item));
 		
 		GameRegistry.addRecipe(new ItemStack(ModMinePainter.barcutter.item),
-                "X ", " Y",
-                'X', new ItemStack(Items.iron_ingot),
-                'Y', new ItemStack(ModMinePainter.chisel.item));
+                "XYX", " Z "," Z ",
+                'X', new ItemStack(ModMinePainter.handle.item),
+                'Y', new ItemStack(Items.diamond),
+                'Z', new ItemStack(Blocks.planks, 1, OreDictionary.WILDCARD_VALUE));
 		
 		GameRegistry.addRecipe(new ItemStack(ModMinePainter.saw.item),
-                "X ", " Y",
-                'X', new ItemStack(Items.diamond),
-                'Y', new ItemStack(ModMinePainter.barcutter.item));
+                "XXY", "ZZ ",
+                'X', new ItemStack(Items.stick),
+                'Y', new ItemStack(ModMinePainter.handle.item),
+                'Z', new ItemStack(Items.diamond));
+		GameRegistry.addRecipe(new ItemStack(ModMinePainter.saw.item),
+                "XZ", "XZ","Y ",
+                'X', new ItemStack(Items.stick),
+                'Y', new ItemStack(ModMinePainter.handle.item),
+                'Z', new ItemStack(Items.diamond));
 		
 		GameRegistry.addRecipe(new ItemStack(ModMinePainter.palette.item),
 				"X", "Y",
-				'X', new ItemStack(Blocks.planks),
+				'X', new ItemStack(Blocks.planks,OreDictionary.WILDCARD_VALUE),
 				'Y', new ItemStack(ModMinePainter.chisel.item));
 		
 		GameRegistry.addRecipe(new ItemStack(ModMinePainter.eraser.item),

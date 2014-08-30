@@ -21,9 +21,11 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 @SideOnly(Side.CLIENT)
 public class SculptureRenderCompiler {
+	public static boolean CULL = true;
 	public static RenderBlocks rb = new SculptureRenderBlocks();
 
 	int glDisplayList = -1;
@@ -74,7 +76,7 @@ public class SculptureRenderCompiler {
 	
 	public void build(BlockSlice slice){
 		rb.blockAccess = slice;
-		rb.renderAllFaces = false;
+		rb.renderAllFaces = CULL;
 		SculptureBlock sculpture = ModMinePainter.sculpture.block;
 		
 		TextureManager tm = Minecraft.getMinecraft().renderEngine;
@@ -85,19 +87,45 @@ public class SculptureRenderCompiler {
 		tes.setTranslation(0, 0, 0);
 		tes.startDrawingQuads();
 		
-		for(int i = 0; i < 512; i ++){
-			int x = (i >> 6) & 7;
-			int y = (i >> 3) & 7;
-			int z = (i >> 0) & 7;
-
-			Block b = slice.getBlock(x, y, z);
-			if(b == Blocks.air)continue;
-			int meta = slice.getBlockMetadata(x, y, z);
-			sculpture.setCurrentBlock(b, meta);
-			
-			tes.setTranslation(-x, -y, -z);
-			sculpture.setBlockBounds(x/8f, y/8f, z/8f, (x+1)/8f, (y+1)/8f, (z+1)/8f);
-			rb.renderBlockByRenderType(sculpture, x,y,z);
+		if(!CULL){
+			for(int i = 0; i < 512; i ++){
+				int x = (i >> 6) & 7;
+				int y = (i >> 3) & 7;
+				int z = (i >> 0) & 7;
+	
+				Block b = slice.getBlock(x, y, z);
+				if(b == Blocks.air)continue;
+				int meta = slice.getBlockMetadata(x, y, z);
+				sculpture.setCurrentBlock(b, meta);
+				
+				tes.setTranslation(-x, -y, -z);
+				sculpture.setBlockBounds(x/8f, y/8f, z/8f, (x+1)/8f, (y+1)/8f, (z+1)/8f);
+				rb.renderBlockByRenderType(sculpture, x,y,z);
+			}
+		}else{
+			int ao = Minecraft.getMinecraft().gameSettings.ambientOcclusion;
+			Minecraft.getMinecraft().gameSettings.ambientOcclusion = 0;
+			int[][][] merged = SculptureRenderCuller.culler.getMergeMap(slice.sculpture);
+			for(int i = 0; i < 512; i ++){
+				int x = (i >> 6) & 7;
+				int y = (i >> 3) & 7;
+				int z = (i >> 0) & 7;
+				
+				if((merged[x][y][z] & 3) != 3)continue;
+				int index = merged[x][y][z] >> 11;
+				Block b = Block.getBlockById(slice.sculpture.block_ids[index]);
+				if(b == Blocks.air)continue;
+				int meta = slice.sculpture.block_metas[index];
+				int ex = (merged[x][y][z] >> 2)&7;
+				int ey = (merged[x][y][z] >> 5)&7;
+				int ez = (merged[x][y][z] >> 8)&7;
+				
+				sculpture.setCurrentBlock(b, meta);				
+				tes.setTranslation(-x, -y, -z);
+				sculpture.setBlockBounds(x/8f, y/8f, z/8f, (x+ex+1)/8f, (y+ey+1)/8f, (z+ez+1)/8f);
+				rb.renderBlockByRenderType(sculpture, x,y,z);
+			}
+			Minecraft.getMinecraft().gameSettings.ambientOcclusion = ao;
 		}
 		
 		Hinge hinge = Hinge.fromSculpture((SculptureEntity) slice.getTileEntity(0, 0, 0));
@@ -108,6 +136,13 @@ public class SculptureRenderCompiler {
 			rb.setRenderBoundsFromBlock(sculpture);
 			rb.renderAllFaces = true;
 			rb.renderStandardBlockWithColorMultiplier(sculpture, 0,0,0, 1f,1f,1f);
+		}
+		
+		Nail nail = Nail.fromSculpture(slice, 0, 0, 0);
+		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS){
+			if(!nail.isOnFace(dir.ordinal()))continue;
+			
+			
 		}
 		
 		sculpture.setCurrentBlock(null,0);

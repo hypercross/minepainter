@@ -22,6 +22,8 @@ import hx.minepainter.sculpture.SculptureEntity;
 import hx.minepainter.sculpture.SculptureEntityRenderer;
 import hx.minepainter.sculpture.SculptureOperationMessage;
 import hx.minepainter.sculpture.SculptureRender;
+import hx.minepainter.sculpture.SculptureRenderCompiler;
+import hx.minepainter.sculpture.SculptureRenderCuller;
 import hx.utils.BlockLoader;
 import hx.utils.Debug;
 import hx.utils.ItemLoader;
@@ -31,6 +33,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -60,6 +63,7 @@ public class ModMinePainter {
 	public static BlockLoader<PaintingBlock> painting = 
 			new BlockLoader(new PaintingBlock(), PaintingEntity.class);
 	
+	public static ItemLoader<Item> handle = new ItemLoader(new Item().setUnlocalizedName("handle").setTextureName("minepainter:handle"));
 	public static ItemLoader<ChiselItem> chisel = new ItemLoader(new ChiselItem());
 	public static ItemLoader<ChiselItem> barcutter = new ItemLoader(new ChiselItem.Barcutter());
 	public static ItemLoader<ChiselItem> saw = new ItemLoader(new ChiselItem.Saw());
@@ -79,11 +83,20 @@ public class ModMinePainter {
 	
 	public static SimpleNetworkWrapper network;
 	
+	@EventHandler public void preInit(FMLPreInitializationEvent event){
+		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+		config.load();
+		SculptureRenderCompiler.CULL = config.getBoolean("greedy_culling", "RENDER", true, 
+				"Greedily merge blocks for faster render. Sacrifices AO effect.", "config.greedy_culling");
+		config.save();
+	}
+	
 	@EventHandler
-	public void preInit(FMLInitializationEvent e){
+	public void init(FMLInitializationEvent e){
 		sculpture.load();
 		painting.load();
 		
+		handle.load();
 		chisel.load();
 		barcutter.load();
 		saw.load();
@@ -118,7 +131,7 @@ public class ModMinePainter {
 	
 	@SideOnly(Side.CLIENT)
 	@EventHandler
-	public void preInitClient(FMLInitializationEvent e){
+	public void initClient(FMLInitializationEvent e){
 //		sculpture.registerRendering(new SculptureRender(), null);
 		sculpture.registerRendering(new SculptureRender(), new SculptureEntityRenderer());
 		painting.registerRendering(null, new PaintingRenderer());

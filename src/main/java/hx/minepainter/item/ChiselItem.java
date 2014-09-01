@@ -26,7 +26,9 @@ public class ChiselItem extends Item{
 		this.setUnlocalizedName("chisel");
 		this.setTextureName("minepainter:chisel");
 		this.setMaxStackSize(1);
-		this.setMaxDamage(240);
+		this.setMaxDamage(960);
+		this.setContainerItem(this);
+		this.setFull3D();
 	}
 	
 	@Override

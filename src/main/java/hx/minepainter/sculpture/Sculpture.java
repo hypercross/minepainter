@@ -5,6 +5,7 @@ import hx.utils.Debug;
 import org.lwjgl.util.vector.Matrix;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class Sculpture {
@@ -211,5 +212,18 @@ public class Sculpture {
 			if(current > light)light = current;
 		}
 		return light;
+	}
+	
+	public int[][] getBlockSigs(){
+		int[][] result = new int[2][usage_count.length];
+		int s = 0;
+		for(int i = 0; i < usage_count.length; i++){
+			if(Block.getBlockById(block_ids[i]) == Blocks.air || usage_count[i] == 0)
+				continue;
+			result[0][s] = (block_ids[i] << 4) + block_metas[i];
+			result[1][s] = usage_count[i];
+			s++;
+		}
+		return result;
 	}
 }

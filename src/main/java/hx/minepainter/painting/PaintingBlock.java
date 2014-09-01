@@ -2,6 +2,8 @@ package hx.minepainter.painting;
 
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.ModMinePainter;
 import hx.utils.Utils;
 import net.minecraft.block.Block;
@@ -9,6 +11,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -86,6 +89,10 @@ public class PaintingBlock extends BlockContainer{
     }
     
     protected ItemStack createStackedBlock(int p_149644_1_){return null;}
+    
+    @Override @SideOnly(Side.CLIENT) public IIcon getIcon(int side, int meta){
+		return Blocks.wool.getIcon(side, 0);
+	}
     
     public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
     {

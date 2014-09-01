@@ -18,6 +18,7 @@ public class PieceItem extends ChiselItem{
 		this.setHasSubtypes(true);
 		this.setMaxStackSize(64);
 		this.setMaxDamage(0);
+		this.setContainerItem(null);
 	}
 	
 	@Override public void registerIcons(IIconRegister r){}

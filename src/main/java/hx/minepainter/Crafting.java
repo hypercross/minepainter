@@ -60,10 +60,9 @@ public class Crafting {
                 'Y', new ItemStack(ModMinePainter.handle.item),
                 'Z', new ItemStack(Items.diamond));
 		
-		GameRegistry.addRecipe(new ItemStack(ModMinePainter.palette.item),
-				"X", "Y",
-				'X', new ItemStack(Blocks.planks,OreDictionary.WILDCARD_VALUE),
-				'Y', new ItemStack(ModMinePainter.chisel.item));
+		GameRegistry.addShapelessRecipe(new ItemStack(ModMinePainter.palette.item),
+				new ItemStack(Blocks.planks,OreDictionary.WILDCARD_VALUE),
+				new ItemStack(ModMinePainter.chisel.item));
 		
 		GameRegistry.addRecipe(new ItemStack(ModMinePainter.eraser.item),
 				"XX ", "YY ", "ZZ ",
@@ -75,6 +74,11 @@ public class Crafting {
 				"XX ","YX ", " X ",
 				'X', new ItemStack(Items.iron_ingot),
 				'Y', new ItemStack(Items.dye, 1, 1));
+		
+		GameRegistry.addRecipe(new ItemStack(ModMinePainter.copygun.item),
+				"XXX","YYX"," YX",
+				'X', new ItemStack(Items.iron_ingot),
+				'Y', new ItemStack(Items.gold_ingot));
 		
 		GameRegistry.addRecipe(scrap);
 		

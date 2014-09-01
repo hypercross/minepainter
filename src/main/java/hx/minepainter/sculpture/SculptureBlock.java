@@ -154,18 +154,18 @@ public class SculptureBlock extends BlockContainer{
     
     protected ItemStack createStackedBlock(int p_149644_1_){return null;}
     
-    public boolean removedByPlayer(World w, EntityPlayer ep, int x, int y, int z)
-    {
+    public boolean dropSculptureToPlayer(World w, EntityPlayer ep, int x,int y,int z){
     	SculptureEntity se = Utils.getTE(w, x, y, z);
     	if(se == null || se.sculpture().isEmpty()){
     		Debug.log("hey this is null!");
-    		return super.removedByPlayer(w, ep, x, y, z);
+    		return false;
     	}
     	NBTTagCompound nbt = new NBTTagCompound();
     	ItemStack is = new ItemStack(ModMinePainter.droppedSculpture.item);
     	
     	applyPlayerRotation(se.sculpture.r, ep, true);
     	se.sculpture.write(nbt);
+    	applyPlayerRotation(se.sculpture.r, ep, false);
     	is.setTagCompound(nbt);
     	this.dropBlockAsItem(w, x, y, z, is);
     	
@@ -174,6 +174,12 @@ public class SculptureBlock extends BlockContainer{
     		this.dropBlockAsItem(w, x, y, z, is);
     	}
     	
+    	return true;
+    }
+    
+    public boolean removedByPlayer(World w, EntityPlayer ep, int x, int y, int z)
+    {
+    	dropSculptureToPlayer(w,ep,x,y,z);
         return super.removedByPlayer(w, ep, x, y, z);
     }
     

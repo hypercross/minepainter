@@ -4,6 +4,7 @@ import hx.minepainter.ModMinePainter;
 import hx.utils.Debug;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,9 +27,9 @@ public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 		SculptureEntity se = (SculptureEntity) var1;
 
 		RenderHelper.disableStandardItemLighting();
-		GL11.glShadeModel(GL11.GL_SMOOTH);
 	    GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+	    GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
+//        GL11.glDisable(GL11.GL_ALPHA_TEST);
 	    OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 	    
 	    if(!se.getRender().ready() && !se.getRender().hasContext()){
@@ -50,10 +51,8 @@ public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 		GL11.glPopMatrix();
 
 		
-		
 		GL11.glDisable(GL11.GL_BLEND);
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+//        GL11.glEnable(GL11.GL_ALPHA_TEST);
         RenderHelper.enableStandardItemLighting();
 	}
 

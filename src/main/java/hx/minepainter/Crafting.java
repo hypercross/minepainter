@@ -16,6 +16,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Crafting {
+	public static boolean CRAFTABLE_COPYGUN = false;
 
 	public void registerRecipes(){
 		
@@ -75,6 +76,7 @@ public class Crafting {
 				'X', new ItemStack(Items.iron_ingot),
 				'Y', new ItemStack(Items.dye, 1, 1));
 		
+		if(CRAFTABLE_COPYGUN)
 		GameRegistry.addRecipe(new ItemStack(ModMinePainter.copygun.item),
 				"XXX","YYX"," YX",
 				'X', new ItemStack(Items.iron_ingot),

@@ -38,7 +38,10 @@ public class CopygunItem extends Item{
 				int block_sig = Block.getIdFromBlock(b) << 4;
 				block_sig += meta;
 				
-				setCharge(is, block_sig, getCharge(is, block_sig) + 512);
+				int prev = getCharge(is, block_sig);
+				if(prev + 512 > Short.MAX_VALUE)return false;
+				
+				setCharge(is, block_sig, prev  + 512);
 				return w.setBlockToAir(x, y, z);
 			}
 			return false;
@@ -59,6 +62,9 @@ public class CopygunItem extends Item{
 			 int count = sigs[1][i];
 			 setCharge(is, sig, getCharge(is, sig) - count);
 		 }
+		 
+		 if(!ep.capabilities.isCreativeMode)
+			 is.damageItem(1, ep);
 		
 		return ModMinePainter.sculpture.block.dropSculptureToPlayer(w, ep, x, y, z);
 	}

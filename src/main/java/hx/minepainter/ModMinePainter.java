@@ -88,8 +88,10 @@ public class ModMinePainter {
 	@EventHandler public void preInit(FMLPreInitializationEvent event){
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
-		SculptureRenderCompiler.CULL = config.getBoolean("greedy_culling", "RENDER", true, 
-				"Greedily merge blocks for faster render. Sacrifices AO effect.", "config.greedy_culling");
+		if(event.getSide().isClient())
+			SculptureRenderCompiler.CULL = config.getBoolean("greedy_culling", "RENDER", true, 
+					"Greedily merge blocks for faster render. Sacrifices AO effect.", "config.greedy_culling");
+		Crafting.CRAFTABLE_COPYGUN = config.getBoolean("craftable_copygun", "GAMEPLAY", true, "make copygun craftable");
 		config.save();
 	}
 	

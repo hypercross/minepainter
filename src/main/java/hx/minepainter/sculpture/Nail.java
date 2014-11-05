@@ -42,6 +42,6 @@ public class Nail {
 //		if(se == null)return Nail.None;
 //		
 //		return se.getNail();
-		return Nail.All;
+		return Nail.None;
 	}
 }

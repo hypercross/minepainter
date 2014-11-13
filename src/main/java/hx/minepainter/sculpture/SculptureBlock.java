@@ -46,6 +46,9 @@ public class SculptureBlock extends BlockContainer{
 		this.meta = meta;
 		renderID = that.getRenderType();
 	}
+	public void useStandardRendering(){
+		renderID = 0;
+	}
 	public void setSubCoordinate(int x,int y,int z){
 		this.x = x; this.y = y; this.z = z;
 	}

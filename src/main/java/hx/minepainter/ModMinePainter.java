@@ -11,6 +11,7 @@ import hx.minepainter.item.Palette;
 import hx.minepainter.item.PieceItem;
 import hx.minepainter.item.PieceItem.Bar;
 import hx.minepainter.item.PieceRenderer;
+import hx.minepainter.item.TransmuterItem;
 import hx.minepainter.item.WrenchItem;
 import hx.minepainter.painting.CommandImportPainting;
 import hx.minepainter.painting.PaintTool;
@@ -75,6 +76,7 @@ public class ModMinePainter {
 	public static ItemLoader<WrenchItem> wrench = new ItemLoader(new WrenchItem());
 	public static ItemLoader<CopygunItem> copygun = new ItemLoader(new CopygunItem());
 	public static ItemLoader<HingeItem> hinge = new ItemLoader(new HingeItem());
+	public static ItemLoader<TransmuterItem> transmuter = new ItemLoader(new TransmuterItem());
 	public static ItemLoader<PaintTool> minibrush = new ItemLoader(new PaintTool.Mini());
 	public static ItemLoader<PaintTool> mixerbrush = new ItemLoader(new PaintTool.Mixer());
 	public static ItemLoader<PaintTool> bucket = new ItemLoader(new PaintTool.Bucket());
@@ -111,6 +113,7 @@ public class ModMinePainter {
 		wrench.load();
 		copygun.load();
 		hinge.load();
+		transmuter.load();
 		minibrush.load();
 		mixerbrush.load();
 		bucket.load();

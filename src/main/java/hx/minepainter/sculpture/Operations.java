@@ -236,6 +236,7 @@ public class Operations {
 	public static final int ALLZ = 8;
 	public static final int DAMAGE = 16;
 	public static final int CONSUME = 32;
+	public static final int TRANSMUTE = 64;
 	
 	public static void setBlockBoundsFromRaytrace(int[] pos, Block block, int type){
 		pos = pos.clone();
@@ -306,6 +307,19 @@ public class Operations {
 
 	public static boolean applyOperation(World w, int x, int y, int z,
 			int[] pos, int flags, Block editBlock, int editMeta) {
+
+		if(hasFlag(flags, TRANSMUTE)){
+			SculptureEntity se = Utils.getTE(w, x, y, z);
+			int index = se.sculpture.getIndex(pos[0], pos[1], pos[2]);
+			se.sculpture.block_ids[index] = Block.getIdFromBlock(editBlock);
+			se.sculpture.block_metas[index] = (byte) editMeta;
+			
+			if(se.sculpture.isEmpty())w.setBlock(x,y,z, Blocks.air);
+			if(w.isRemote)se.getRender().changed  = true;
+			else w.markBlockForUpdate(x,y,z);
+			
+			return true;
+		}
 		
 		pos= pos.clone();
 		if(hasFlag(flags, PLACE)){

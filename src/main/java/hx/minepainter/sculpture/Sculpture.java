@@ -103,6 +103,8 @@ public class Sculpture {
 			if(block_ids[i] == blockID && block_metas[i] == meta){
 				return i;
 			}
+		}
+		for(int i = 0; i < block_ids.length; i++){
 			if(usage_count[i] == 0){
 				block_ids[i] = blockID;
 				block_metas[i] = meta;

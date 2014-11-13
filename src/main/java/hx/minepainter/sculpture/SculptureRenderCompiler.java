@@ -123,7 +123,12 @@ public class SculptureRenderCompiler {
 				sculpture.setCurrentBlock(b, meta);				
 				tes.setTranslation(-x, -y, -z);
 				sculpture.setBlockBounds(x/8f, y/8f, z/8f, (x+ex+1)/8f, (y+ey+1)/8f, (z+ez+1)/8f);
-				rb.renderBlockByRenderType(sculpture, x,y,z);
+				try{
+					rb.renderBlockByRenderType(sculpture, x,y,z);
+				}catch(RuntimeException e){
+					sculpture.useStandardRendering();
+					rb.renderBlockByRenderType(sculpture, x,y,z);
+				}
 			}
 			Minecraft.getMinecraft().gameSettings.ambientOcclusion = ao;
 		}

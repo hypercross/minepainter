@@ -1,5 +1,8 @@
 package hx.minepainter.sculpture;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+
 public class SculptureRenderCuller {
 	public static SculptureRenderCuller culler = new SculptureRenderCuller();
 	
@@ -15,6 +18,15 @@ public class SculptureRenderCuller {
 	
 	private int[][][] mergeMap = new int[8][8][8];
 	
+	public static boolean isMergeable(Block b){
+		return isMergeable(Block.getIdFromBlock(b));
+	}
+	
+	private static boolean isMergeable(int id){
+		if(id == Block.getIdFromBlock(Blocks.glass))return false;
+		if(id == Block.getIdFromBlock(Blocks.water))return false;
+		return true;
+	}
 	
 	public int[][][] getMergeMap(Sculpture sculpture){
 		
@@ -25,7 +37,7 @@ public class SculptureRenderCuller {
 				int source = -1;
 				for(int k = 0; k < 8; k ++){
 					int now = sculpture.getIndex(i, j, k);
-					if(now == prev){
+					if(now == prev && isMergeable(sculpture.block_ids[now])){
 						mergeMap[i][j][k] = TYPE_Z;
 						mergeMap[i][j][source] += BIT_ZLEN;
 					}else{
@@ -51,7 +63,7 @@ public class SculptureRenderCuller {
 					}
 					
 					int now = mergeMap[i][j][k]; 
-					if(now == prev){
+					if(now == prev && isMergeable(sculpture.block_ids[now/BIT_INDEX])){
 						mergeMap[i][j][k] = TYPE_Y;
 						mergeMap[i][source][k] += BIT_YLEN; 
 					}else{
@@ -74,7 +86,7 @@ public class SculptureRenderCuller {
 					}
 					
 					int now = mergeMap[i][j][k]; 
-					if(now == prev){
+					if(now == prev && isMergeable(sculpture.block_ids[now/BIT_INDEX])){
 						mergeMap[i][j][k] = TYPE_X;
 						mergeMap[source][j][k] += BIT_XLEN; 
 					}else{

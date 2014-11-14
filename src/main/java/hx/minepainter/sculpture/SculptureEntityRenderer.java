@@ -55,7 +55,6 @@ public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 		}
 		
 		GL11.glPopMatrix();
-
 		
 //        GL11.glEnable(GL11.GL_ALPHA_TEST);
         RenderHelper.enableStandardItemLighting();

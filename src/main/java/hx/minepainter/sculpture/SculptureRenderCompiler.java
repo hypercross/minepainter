@@ -80,7 +80,6 @@ public class SculptureRenderCompiler {
 	
 	public void build(BlockSlice slice, int pass){
 		rb.blockAccess = slice;
-		rb.renderAllFaces = CULL;
 		SculptureBlock sculpture = ModMinePainter.sculpture.block;
 		
 		TextureManager tm = Minecraft.getMinecraft().renderEngine;
@@ -134,6 +133,7 @@ public class SculptureRenderCompiler {
 				sculpture.setCurrentBlock(b, meta);				
 				tes.setTranslation(-x, -y, -z);
 				sculpture.setBlockBounds(x/8f, y/8f, z/8f, (x+ex+1)/8f, (y+ey+1)/8f, (z+ez+1)/8f);
+				rb.renderAllFaces = SculptureRenderCuller.isMergeable(b);
 				try{
 					rb.renderBlockByRenderType(sculpture, x,y,z);
 				}catch(RuntimeException e){

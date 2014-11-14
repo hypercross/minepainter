@@ -49,7 +49,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 //TODO [DEFER] add a sculpture motor block thing
 //TODO [DEFER] add a sculpture printer block
-@Mod(modid = "minepainter", version = "0.2.6")
+@Mod(modid = "minepainter", version = "0.3.0f1")
 public class ModMinePainter {
 	
 	public static CreativeTabs tabMinePainter = new CreativeTabs("minepainter"){

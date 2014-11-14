@@ -19,13 +19,12 @@ public class SculptureRenderCuller {
 	private int[][][] mergeMap = new int[8][8][8];
 	
 	public static boolean isMergeable(Block b){
-		return isMergeable(Block.getIdFromBlock(b));
+		if(b.getLightOpacity() < 255)return false;
+		return true;
 	}
 	
 	private static boolean isMergeable(int id){
-		if(id == Block.getIdFromBlock(Blocks.glass))return false;
-		if(id == Block.getIdFromBlock(Blocks.water))return false;
-		return true;
+		return isMergeable(Block.getBlockById(id));
 	}
 	
 	public int[][][] getMergeMap(Sculpture sculpture){

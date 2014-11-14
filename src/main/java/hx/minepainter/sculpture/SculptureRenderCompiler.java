@@ -65,11 +65,11 @@ public class SculptureRenderCompiler {
 		
 		if(glDisplayList == null)glDisplayList = new int[]{-1,-1};
 		for(int pass = 0; pass < 2; pass++){
-			if(!slice.sculpture.needRenderPass(pass))continue;
 			if(glDisplayList[pass] < 0)glDisplayList[pass] = GLAllocation.generateDisplayLists(1);
 			GL11.glPushMatrix();
 			GL11.glNewList(glDisplayList[pass], GL11.GL_COMPILE);
-			build(slice,pass);
+			if(slice.sculpture.needRenderPass(pass))
+				build(slice,pass);
 			GL11.glEndList();
 			GL11.glPopMatrix();
 		}		

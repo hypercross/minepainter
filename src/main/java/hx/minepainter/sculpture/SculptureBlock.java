@@ -45,6 +45,8 @@ public class SculptureBlock extends BlockContainer{
 		current = that;
 		this.meta = meta;
 		renderID = that.getRenderType();
+		if(!SculptureRenderCuller.isMergeable(that))
+			renderID = 0;
 	}
 	public void useStandardRendering(){
 		renderID = 0;

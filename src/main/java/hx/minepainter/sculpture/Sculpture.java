@@ -4,6 +4,9 @@ import hx.utils.Debug;
 
 import org.lwjgl.util.vector.Matrix;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -227,5 +230,17 @@ public class Sculpture {
 			s++;
 		}
 		return result;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public boolean needRenderPass(int pass){
+		for(int i = 0; i < usage_count.length; i++){
+			Block that = Block.getBlockById(block_ids[i]); 
+			if(that == Blocks.air || usage_count[i] == 0)
+				continue;
+			
+			if(that.canRenderInPass(pass))return true;
+		}
+		return false;
 	}
 }

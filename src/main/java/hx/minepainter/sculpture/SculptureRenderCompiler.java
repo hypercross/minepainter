@@ -28,7 +28,7 @@ public class SculptureRenderCompiler {
 	public static boolean CULL = true;
 	public static RenderBlocks rb = new SculptureRenderBlocks();
 
-	int glDisplayList = -1;
+	int[] glDisplayList;
 	int light;
 	public boolean changed = true;
 	boolean context = false;
@@ -61,20 +61,24 @@ public class SculptureRenderCompiler {
 	}
 	
 	public boolean update(BlockSlice slice){
-		if(glDisplayList != -1 && !changed)return false;
+		if(glDisplayList != null && !changed)return false;
 		
-		if(glDisplayList < 0)glDisplayList = GLAllocation.generateDisplayLists(1);
-		GL11.glPushMatrix();
-		GL11.glNewList(glDisplayList, GL11.GL_COMPILE);
-		build(slice);
-		GL11.glEndList();
-		GL11.glPopMatrix();
+		if(glDisplayList == null)glDisplayList = new int[]{-1,-1};
+		for(int pass = 0; pass < 2; pass++){
+			if(!slice.sculpture.needRenderPass(pass))continue;
+			if(glDisplayList[pass] < 0)glDisplayList[pass] = GLAllocation.generateDisplayLists(1);
+			GL11.glPushMatrix();
+			GL11.glNewList(glDisplayList[pass], GL11.GL_COMPILE);
+			build(slice,pass);
+			GL11.glEndList();
+			GL11.glPopMatrix();
+		}		
 		
 		changed = false;
 		return true;
 	}
 	
-	public void build(BlockSlice slice){
+	public void build(BlockSlice slice, int pass){
 		rb.blockAccess = slice;
 		rb.renderAllFaces = CULL;
 		SculptureBlock sculpture = ModMinePainter.sculpture.block;
@@ -95,12 +99,18 @@ public class SculptureRenderCompiler {
 	
 				Block b = slice.getBlock(x, y, z);
 				if(b == Blocks.air)continue;
+				if(!b.canRenderInPass(pass))continue;
 				int meta = slice.getBlockMetadata(x, y, z);
 				sculpture.setCurrentBlock(b, meta);
 				
 				tes.setTranslation(-x, -y, -z);
 				sculpture.setBlockBounds(x/8f, y/8f, z/8f, (x+1)/8f, (y+1)/8f, (z+1)/8f);
-				rb.renderBlockByRenderType(sculpture, x,y,z);
+				try{
+					rb.renderBlockByRenderType(sculpture, x,y,z);
+				}catch(RuntimeException e){
+					sculpture.useStandardRendering();
+					rb.renderBlockByRenderType(sculpture, x,y,z);
+				}
 			}
 		}else{
 			int ao = Minecraft.getMinecraft().gameSettings.ambientOcclusion;
@@ -115,6 +125,7 @@ public class SculptureRenderCompiler {
 				int index = merged[x][y][z] >> 11;
 				Block b = Block.getBlockById(slice.sculpture.block_ids[index]);
 				if(b == Blocks.air)continue;
+				if(!b.canRenderInPass(pass))continue;
 				int meta = slice.sculpture.block_metas[index];
 				int ex = (merged[x][y][z] >> 2)&7;
 				int ey = (merged[x][y][z] >> 5)&7;
@@ -133,22 +144,22 @@ public class SculptureRenderCompiler {
 			Minecraft.getMinecraft().gameSettings.ambientOcclusion = ao;
 		}
 		
-		Hinge hinge = Hinge.fromSculpture((SculptureEntity) slice.getTileEntity(0, 0, 0));
-		if(hinge != null){
-			hinge.setRenderBounds(sculpture);
-			sculpture.setCurrentBlock(Blocks.iron_block, 0);
-			tes.setTranslation(0, 0, 0);
-			rb.setRenderBoundsFromBlock(sculpture);
-			rb.renderAllFaces = true;
-			rb.renderStandardBlockWithColorMultiplier(sculpture, 0,0,0, 1f,1f,1f);
-		}
-		
-		Nail nail = Nail.fromSculpture(slice, 0, 0, 0);
-		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS){
-			if(!nail.isOnFace(dir.ordinal()))continue;
-			
-			
-		}
+//		Hinge hinge = Hinge.fromSculpture((SculptureEntity) slice.getTileEntity(0, 0, 0));
+//		if(hinge != null){
+//			hinge.setRenderBounds(sculpture);
+//			sculpture.setCurrentBlock(Blocks.iron_block, 0);
+//			tes.setTranslation(0, 0, 0);
+//			rb.setRenderBoundsFromBlock(sculpture);
+//			rb.renderAllFaces = true;
+//			rb.renderStandardBlockWithColorMultiplier(sculpture, 0,0,0, 1f,1f,1f);
+//		}
+//		
+//		Nail nail = Nail.fromSculpture(slice, 0, 0, 0);
+//		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS){
+//			if(!nail.isOnFace(dir.ordinal()))continue;
+//			
+//			
+//		}
 		
 		sculpture.setCurrentBlock(null,0);
 		sculpture.setBlockBounds(0,0,0,1,1,1);
@@ -158,13 +169,15 @@ public class SculptureRenderCompiler {
 	}
 
 	public void clear(){
-		if(glDisplayList>=0)
-			GL11.glDeleteLists(glDisplayList, 1);
+		if(glDisplayList == null)return;
+		for(int i = 0; i < glDisplayList.length; i ++)
+		if(glDisplayList[i]>=0)
+			GL11.glDeleteLists(glDisplayList[i], 1);
 	}
 
 
 	public boolean ready() {
-		return glDisplayList>=0;
+		return glDisplayList != null;
 	}
 	
 	private double[] getTesOffsets(){

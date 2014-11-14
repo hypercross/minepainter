@@ -112,7 +112,7 @@ public class ModMinePainter {
 		droppedSculpture.load();
 		wrench.load();
 		copygun.load();
-		hinge.load();
+//		hinge.load();
 		transmuter.load();
 		minibrush.load();
 		mixerbrush.load();

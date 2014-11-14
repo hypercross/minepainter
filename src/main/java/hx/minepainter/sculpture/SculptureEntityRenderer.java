@@ -25,12 +25,6 @@ public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 	public void renderTileEntityAt(TileEntity var1, double xd, double yd,
 			double zd, float partial) {
 		SculptureEntity se = (SculptureEntity) var1;
-
-		RenderHelper.disableStandardItemLighting();
-	    GL11.glEnable(GL11.GL_BLEND);
-	    GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-//        GL11.glDisable(GL11.GL_ALPHA_TEST);
-	    OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 	    
 	    if(!se.getRender().ready() && !se.getRender().hasContext()){
 	    	
@@ -43,15 +37,26 @@ public class SculptureEntityRenderer  extends TileEntitySpecialRenderer{
 	    else
 	    	se.updateRender();
 
-	    
-	    
+		RenderHelper.disableStandardItemLighting();
 		GL11.glPushMatrix();
-		GL11.glTranslated(xd,yd,zd);		
-		GL11.glCallList(se.getRender().glDisplayList);
+		GL11.glTranslated(xd,yd,zd);
+		
+		int displayList = se.getRender().glDisplayList[0];
+		if(displayList > 0)
+			GL11.glCallList(displayList);
+		
+		displayList = se.getRender().glDisplayList[1];
+		if(displayList > 0){
+			GL11.glEnable(GL11.GL_BLEND);
+		    OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+		    GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
+			GL11.glCallList(displayList);
+			GL11.glDisable(GL11.GL_BLEND);
+		}
+		
 		GL11.glPopMatrix();
 
 		
-		GL11.glDisable(GL11.GL_BLEND);
 //        GL11.glEnable(GL11.GL_ALPHA_TEST);
         RenderHelper.enableStandardItemLighting();
 	}
